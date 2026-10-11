@@ -1,0 +1,114 @@
+[
+  {
+    "id": 1,
+    "file": "photos/photo-01.jpg",
+    "originalName": "IMG_20261011_220124.jpg",
+    "width": 1440,
+    "height": 1920,
+    "aspect": 0.75
+  },
+  {
+    "id": 2,
+    "file": "photos/photo-02.jpg",
+    "originalName": "IMG_20261011_220128.jpg",
+    "width": 1920,
+    "height": 1440,
+    "aspect": 1.33
+  },
+  {
+    "id": 3,
+    "file": "photos/photo-03.jpg",
+    "originalName": "IMG_20261011_220133.jpg",
+    "width": 1440,
+    "height": 1920,
+    "aspect": 0.75
+  },
+  {
+    "id": 4,
+    "file": "photos/photo-04.jpg",
+    "originalName": "IMG_20261011_220136.jpg",
+    "width": 1440,
+    "height": 1920,
+    "aspect": 0.75
+  },
+  {
+    "id": 5,
+    "file": "photos/photo-05.jpg",
+    "originalName": "IMG_20261011_220138.jpg",
+    "width": 1280,
+    "height": 960,
+    "aspect": 1.33
+  },
+  {
+    "id": 6,
+    "file": "photos/photo-06.jpg",
+    "originalName": "IMG_20261011_220144.jpg",
+    "width": 1280,
+    "height": 1707,
+    "aspect": 0.75
+  },
+  {
+    "id": 7,
+    "file": "photos/photo-07.jpg",
+    "originalName": "IMG_20261011_220146.jpg",
+    "width": 1920,
+    "height": 1440,
+    "aspect": 1.33
+  },
+  {
+    "id": 8,
+    "file": "photos/photo-08.jpg",
+    "originalName": "IMG_20261011_220149.jpg",
+    "width": 1440,
+    "height": 1920,
+    "aspect": 0.75
+  },
+  {
+    "id": 9,
+    "file": "photos/photo-09.jpg",
+    "originalName": "IMG_20261011_220151.jpg",
+    "width": 1440,
+    "height": 1920,
+    "aspect": 0.75
+  },
+  {
+    "id": 10,
+    "file": "photos/photo-10.jpg",
+    "originalName": "IMG_20261011_220154.jpg",
+    "width": 1440,
+    "height": 1920,
+    "aspect": 0.75
+  },
+  {
+    "id": 11,
+    "file": "photos/photo-11.jpg",
+    "originalName": "IMG_20261011_220201.jpg",
+    "width": 1440,
+    "height": 1920,
+    "aspect": 0.75
+  },
+  {
+    "id": 12,
+    "file": "photos/photo-12.jpg",
+    "originalName": "IMG_20261011_220203.jpg",
+    "width": 1440,
+    "height": 1920,
+    "aspect": 0.75
+  },
+  {
+    "id": 13,
+    "file": "photos/photo-13.jpg",
+    "originalName": "IMG_20261011_220206.jpg",
+    "width": 1440,
+    "height": 1920,
+    "aspect": 0.75
+  },
+  {
+    "id": 14,
+    "file": "photos/photo-14.jpg",
+    "originalName": "IMG_20261011_220209.jpg",
+    "width": 1920,
+    "height": 1440,
+    "aspect": 1.33
+  }
+]

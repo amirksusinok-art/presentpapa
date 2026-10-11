@@ -1,0 +1,27 @@
+{
+  "name": "presentpapa",
+  "version": "1.0.0",
+  "description": "Поздравительный сайт ко дню рождения папы с реалистичной 3D-коробкой и фотогалереей",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "sirv dist --single --port ${PORT:-3000} --host 0.0.0.0"
+  },
+  "keywords": [
+    "birthday",
+    "threejs",
+    "gift",
+    "gallery"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "sirv-cli": "^3.0.1",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "vite": "^8.3.4"
+  }
+}
