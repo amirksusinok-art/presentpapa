@@ -3,20 +3,20 @@ import { soundCtrl } from './audio.js';
 
 // Hardcoded fallback photos list ensuring instant rendering even if fetch fails
 const DEFAULT_PHOTOS = [
-  { id: 1, file: '/photos/photo-01.jpg', aspect: 0.75 },
-  { id: 2, file: '/photos/photo-02.jpg', aspect: 1.33 },
-  { id: 3, file: '/photos/photo-03.jpg', aspect: 0.75 },
-  { id: 4, file: '/photos/photo-04.jpg', aspect: 0.75 },
-  { id: 5, file: '/photos/photo-05.jpg', aspect: 1.33 },
-  { id: 6, file: '/photos/photo-06.jpg', aspect: 0.75 },
-  { id: 7, file: '/photos/photo-07.jpg', aspect: 1.33 },
-  { id: 8, file: '/photos/photo-08.jpg', aspect: 0.75 },
-  { id: 9, file: '/photos/photo-09.jpg', aspect: 0.75 },
-  { id: 10, file: '/photos/photo-10.jpg', aspect: 0.75 },
-  { id: 11, file: '/photos/photo-11.jpg', aspect: 0.75 },
-  { id: 12, file: '/photos/photo-12.jpg', aspect: 0.75 },
-  { id: 13, file: '/photos/photo-13.jpg', aspect: 0.75 },
-  { id: 14, file: '/photos/photo-14.jpg', aspect: 1.33 }
+  { id: 1, file: 'photos/photo-01.jpg', aspect: 0.75 },
+  { id: 2, file: 'photos/photo-02.jpg', aspect: 1.33 },
+  { id: 3, file: 'photos/photo-03.jpg', aspect: 0.75 },
+  { id: 4, file: 'photos/photo-04.jpg', aspect: 0.75 },
+  { id: 5, file: 'photos/photo-05.jpg', aspect: 1.33 },
+  { id: 6, file: 'photos/photo-06.jpg', aspect: 0.75 },
+  { id: 7, file: 'photos/photo-07.jpg', aspect: 1.33 },
+  { id: 8, file: 'photos/photo-08.jpg', aspect: 0.75 },
+  { id: 9, file: 'photos/photo-09.jpg', aspect: 0.75 },
+  { id: 10, file: 'photos/photo-10.jpg', aspect: 0.75 },
+  { id: 11, file: 'photos/photo-11.jpg', aspect: 0.75 },
+  { id: 12, file: 'photos/photo-12.jpg', aspect: 0.75 },
+  { id: 13, file: 'photos/photo-13.jpg', aspect: 0.75 },
+  { id: 14, file: 'photos/photo-14.jpg', aspect: 1.33 }
 ];
 
 class App {
@@ -203,7 +203,7 @@ class App {
 
   async loadPhotosData() {
     try {
-      const res = await fetch('/photos.json');
+      const res = await fetch('./photos.json');
       if (res.ok) {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
