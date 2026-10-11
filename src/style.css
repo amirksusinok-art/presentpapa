@@ -1,19 +1,20 @@
 /* ==========================================================================
    CSS STYLES - ПОДАРОК ДЛЯ ПАПЫ
-   Design Philosophy: Minimalist luxury, restrained palette, mobile-first touch ergonomics.
+   Design Philosophy: Luxury editorial minimalism, bespoke typography,
+   zero AI-template aesthetics, single-photo showcase ergonomics.
    ========================================================================== */
 
 :root {
   /* Color Palette */
   --bg-dark: #07090e;
-  --bg-gradient: radial-gradient(circle at 50% 40%, #111726 0%, #07090e 100%);
-  --surface-card: rgba(16, 21, 32, 0.75);
-  --surface-card-hover: rgba(22, 30, 46, 0.85);
-  --surface-elevated: #151b28;
+  --bg-gradient: radial-gradient(circle at 50% 38%, #111726 0%, #07090e 100%);
+  --surface-glass: rgba(14, 19, 29, 0.85);
+  --surface-card: rgba(16, 22, 34, 0.9);
+  --surface-card-hover: rgba(22, 30, 46, 0.95);
 
-  --border-subtle: rgba(255, 255, 255, 0.09);
-  --border-gold: rgba(224, 183, 85, 0.38);
-  --border-gold-bright: rgba(245, 215, 130, 0.7);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-gold: rgba(224, 185, 95, 0.4);
+  --border-gold-bright: rgba(245, 218, 140, 0.85);
 
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
@@ -22,8 +23,8 @@
   --gold: #dcb355;
   --gold-light: #f5d78e;
   --gold-dark: #b5892d;
-  --gold-glow: rgba(220, 179, 85, 0.18);
-  --gold-glow-strong: rgba(245, 215, 142, 0.35);
+  --gold-glow: rgba(220, 179, 85, 0.16);
+  --gold-glow-strong: rgba(245, 215, 142, 0.32);
 
   /* Typography */
   --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
@@ -31,10 +32,10 @@
 
   /* Transitions */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --duration-normal: 0.35s;
+  --duration-normal: 0.32s;
 }
 
-/* Base Reset */
+/* Reset & Basics */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -51,14 +52,14 @@ html, body {
   color: var(--text-main);
   font-family: var(--font-sans);
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.55;
   overflow-x: hidden;
   position: relative;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Background Canvas Layer */
+/* 3D Background Canvas Layer */
 #canvas-container {
   position: fixed;
   top: 0;
@@ -67,35 +68,35 @@ html, body {
   height: 100%;
   z-index: 1;
   pointer-events: auto;
-  transition: opacity 0.8s var(--ease-out);
+  transition: opacity 0.8s var(--ease-out), filter 0.8s var(--ease-out);
 }
 
 #canvas-container.dimmed {
-  opacity: 0.25;
-  filter: blur(4px);
+  opacity: 0.2;
+  filter: blur(5px);
   pointer-events: none;
 }
 
-/* Golden Ambient Background Glow */
+/* Ambient Radial Golden Light Vignette */
 .ambient-glow {
   position: fixed;
-  top: 30%;
+  top: 36%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 600px;
+  width: 580px;
   max-width: 90vw;
-  height: 600px;
+  height: 580px;
   max-height: 90vw;
-  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
-  filter: blur(50px);
+  background: radial-gradient(circle, var(--gold-glow) 0%, transparent 68%);
+  filter: blur(60px);
   z-index: 0;
   pointer-events: none;
-  animation: glowPulse 6s ease-in-out infinite alternate;
+  animation: glowPulse 7s ease-in-out infinite alternate;
 }
 
 @keyframes glowPulse {
-  0% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.95); }
-  100% { opacity: 0.95; transform: translate(-50%, -50%) scale(1.08); }
+  0% { opacity: 0.55; transform: translate(-50%, -50%) scale(0.96); }
+  100% { opacity: 0.85; transform: translate(-50%, -50%) scale(1.06); }
 }
 
 /* Top Navigation Bar */
@@ -108,15 +109,15 @@ html, body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 20;
+  z-index: 25;
   pointer-events: none;
 }
 
 .brand-label {
   font-family: var(--font-serif);
-  font-size: 1.15rem;
+  font-size: 1.05rem;
   font-weight: 500;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   color: var(--gold-light);
   opacity: 0.9;
   text-transform: uppercase;
@@ -124,24 +125,24 @@ html, body {
 
 .sound-toggle-btn {
   pointer-events: auto;
-  background: rgba(20, 26, 38, 0.65);
+  background: rgba(18, 24, 36, 0.75);
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
-  padding: 0.55rem 0.95rem;
+  padding: 0.5rem 0.9rem;
   color: var(--text-main);
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.85rem;
+  gap: 0.45rem;
+  font-size: 0.82rem;
   cursor: pointer;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   transition: all var(--duration-normal) var(--ease-out);
-  min-height: 44px;
+  min-height: 42px;
 }
 
 .sound-toggle-btn:hover {
   border-color: var(--border-gold);
-  background: rgba(28, 37, 54, 0.85);
+  background: rgba(26, 35, 52, 0.9);
   transform: translateY(-1px);
 }
 
@@ -150,7 +151,7 @@ html, body {
   outline-offset: 2px;
 }
 
-/* UI Container & Screens */
+/* UI Viewport Screens System */
 .app-viewport {
   position: relative;
   z-index: 10;
@@ -164,10 +165,9 @@ html, body {
   display: none;
   opacity: 0;
   transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
-  transform: translateY(14px);
+  transform: translateY(12px);
   width: 100%;
   min-height: 100dvh;
-  padding: 5rem 1.5rem 3rem;
   position: relative;
 }
 
@@ -179,60 +179,72 @@ html, body {
 
 /* --------------------------------------------------------------------------
    SCREEN 1: HERO / INTRO
+   Framed so typography sits above the 3D gift box and CTA sits below.
+   ZERO overlapping or visual clashing!
    -------------------------------------------------------------------------- */
 #screen-intro {
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   text-align: center;
-  padding-bottom: 5.5rem;
+  padding: 5rem 1.5rem 3rem;
   pointer-events: none;
 }
 
-.intro-content {
+.intro-header {
   pointer-events: auto;
-  max-width: 580px;
+  max-width: 600px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
-  animation: introFadeIn 1.2s var(--ease-out) forwards;
+  gap: 0.65rem;
+  animation: introFadeIn 1.1s var(--ease-out) forwards;
+}
+
+.intro-footer {
+  pointer-events: auto;
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1.5rem;
+  animation: introFadeIn 1.3s var(--ease-out) forwards;
 }
 
 @keyframes introFadeIn {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .tagline-accent {
   font-family: var(--font-sans);
-  font-size: 0.82rem;
-  letter-spacing: 0.22em;
+  font-size: 0.78rem;
+  letter-spacing: 0.26em;
   text-transform: uppercase;
   color: var(--gold);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .hero-title {
   font-family: var(--font-serif);
-  font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+  font-size: clamp(2rem, 4.8vw, 3.4rem);
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: 0.01em;
   color: #ffffff;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
 }
 
 .hero-subtitle {
-  font-size: clamp(1rem, 2.3vw, 1.25rem);
+  font-size: clamp(0.95rem, 2vw, 1.18rem);
   color: var(--text-muted);
-  font-weight: 400;
-  margin-bottom: 0.8rem;
+  font-weight: 300;
+  letter-spacing: 0.01em;
 }
 
 /* --------------------------------------------------------------------------
-   BUTTON SYSTEM & STATES
+   BESPOKE BUTTON SYSTEM (Non-AI, restrained luxury)
    -------------------------------------------------------------------------- */
 .btn {
   display: inline-flex;
@@ -240,61 +252,68 @@ html, body {
   justify-content: center;
   gap: 0.65rem;
   font-family: var(--font-sans);
-  font-size: 1rem;
+  font-size: 0.98rem;
   font-weight: 500;
-  padding: 0.95rem 2.2rem;
+  letter-spacing: 0.03em;
+  padding: 0.9rem 2.2rem;
   border-radius: 999px;
   border: 1px solid transparent;
   cursor: pointer;
   text-decoration: none;
-  min-height: 52px;
+  min-height: 50px;
   position: relative;
   overflow: hidden;
   transition: all 0.3s var(--ease-out);
 }
 
-/* Button Primary (Gold Accent) */
-.btn-gold {
-  background: linear-gradient(135deg, #f5d78e 0%, #dcb355 50%, #ba8c2d 100%);
-  color: #121620;
-  box-shadow: 0 8px 24px var(--gold-glow);
-  font-weight: 600;
+/* Luxury Satin Obsidian Button with Gold Hairline */
+.btn-luxury {
+  background: linear-gradient(135deg, rgba(22, 28, 42, 0.92) 0%, rgba(13, 17, 26, 0.96) 100%);
+  border: 1px solid var(--border-gold);
+  color: #f7ecd2;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55), 0 0 20px var(--gold-glow);
+  backdrop-filter: blur(14px);
 }
 
-.btn-gold:hover {
+.btn-luxury:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 32px var(--gold-glow-strong);
-  filter: brightness(1.05);
+  border-color: var(--border-gold-bright);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.65), 0 0 32px var(--gold-glow-strong);
+  color: #ffffff;
 }
 
-.btn-gold:active {
+.btn-luxury:active {
   transform: translateY(0) scale(0.98);
 }
 
-.btn-gold:focus-visible {
-  outline: 2px solid #ffffff;
+.btn-luxury:focus-visible {
+  outline: 2px solid var(--gold-light);
   outline-offset: 3px;
 }
 
-.btn-gold.opening-state {
+.btn-luxury.opening-state {
   pointer-events: none;
-  opacity: 0.85;
+  opacity: 0.8;
   cursor: default;
 }
 
-/* Button Secondary / Outline */
+.btn-sparkle {
+  color: var(--gold-light);
+}
+
+/* Outline Secondary Button */
 .btn-outline {
-  background: rgba(18, 24, 36, 0.7);
-  border-color: var(--border-gold);
-  color: var(--text-main);
+  background: rgba(16, 21, 32, 0.7);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-muted);
   backdrop-filter: blur(12px);
 }
 
 .btn-outline:hover {
-  background: rgba(28, 38, 56, 0.9);
-  border-color: var(--gold-light);
+  background: rgba(24, 32, 48, 0.85);
+  border-color: var(--border-gold);
+  color: var(--text-main);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .btn-outline:active {
@@ -306,31 +325,31 @@ html, body {
   outline-offset: 3px;
 }
 
-/* Opening Toast / Notification during animation */
+/* Opening Toast Notification */
 .opening-status-bar {
   position: fixed;
   bottom: 2.5rem;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 15;
-  background: rgba(14, 19, 29, 0.85);
+  z-index: 20;
+  background: rgba(14, 19, 29, 0.88);
   border: 1px solid var(--border-gold);
   border-radius: 999px;
   padding: 0.65rem 1.6rem;
   color: var(--gold-light);
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
+  font-size: 0.88rem;
+  letter-spacing: 0.04em;
   display: none;
   align-items: center;
   gap: 0.75rem;
   backdrop-filter: blur(14px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  animation: pulseLight 2s infinite alternate;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  animation: pulseGold 2s infinite alternate;
 }
 
-@keyframes pulseLight {
-  from { border-color: rgba(220, 179, 85, 0.3); }
-  to { border-color: rgba(245, 215, 142, 0.8); }
+@keyframes pulseGold {
+  from { border-color: rgba(220, 179, 85, 0.35); }
+  to { border-color: rgba(245, 218, 140, 0.85); }
 }
 
 /* --------------------------------------------------------------------------
@@ -341,53 +360,53 @@ html, body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 4rem 1.5rem;
+  padding: 5rem 1.5rem 3rem;
   pointer-events: none;
 }
 
 .greeting-card {
   pointer-events: auto;
-  max-width: 680px;
+  max-width: 660px;
   width: 100%;
-  background: rgba(12, 16, 25, 0.82);
+  background: rgba(12, 16, 26, 0.85);
   border: 1px solid var(--border-gold);
   border-radius: 20px;
-  padding: clamp(2rem, 5vw, 3.5rem);
-  backdrop-filter: blur(18px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6), 0 0 40px var(--gold-glow);
+  padding: clamp(2rem, 5vw, 3.4rem);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 35px var(--gold-glow);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
-  animation: cardFadeIn 1s var(--ease-out) forwards;
+  gap: 1.4rem;
+  animation: cardFadeIn 0.9s var(--ease-out) forwards;
 }
 
 @keyframes cardFadeIn {
-  from { opacity: 0; transform: scale(0.96) translateY(15px); }
+  from { opacity: 0; transform: scale(0.97) translateY(12px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.greeting-card .accent-crown {
-  font-size: 1.8rem;
+.accent-crown {
+  font-size: 1.6rem;
   color: var(--gold);
 }
 
 .greeting-title {
   font-family: var(--font-serif);
-  font-size: clamp(2.1rem, 4.8vw, 3.3rem);
+  font-size: clamp(2rem, 4.5vw, 3.1rem);
   font-weight: 600;
   color: #ffffff;
   line-height: 1.2;
 }
 
 .greeting-divider {
-  width: 70px;
+  width: 60px;
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
 
 .greeting-body {
-  font-size: clamp(1.02rem, 2.2vw, 1.22rem);
+  font-size: clamp(1rem, 2.1vw, 1.18rem);
   line-height: 1.75;
   color: #e2e8f0;
   font-weight: 300;
@@ -395,153 +414,267 @@ html, body {
 }
 
 /* --------------------------------------------------------------------------
-   SCREEN 3: PHOTO GALLERY
+   SCREEN 3: SINGLE-PHOTO ALBUM SLIDER (1 ФОТО ЗА РАЗ, БЕЗ ПРОБЕЛОВ)
    -------------------------------------------------------------------------- */
 #screen-gallery {
   flex-direction: column;
   align-items: center;
-  padding-top: 5rem;
-  padding-bottom: 5rem;
+  justify-content: center;
+  padding: 5rem 1.2rem 3rem;
 }
 
-.gallery-container {
+.album-container {
   width: 100%;
-  max-width: 1160px;
+  max-width: 820px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 2.5rem;
+  align-items: center;
+  gap: 1.4rem;
 }
 
-.gallery-header {
+.album-header {
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.4rem;
 }
 
-.gallery-title {
+.album-title {
   font-family: var(--font-serif);
-  font-size: clamp(2rem, 4.2vw, 3rem);
+  font-size: clamp(1.8rem, 3.8vw, 2.6rem);
   font-weight: 500;
   color: #ffffff;
 }
 
-.gallery-desc {
-  font-size: 1.05rem;
-  color: var(--text-muted);
-  max-width: 600px;
+.album-counter-badge {
+  display: inline-block;
+  padding: 0.25rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-gold);
+  background: rgba(220, 179, 85, 0.08);
+  color: var(--gold-light);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+  margin-top: 0.2rem;
 }
 
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.4rem;
+/* The Single Photo Stage: Prev Arrow + Image Frame + Next Arrow */
+.album-stage {
   width: 100%;
-}
-
-@media (max-width: 640px) {
-  .gallery-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1rem;
-  }
-}
-
-.photo-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
   position: relative;
-  background: var(--surface-card);
+}
+
+/* Arrow Navigation Buttons */
+.album-nav-btn {
+  background: rgba(18, 24, 36, 0.75);
+  border: 1px solid var(--border-gold);
+  color: var(--text-main);
+  border-radius: 999px;
+  width: 50px;
+  height: 50px;
+  min-width: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transition: all 0.25s var(--ease-out);
+  z-index: 5;
+  user-select: none;
+}
+
+.album-nav-btn:hover {
+  background: rgba(28, 38, 56, 0.95);
+  border-color: var(--border-gold-bright);
+  box-shadow: 0 0 20px var(--gold-glow);
+  transform: scale(1.06);
+}
+
+.album-nav-btn:active {
+  transform: scale(0.96);
+}
+
+.album-nav-btn:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 2px;
+}
+
+/* Single Photo Viewer Card */
+.photo-viewer-card {
+  position: relative;
+  background: rgba(13, 17, 26, 0.85);
   border: 1px solid var(--border-subtle);
-  border-radius: 14px;
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), inset 0 0 0 1px rgba(220, 179, 85, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 620px;
+  height: 58vh;
+  min-height: 380px;
+  max-height: 560px;
   overflow: hidden;
   cursor: pointer;
-  aspect-ratio: 4 / 3;
-  transition: all 0.35s var(--ease-out);
+  touch-action: pan-y;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.photo-card.aspect-tall {
-  aspect-ratio: 3 / 4;
-}
-
-.photo-card:hover {
-  transform: translateY(-4px);
+.photo-viewer-card:hover {
   border-color: var(--border-gold);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45), 0 0 20px var(--gold-glow);
+  box-shadow: 0 22px 55px rgba(0, 0, 0, 0.75), 0 0 25px var(--gold-glow);
 }
 
-.photo-card:focus-visible {
+.photo-viewer-card:focus-visible {
   outline: 2px solid var(--gold-light);
   outline-offset: 3px;
 }
 
-.photo-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.6s var(--ease-out), opacity 0.4s ease;
-  display: block;
+.viewer-image {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  transition: opacity 0.3s var(--ease-out), transform 0.35s var(--ease-out);
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
-.photo-card:hover img {
-  transform: scale(1.04);
+.viewer-tap-hint {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: rgba(10, 14, 22, 0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  backdrop-filter: blur(8px);
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
 }
 
-/* Skeleton Loading State */
+.photo-viewer-card:hover .viewer-tap-hint {
+  opacity: 1;
+  color: var(--gold-light);
+}
+
+/* Skeleton Loading Shimmer */
 .skeleton-shimmer {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.03) 25%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.03) 75%
+    rgba(255, 255, 255, 0.02) 25%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0.02) 75%
   );
   background-size: 200% 100%;
-  animation: shimmer 1.6s infinite;
+  animation: shimmerAnim 1.6s infinite;
+  border-radius: 10px;
   z-index: 1;
+  pointer-events: none;
 }
 
-@keyframes shimmer {
+@keyframes shimmerAnim {
   0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 
-/* Image Error Fallback State */
-.photo-error-box {
+/* Thumbnail Strip for instant jumping */
+.thumbs-strip {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.55rem;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 0.4rem 0.2rem;
+  scrollbar-width: none;
+}
+
+.thumbs-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.thumb-item {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  opacity: 0.55;
+  transition: all 0.2s var(--ease-out);
+  background: #0d121c;
+}
+
+.thumb-item img {
   width: 100%;
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  color: var(--text-dim);
-  background: #111520;
-  padding: 1.5rem;
-  text-align: center;
-  font-size: 0.85rem;
+  object-fit: cover;
+  display: block;
 }
 
-.photo-error-box svg {
-  width: 28px;
-  height: 28px;
-  stroke: var(--text-dim);
+.thumb-item:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
 }
 
-.gallery-footer {
+.thumb-item.active {
+  opacity: 1;
+  border: 2px solid var(--gold);
+  box-shadow: 0 0 12px var(--gold-glow);
+  transform: scale(1.1);
+}
+
+.album-footer {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1.2rem;
   flex-wrap: wrap;
-  margin-top: 1.5rem;
+  margin-top: 0.6rem;
+}
+
+@media (max-width: 640px) {
+  .album-stage {
+    gap: 0.5rem;
+  }
+  .album-nav-btn {
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    font-size: 1.4rem;
+  }
+  .photo-viewer-card {
+    height: 52vh;
+    min-height: 320px;
+  }
 }
 
 /* --------------------------------------------------------------------------
-   LIGHTBOX MODAL
+   LIGHTBOX FULLSCREEN MODAL
    -------------------------------------------------------------------------- */
 .lightbox-modal {
   position: fixed;
@@ -549,7 +682,7 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(5, 7, 11, 0.94);
+  background: rgba(5, 7, 11, 0.95);
   backdrop-filter: blur(16px);
   z-index: 50;
   display: none;
@@ -580,21 +713,21 @@ html, body {
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
-  transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+  transition: opacity 0.25s var(--ease-out);
   user-select: none;
 }
 
 .lightbox-counter {
   margin-top: 0.8rem;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   letter-spacing: 0.08em;
   color: var(--text-muted);
 }
 
 .lightbox-btn {
   position: absolute;
-  background: rgba(22, 28, 42, 0.7);
-  border: 1px solid var(--border-subtle);
+  background: rgba(20, 26, 38, 0.75);
+  border: 1px solid var(--border-gold);
   color: #ffffff;
   border-radius: 999px;
   width: 48px;
@@ -608,8 +741,8 @@ html, body {
 }
 
 .lightbox-btn:hover {
-  background: rgba(35, 46, 68, 0.95);
-  border-color: var(--border-gold);
+  background: rgba(32, 42, 62, 0.95);
+  border-color: var(--border-gold-bright);
   transform: scale(1.08);
 }
 
@@ -666,16 +799,16 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 1.6rem;
-  animation: cardFadeIn 1.1s var(--ease-out) forwards;
+  animation: cardFadeIn 1s var(--ease-out) forwards;
 }
 
 .finale-badge {
   display: inline-block;
-  padding: 0.4rem 1.2rem;
+  padding: 0.35rem 1.1rem;
   border-radius: 999px;
   border: 1px solid var(--border-gold);
   color: var(--gold-light);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   background: rgba(220, 179, 85, 0.08);
@@ -718,11 +851,11 @@ html, body {
 .css-fallback-container {
   display: none;
   position: fixed;
-  top: 45%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 220px;
-  height: 220px;
+  width: 180px;
+  height: 180px;
   z-index: 2;
   perspective: 800px;
 }
@@ -732,14 +865,14 @@ html, body {
 }
 
 .css-gift-box {
-  width: 180px;
-  height: 150px;
-  background: linear-gradient(135deg, #182236 0%, #0d121c 100%);
-  border: 2px solid var(--border-gold);
+  width: 160px;
+  height: 130px;
+  background: linear-gradient(135deg, #151b2a 0%, #0d121c 100%);
+  border: 1.5px solid var(--border-gold);
   border-radius: 8px;
   position: absolute;
   bottom: 0;
-  left: 20px;
+  left: 10px;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
 }
 
@@ -748,23 +881,23 @@ html, body {
   position: absolute;
   left: 50%;
   top: 0;
-  width: 28px;
+  width: 24px;
   height: 100%;
   transform: translateX(-50%);
   background: linear-gradient(180deg, #f5d78e, #dcb355);
 }
 
 .css-gift-lid {
-  width: 200px;
-  height: 38px;
-  background: linear-gradient(135deg, #1c273e 0%, #111724 100%);
-  border: 2px solid var(--border-gold);
+  width: 174px;
+  height: 32px;
+  background: linear-gradient(135deg, #182236 0%, #101624 100%);
+  border: 1.5px solid var(--border-gold);
   border-radius: 6px;
   position: absolute;
-  top: 32px;
-  left: 10px;
+  top: 26px;
+  left: 3px;
   transform-origin: top left;
-  transition: transform 3.5s var(--ease-out);
+  transition: transform 3.2s var(--ease-out);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
 }
 
@@ -773,7 +906,7 @@ html, body {
   position: absolute;
   left: 50%;
   top: 0;
-  width: 28px;
+  width: 24px;
   height: 100%;
   transform: translateX(-50%);
   background: linear-gradient(180deg, #f5d78e, #dcb355);
@@ -781,19 +914,19 @@ html, body {
 
 .css-gift-bow {
   position: absolute;
-  top: -24px;
+  top: -22px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 2rem;
+  font-size: 1.8rem;
   transition: opacity 1.5s ease;
 }
 
 .css-gift-glow {
   position: absolute;
-  top: 40px;
-  left: 20px;
-  width: 180px;
-  height: 140px;
+  top: 35px;
+  left: 15px;
+  width: 150px;
+  height: 120px;
   background: radial-gradient(circle, rgba(255, 220, 120, 0.8) 0%, transparent 70%);
   opacity: 0;
   transition: opacity 2.5s ease;
@@ -801,7 +934,7 @@ html, body {
 }
 
 .css-fallback-container.opened .css-gift-lid {
-  transform: translateY(-80px) rotate(-35deg);
+  transform: translateY(-70px) rotate(-32deg);
 }
 
 .css-fallback-container.opened .css-gift-bow {

@@ -3,25 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="Поздравительный сайт ко дню рождения папы с реалистичной 3D-коробкой, теплыми пожеланиями и семейными фотографиями." />
+  <meta name="description" content="Поздравительный сайт ко дню рождения папы с реалистичной 3D-коробкой, душевными пожеланиями и семейным альбомом." />
   <meta name="theme-color" content="#07090e" />
   <title>С днём рождения, папа! | Для самого лучшего папы</title>
 
   <!-- Google Fonts: Cormorant Garamond & Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="/src/style.css" />
 </head>
 <body>
-  <!-- Ambient Gold Light Background -->
+  <!-- Ambient Gold Light Vignette -->
   <div class="ambient-glow" aria-hidden="true"></div>
 
   <!-- 3D Three.js WebGL Canvas -->
   <div id="canvas-container" aria-hidden="true"></div>
 
-  <!-- Fallback CSS 3D Box (displayed only if WebGL is unavailable) -->
+  <!-- Fallback CSS 3D Box (active only if WebGL is unavailable) -->
   <div id="css-fallback" class="css-fallback-container" aria-hidden="true">
     <div class="css-gift-box"></div>
     <div class="css-gift-lid">
@@ -39,26 +39,29 @@
     </button>
   </header>
 
-  <!-- Cinematic Opening Status Pill -->
+  <!-- Opening Status Notification Pill -->
   <div id="opening-status" class="opening-status-bar" role="status" aria-live="polite">
-    <span>✨</span>
+    <span class="status-sparkle">✨</span>
     <span>Подарок открывается...</span>
   </div>
 
-  <!-- Main Viewport Applications Screens -->
+  <!-- Main Viewport Application Screens -->
   <main class="app-viewport">
     
     <!-- ====================================================================
-         SCREEN 1: HERO / INTRO
+         SCREEN 1: HERO / INTRO (Framed cleanly above and below 3D box)
          ==================================================================== -->
     <section id="screen-intro" class="screen-section active" aria-label="Главный экран">
-      <div class="intro-content">
+      <div class="intro-header">
         <span class="tagline-accent">Особенный день</span>
         <h1 class="hero-title">Для самого лучшего папы</h1>
         <p class="hero-subtitle">Сегодня тебя ждёт кое-что особенное</p>
-        <button id="btn-open-gift" class="btn btn-gold" autofocus>
+      </div>
+
+      <div class="intro-footer">
+        <button id="btn-open-gift" class="btn btn-luxury" autofocus>
           <span>Открыть подарок</span>
-          <span aria-hidden="true">✨</span>
+          <span class="btn-sparkle" aria-hidden="true">✨</span>
         </button>
       </div>
     </section>
@@ -74,7 +77,7 @@
         <p class="greeting-body">
           Желаем тебе крепкого здоровья, счастья, успехов и исполнения всех желаний. Пусть каждый день приносит радость, новые возможности и хорошие события. Спасибо за всё, что ты делаешь для нашей семьи. Пусть впереди будет много прекрасных моментов, а рядом всегда будут близкие люди.
         </p>
-        <button id="btn-view-photos" class="btn btn-gold">
+        <button id="btn-view-photos" class="btn btn-luxury">
           <span>Посмотреть фотографии</span>
           <span aria-hidden="true">📸</span>
         </button>
@@ -82,20 +85,39 @@
     </section>
 
     <!-- ====================================================================
-         SCREEN 3: PHOTO GALLERY
+         SCREEN 3: SINGLE-PHOTO ALBUM SLIDER (1 фото за раз без пробелов)
          ==================================================================== -->
-    <section id="screen-gallery" class="screen-section" aria-label="Семейная галерея">
-      <div class="gallery-container">
-        <div class="gallery-header">
-          <h2 class="gallery-title">Семейные воспоминания</h2>
-          <p class="gallery-desc">Самые тёплые и дорогие моменты, проведённые вместе с семьёй.</p>
+    <section id="screen-gallery" class="screen-section" aria-label="Семейный альбом">
+      <div class="album-container">
+        <div class="album-header">
+          <span class="tagline-accent">Семейный альбом</span>
+          <h2 class="album-title">Самые дорогие моменты</h2>
+          <div class="album-counter-badge" id="album-counter">1 из 14</div>
         </div>
 
-        <!-- Dynamic Grid of 14 Unique Family Photos -->
-        <div id="photos-grid" class="gallery-grid" role="list"></div>
+        <!-- Single Photo Showcase Stage -->
+        <div class="album-stage">
+          <button id="album-prev" class="album-nav-btn album-prev" aria-label="Предыдущая фотография">‹</button>
 
-        <div class="gallery-footer">
-          <button id="btn-finish-gallery" class="btn btn-gold">
+          <div class="photo-viewer-card" id="photo-viewer-card" tabindex="0" role="region" aria-label="Текущая фотография. Нажмите для полноэкранного просмотра.">
+            <div id="viewer-skeleton" class="skeleton-shimmer"></div>
+            <img id="viewer-img" class="viewer-image" src="" alt="Семейная фотография" />
+            <div class="viewer-tap-hint">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
+              </svg>
+              <span>На весь экран</span>
+            </div>
+          </div>
+
+          <button id="album-next" class="album-nav-btn album-next" aria-label="Следующая фотография">›</button>
+        </div>
+
+        <!-- Mini thumbnail strip for fast navigation -->
+        <div class="thumbs-strip" id="thumbs-strip" role="tablist" aria-label="Быстрый выбор фотографии"></div>
+
+        <div class="album-footer">
+          <button id="btn-finish-gallery" class="btn btn-luxury">
             <span>Завершить</span>
             <span aria-hidden="true">❤️</span>
           </button>
@@ -117,8 +139,8 @@
         <p class="finale-birthday">С днём рождения!</p>
 
         <div class="finale-actions">
-          <button id="btn-back-to-photos" class="btn btn-gold">
-            <span>Посмотреть фотографии снова</span>
+          <button id="btn-back-to-photos" class="btn btn-luxury">
+            <span>Посмотреть альбом снова</span>
             <span aria-hidden="true">📸</span>
           </button>
           <button id="btn-restart" class="btn btn-outline">
@@ -136,8 +158,8 @@
        ====================================================================== -->
   <div id="lightbox" class="lightbox-modal" role="dialog" aria-modal="true" aria-label="Просмотр фотографии на весь экран">
     <button id="lightbox-close" class="lightbox-btn lightbox-close" aria-label="Закрыть просмотр (Escape)">✕</button>
-    <button id="lightbox-prev" class="lightbox-btn lightbox-prev" aria-label="Предыдущая фотография (Стрелка влево)">‹</button>
-    <button id="lightbox-next" class="lightbox-btn lightbox-next" aria-label="Следующая фотография (Стрелка вправо)">›</button>
+    <button id="lightbox-prev" class="lightbox-btn lightbox-prev" aria-label="Предыдущая фотография">‹</button>
+    <button id="lightbox-next" class="lightbox-btn lightbox-next" aria-label="Следующая фотография">›</button>
 
     <div class="lightbox-content-wrap">
       <img id="lightbox-img" class="lightbox-image" src="" alt="Семейная фотография" />
