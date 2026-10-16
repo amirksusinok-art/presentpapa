@@ -414,6 +414,7 @@ export class CosmicRocketModule {
 
     // 1. Scene
     this.scene = new THREE.Scene();
+    this.scene.background = new THREE.Color(0x060913);
     this.scene.fog = new THREE.FogExp2(0x060913, 0.022);
 
     // 2. Camera
@@ -434,12 +435,12 @@ export class CosmicRocketModule {
     this.renderer.toneMappingExposure = 1.35;
     mount.appendChild(this.renderer.domElement);
 
-    // 4. Construct 3D Elements
-    this.createLights();
-    this.createStarfield();
-    this.createEarth();
-    this.createLaunchPad();
+    // 4. Construct 3D Elements in strict order: Rocket first so parented lights & effects bind reliably
     this.createRocket();
+    this.createLaunchPad();
+    this.createEarth();
+    this.createStarfield();
+    this.createLights();
     this.createCryoSteam();
     this.createFlameAndSmoke();
 
@@ -451,6 +452,13 @@ export class CosmicRocketModule {
     if (!this.isPaused && this.animFrameId) return;
     this.isPaused = false;
     this.clock.getDelta();
+    this.onWindowResize();
+    requestAnimationFrame(() => {
+      this.onWindowResize();
+    });
+    setTimeout(() => {
+      this.onWindowResize();
+    }, 60);
     this.animate();
   }
 
@@ -482,26 +490,32 @@ export class CosmicRocketModule {
     rimLight.position.set(-6, 12, -10);
     this.scene.add(rimLight);
 
-    // 5. Upward Ground Launchpad Floodlights
+    // 5. Upward Ground Launchpad Floodlights (aimed at rocket booster core)
     this.padSpot1 = new THREE.SpotLight(0xffedd5, 4.5, 25, Math.PI / 3, 0.4);
     this.padSpot1.position.set(3.2, 0.2, 3.2);
-    this.padSpot1.target = this.rocketGroup;
+    this.padSpot1.target.position.set(0, 4, 0);
     this.scene.add(this.padSpot1);
+    this.scene.add(this.padSpot1.target);
 
     this.padSpot2 = new THREE.SpotLight(0xdbeafe, 4.0, 25, Math.PI / 3, 0.4);
     this.padSpot2.position.set(-3.2, 0.2, 3.2);
-    this.padSpot2.target = this.rocketGroup;
+    this.padSpot2.target.position.set(0, 4, 0);
     this.scene.add(this.padSpot2);
+    this.scene.add(this.padSpot2.target);
 
     // 6. Tower red aviation warning beacon
     this.beaconLight = new THREE.PointLight(0xff2222, 2.0, 15);
     this.beaconLight.position.set(-3.2, 11.6, -1.2);
     this.scene.add(this.beaconLight);
 
-    // 7. Engine Flame PointLight (dynamic intensity)
+    // 7. Engine Flame PointLight (dynamic intensity, moves with rocket)
     this.flameLight = new THREE.PointLight(0xff7700, 0, 50);
     this.flameLight.position.set(0, -0.6, 0);
-    this.scene.add(this.flameLight);
+    if (this.rocketGroup) {
+      this.rocketGroup.add(this.flameLight);
+    } else {
+      this.scene.add(this.flameLight);
+    }
   }
 
   createStarfield() {
@@ -932,8 +946,8 @@ export class CosmicRocketModule {
     const mount = this.container.querySelector('#rocket-canvas-container');
     if (!mount || !this.renderer || !this.camera) return;
 
-    const width = mount.clientWidth || window.innerWidth;
-    const height = mount.clientHeight || window.innerHeight;
+    const width = (mount.clientWidth > 0 ? mount.clientWidth : window.innerWidth) || 360;
+    const height = (mount.clientHeight > 0 ? mount.clientHeight : window.innerHeight) || 640;
 
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
@@ -1042,6 +1056,7 @@ export class CosmicRocketModule {
 
     // Show Earth & Stars
     this.earthGroup.visible = true;
+    if (this.scene.background) this.scene.background.setHex(0x020306);
     this.scene.fog.color.setHex(0x020306);
     this.scene.fog.density = 0.001;
 
@@ -1140,6 +1155,7 @@ export class CosmicRocketModule {
 
     this.hologramProjector.material.opacity = 0;
     this.earthGroup.visible = false;
+    if (this.scene.background) this.scene.background.setHex(0x060913);
     this.scene.fog.color.setHex(0x060913);
     this.scene.fog.density = 0.022;
 

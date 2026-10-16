@@ -310,6 +310,9 @@ class App {
       if (name === 'rocket') {
         this.rocket.startRendering();
         this.rocket.onWindowResize();
+        requestAnimationFrame(() => {
+          if (this.rocket) this.rocket.onWindowResize();
+        });
       } else {
         this.rocket.stopRendering();
       }

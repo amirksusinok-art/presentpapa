@@ -2422,6 +2422,13 @@ html, body {
   z-index: 1;
 }
 
+.rocket-canvas-container canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: none;
+}
+
 /* Clean Rocket Screen Overlay (NO side menus) */
 .rocket-hud {
   position: absolute;
