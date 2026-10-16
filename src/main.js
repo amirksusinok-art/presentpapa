@@ -1,5 +1,7 @@
 import { GiftScene } from './three-scene.js';
 import { soundCtrl } from './audio.js';
+import { ScratchLottery } from './lottery.js';
+import { BirthdayCake } from './cake.js';
 import confetti from 'canvas-confetti';
 
 // Fallback photos list
@@ -27,12 +29,16 @@ class App {
     this.currentPhotoIdx = 0;
     this.giftScene = null;
     this.hasWebGL = false;
+    this.lottery = null;
+    this.cake = null;
 
     // Screens
     this.screens = {
       intro: document.getElementById('screen-intro'),
+      lottery: document.getElementById('screen-lottery'),
       greeting: document.getElementById('screen-greeting'),
       gallery: document.getElementById('screen-gallery'),
+      cake: document.getElementById('screen-cake'),
       finale: document.getElementById('screen-finale')
     };
 
@@ -45,6 +51,7 @@ class App {
     this.btnViewPhotos = document.getElementById('btn-view-photos');
     this.btnFinishGallery = document.getElementById('btn-finish-gallery');
     this.btnBackToGreeting = document.getElementById('btn-back-to-greeting');
+    this.btnBackToCake = document.getElementById('btn-back-to-cake');
     this.btnRestart = document.getElementById('btn-restart');
     this.btnBackToPhotos = document.getElementById('btn-back-to-photos');
     this.btnSoundToggle = document.getElementById('btn-sound-toggle');
@@ -76,11 +83,33 @@ class App {
   async init() {
     this.init3DScene();
     this.initSoundEvents();
+    this.initLotteryModule();
+    this.initCakeModule();
     this.initNavigation();
     this.initAlbumSlider();
     this.initLightbox();
     await this.loadPhotosData();
     this.setupAlbumView();
+  }
+
+  initLotteryModule() {
+    if (this.screens.lottery) {
+      this.lottery = new ScratchLottery(this.screens.lottery, () => {
+        this.showScreen('greeting');
+        this.scrollToTop();
+      });
+      this.lottery.init();
+    }
+  }
+
+  initCakeModule() {
+    if (this.screens.cake) {
+      this.cake = new BirthdayCake(this.screens.cake, () => {
+        this.showScreen('finale');
+        this.scrollToTop();
+      });
+      this.cake.init();
+    }
   }
 
   scrollToTop() {
@@ -131,7 +160,7 @@ class App {
     });
 
     this.btnFinishGallery.addEventListener('click', () => {
-      this.showScreen('finale');
+      this.showScreen('cake');
       this.scrollToTop();
     });
 
@@ -139,6 +168,13 @@ class App {
       this.showScreen('greeting');
       this.scrollToTop();
     });
+
+    if (this.btnBackToCake) {
+      this.btnBackToCake.addEventListener('click', () => {
+        this.showScreen('cake');
+        this.scrollToTop();
+      });
+    }
 
     this.btnBackToPhotos.addEventListener('click', () => {
       this.showScreen('gallery');
@@ -155,24 +191,36 @@ class App {
     this.currentScreen = name;
 
     Object.keys(this.screens).forEach(key => {
-      if (key === name) {
-        this.screens[key].classList.add('active');
-      } else {
-        this.screens[key].classList.remove('active');
+      if (this.screens[key]) {
+        if (key === name) {
+          this.screens[key].classList.add('active');
+        } else {
+          this.screens[key].classList.remove('active');
+        }
       }
     });
 
-    // Dim 3D scene when inside photo album or finale so text and memories have full clarity
-    if (name === 'gallery' || name === 'finale') {
+    // Dim 3D scene when inside interactive lottery, photo album, cake, or finale
+    if (name === 'gallery' || name === 'finale' || name === 'lottery' || name === 'cake') {
       this.canvasContainer.classList.add('dimmed');
     } else {
       this.canvasContainer.classList.remove('dimmed');
     }
+
+    // Manage microphone / audio listening for Cake screen
+    if (this.cake) {
+      if (name === 'cake') {
+        this.cake.startListening();
+      } else {
+        this.cake.stopListening();
+      }
+    }
   }
 
   startGiftOpening() {
+    // Hide button completely to prevent any overlap with opening status bar
+    this.btnOpenGift.style.display = 'none';
     this.btnOpenGift.classList.add('opening-state');
-    this.btnOpenGift.innerHTML = '<span>Открываем...</span> <span class="btn-sparkle">✨</span>';
     this.openingStatus.style.display = 'inline-flex';
 
     // Golden festive confetti celebration when lid opens
@@ -211,7 +259,8 @@ class App {
     if (this.hasWebGL && this.giftScene) {
       this.giftScene.openBox(() => {
         this.openingStatus.style.display = 'none';
-        this.showScreen('greeting');
+        this.showScreen('lottery');
+        this.scrollToTop();
       });
     } else {
       this.cssFallback.classList.add('opened');
@@ -223,7 +272,8 @@ class App {
 
       setTimeout(() => {
         this.openingStatus.style.display = 'none';
-        this.showScreen('greeting');
+        this.showScreen('lottery');
+        this.scrollToTop();
       }, 4200);
     }
   }
@@ -235,6 +285,15 @@ class App {
       this.cssFallback.classList.remove('opened');
     }
 
+    if (this.lottery) {
+      this.lottery.reset();
+    }
+
+    if (this.cake) {
+      this.cake.reset();
+    }
+
+    this.btnOpenGift.style.display = 'inline-flex';
     this.btnOpenGift.classList.remove('opening-state');
     this.btnOpenGift.innerHTML = '<span>Открыть подарок</span> <span class="btn-sparkle" aria-hidden="true">✨</span>';
     this.openingStatus.style.display = 'none';

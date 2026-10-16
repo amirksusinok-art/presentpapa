@@ -329,31 +329,28 @@ html, body {
   outline-offset: 3px;
 }
 
-/* Opening Toast Notification */
+/* Opening Status Notification Pill inside .intro-footer */
 .opening-status-bar {
-  position: fixed;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
-  background: rgba(14, 19, 29, 0.88);
-  border: 1px solid var(--border-gold);
-  border-radius: 999px;
-  padding: 0.65rem 1.6rem;
-  color: var(--gold-light);
-  font-size: 0.88rem;
-  letter-spacing: 0.04em;
   display: none;
   align-items: center;
+  justify-content: center;
   gap: 0.75rem;
+  background: rgba(14, 19, 29, 0.92);
+  border: 1px solid var(--border-gold);
+  border-radius: 999px;
+  padding: 0.85rem 2.2rem;
+  color: var(--gold-light);
+  font-size: 0.92rem;
+  letter-spacing: 0.04em;
   backdrop-filter: blur(14px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--gold-glow);
   animation: pulseGold 2s infinite alternate;
+  user-select: none;
 }
 
 @keyframes pulseGold {
-  from { border-color: rgba(220, 179, 85, 0.35); }
-  to { border-color: rgba(245, 218, 140, 0.85); }
+  from { border-color: rgba(220, 179, 85, 0.35); box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(220, 179, 85, 0.15); }
+  to { border-color: rgba(245, 218, 140, 0.9); box-shadow: 0 8px 35px rgba(0, 0, 0, 0.6), 0 0 28px rgba(245, 218, 140, 0.4); }
 }
 
 /* --------------------------------------------------------------------------
@@ -976,6 +973,669 @@ html, body {
 
 .css-fallback-container.opened .css-gift-glow {
   opacity: 1;
+}
+
+/* ==========================================================================
+   MODULE 1: SCRATCH LOTTERY 777 (#screen-lottery)
+   ========================================================================== */
+#screen-lottery {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4.8rem 1.2rem 2.5rem;
+}
+
+.lottery-ticket-wrapper {
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lottery-ticket {
+  width: 100%;
+  background: linear-gradient(145deg, #121826 0%, #0c101a 100%);
+  border: 2px solid var(--border-gold);
+  border-radius: 18px;
+  padding: 1.5rem 1.2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75), 0 0 35px var(--gold-glow);
+  position: relative;
+  overflow: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23f5d78e' stroke='%23b5892d' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23d4a843' stroke-dasharray='2 2' stroke-width='1.5'/%3E%3Ctext x='16' y='21' font-size='13' font-family='sans-serif' font-weight='bold' fill='%2363450d' text-anchor='middle'%3E₽%3C/text%3E%3C/svg%3E") 16 16, crosshair;
+  animation: cardFadeIn 0.8s var(--ease-out) forwards;
+}
+
+.ticket-watermark {
+  position: absolute;
+  top: 15%;
+  right: -10px;
+  font-family: var(--font-serif);
+  font-size: 7rem;
+  font-weight: 700;
+  color: rgba(220, 179, 85, 0.04);
+  pointer-events: none;
+  line-height: 1;
+}
+
+.ticket-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  border-bottom: 1px dashed rgba(220, 179, 85, 0.3);
+  padding-bottom: 0.8rem;
+}
+
+.ticket-badge {
+  font-size: 0.68rem;
+  letter-spacing: 0.22em;
+  color: var(--gold);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.ticket-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 20px var(--gold-glow);
+}
+
+.ticket-serial {
+  font-family: monospace;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+}
+
+.ticket-instruction {
+  text-align: center;
+  padding: 0.75rem 0.5rem 0.6rem;
+  font-size: 0.82rem;
+  color: #f1f5f9;
+  line-height: 1.4;
+}
+
+/* 3x3 Scratch Grid */
+.scratch-grid-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 0.4rem 0;
+}
+
+.scratch-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+}
+
+.scratch-cell {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: rgba(18, 25, 38, 0.95);
+  border: 1px solid var(--border-gold);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+  user-select: none;
+}
+
+.scratch-cell.is-jackpot-symbol {
+  border-color: rgba(245, 218, 140, 0.7);
+}
+
+.cell-symbol-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  pointer-events: none;
+}
+
+.cell-icon {
+  font-size: 1.9rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+}
+
+.cell-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  color: var(--gold-light);
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.scratch-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 11px;
+  cursor: inherit;
+  z-index: 2;
+  touch-action: none;
+}
+
+/* Winning Line across 3 Cups */
+.jackpot-win-line {
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  right: 5%;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, #fff, #ffd700, #fff, transparent);
+  box-shadow: 0 0 16px #ffd700, 0 0 30px #ffea79;
+  transform: translateY(-50%) scaleX(0);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 4;
+  pointer-events: none;
+}
+
+.jackpot-win-line.active {
+  transform: translateY(-50%) scaleX(1);
+}
+
+.ticket-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.9rem;
+}
+
+.ticket-scratch-all-btn {
+  padding: 0.55rem 1.4rem;
+  font-size: 0.85rem;
+  min-height: 38px;
+}
+
+/* Ticket Footer with Barcode */
+.ticket-footer {
+  margin-top: 1rem;
+  border-top: 1px dashed rgba(220, 179, 85, 0.3);
+  padding-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ticket-barcode {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 24px;
+}
+
+.ticket-barcode span {
+  width: 2px;
+  height: 100%;
+  background: var(--gold);
+  opacity: 0.65;
+}
+
+.ticket-barcode span:nth-child(even) {
+  width: 3px;
+  opacity: 0.85;
+}
+
+.ticket-barcode span:nth-child(3n) {
+  width: 1px;
+}
+
+.ticket-security-code {
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+}
+
+/* Jackpot Celebration Modal */
+.jackpot-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(4, 6, 10, 0.88);
+  backdrop-filter: blur(14px);
+  z-index: 60;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+}
+
+.jackpot-modal.active {
+  display: flex;
+  opacity: 1;
+}
+
+.jackpot-card {
+  max-width: 480px;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(20, 27, 42, 0.95) 0%, rgba(12, 16, 26, 0.98) 100%);
+  border: 2px solid var(--border-gold-bright);
+  border-radius: 22px;
+  padding: clamp(2rem, 5vw, 2.8rem) clamp(1.4rem, 4vw, 2.2rem);
+  text-align: center;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 50px var(--gold-glow-strong);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  animation: cardFadeIn 0.8s var(--ease-out) forwards;
+}
+
+.jackpot-crown {
+  font-size: 2rem;
+  letter-spacing: 0.2rem;
+}
+
+.jackpot-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  color: #ffd700;
+  font-weight: 700;
+  text-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+  line-height: 1.15;
+}
+
+.jackpot-divider {
+  width: 70px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffd700, transparent);
+}
+
+.jackpot-text {
+  font-size: 1.12rem;
+  line-height: 1.6;
+  color: #f1f5f9;
+}
+
+.jackpot-note {
+  font-size: 0.82rem;
+  color: var(--gold-light);
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.jackpot-claim-btn {
+  margin-top: 0.4rem;
+  padding: 0.9rem 1.8rem;
+}
+
+/* ==========================================================================
+   MODULE 2: BIRTHDAY CAKE WITH CANDLES (#screen-cake)
+   ========================================================================== */
+#screen-cake {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4.5rem 1.2rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cake-scene-wrap {
+  width: 100%;
+  max-width: 580px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Room Dim Vignette Overlay */
+.cake-room-vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 55%, rgba(0, 0, 0, 0.45) 0%, rgba(4, 6, 12, 0.92) 80%);
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 1.2s var(--ease-out);
+}
+
+.cake-room-vignette.lights-on {
+  opacity: 0;
+}
+
+.cake-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.cake-prompt-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 480px;
+}
+
+.cake-prompt-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 3.8vw, 2.3rem);
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.25;
+  transition: opacity 0.5s ease;
+  min-height: 3rem;
+}
+
+.cake-prompt-title.fade-transition {
+  opacity: 0;
+}
+
+.cake-mic-status {
+  font-size: 0.78rem;
+  color: var(--gold-light);
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  opacity: 0.9;
+}
+
+.mic-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  animation: pulseMic 1.4s infinite alternate;
+}
+
+@keyframes pulseMic {
+  from { opacity: 0.4; transform: scale(0.85); }
+  to { opacity: 1; transform: scale(1.15); }
+}
+
+/* The Cake Stage */
+.cake-stage {
+  position: relative;
+  width: 280px;
+  height: 220px;
+  margin: 0.5rem auto 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  touch-action: pan-x;
+}
+
+.cake-platter {
+  width: 290px;
+  height: 20px;
+  background: linear-gradient(180deg, #f5d78e 0%, #c49938 100%);
+  border-radius: 50%;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(220, 179, 85, 0.25);
+  position: absolute;
+  bottom: 0;
+  z-index: 1;
+}
+
+.cake-body {
+  width: 240px;
+  height: 130px;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 6px;
+}
+
+.cake-layer-top {
+  width: 100%;
+  height: 65px;
+  background: linear-gradient(180deg, #322216 0%, #20150d 100%);
+  border-radius: 50% / 18px;
+  position: relative;
+  box-shadow: inset 0 2px 8px rgba(255, 215, 120, 0.2);
+}
+
+.cake-layer-bottom {
+  width: 100%;
+  height: 80px;
+  background: linear-gradient(180deg, #271a10 0%, #170f09 100%);
+  border-radius: 0 0 50% 50% / 0 0 24px 24px;
+  position: absolute;
+  top: 30px;
+  left: 0;
+  z-index: -1;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+}
+
+.cake-drips {
+  position: absolute;
+  top: 24px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-around;
+  pointer-events: none;
+}
+
+.cake-drips span {
+  width: 14px;
+  height: 24px;
+  background: linear-gradient(180deg, #f5d78e, #c49938);
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+.cake-drips span:nth-child(2) { height: 32px; }
+.cake-drips span:nth-child(4) { height: 28px; }
+.cake-drips span:nth-child(5) { height: 34px; }
+
+.cake-berries {
+  position: absolute;
+  top: -8px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-around;
+  font-size: 1.15rem;
+  pointer-events: none;
+}
+
+/* 5 Candles */
+.cake-candles {
+  position: absolute;
+  top: 10px;
+  left: 25px;
+  right: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 90px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.candle {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 18px;
+}
+
+.candle-stem {
+  width: 8px;
+  height: 44px;
+  background: linear-gradient(90deg, #fceec5 0%, #d4a843 60%, #b38320 100%);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+.wick {
+  width: 2px;
+  height: 6px;
+  background: #332211;
+  margin-bottom: -1px;
+}
+
+/* Living Flame */
+.flame {
+  width: 14px;
+  height: 24px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: center bottom;
+  animation: flameFlicker 1.8s infinite alternate ease-in-out;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+@keyframes flameFlicker {
+  0% { transform: scale(1) rotate(-1deg); }
+  25% { transform: scale(1.06, 0.94) rotate(2deg); }
+  50% { transform: scale(0.96, 1.04) rotate(-2deg); }
+  75% { transform: scale(1.04, 0.98) rotate(1.5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.flame-inner {
+  width: 12px;
+  height: 20px;
+  background: radial-gradient(ellipse at 50% 70%, #ffffff 0%, #fff3b0 30%, #ff8c00 75%, transparent 100%);
+  border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
+  filter: drop-shadow(0 0 6px rgba(255, 140, 0, 0.8));
+}
+
+.flame-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  background: radial-gradient(circle, rgba(255, 200, 80, 0.45) 0%, transparent 70%);
+  pointer-events: none;
+  animation: glowPulse 2s infinite alternate;
+}
+
+.flame.extinguished {
+  opacity: 0;
+  transform: scale(0.1) !important;
+  pointer-events: none;
+}
+
+/* Smoke Wisp on Candle Extinguish */
+.smoke-wisp {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  width: 3px;
+  height: 28px;
+  background: linear-gradient(180deg, transparent, rgba(220, 220, 230, 0.45));
+  border-radius: 999px;
+  transform: translateX(-50%) scale(0);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.smoke-wisp.active {
+  animation: smokeRise 2.2s ease-out forwards;
+}
+
+@keyframes smokeRise {
+  0% {
+    transform: translateX(-50%) translateY(0) scaleY(0.4);
+    opacity: 0.7;
+  }
+  50% {
+    transform: translateX(-35%) translateY(-24px) scaleY(1) rotate(6deg);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateX(-60%) translateY(-50px) scaleY(1.4) rotate(-10deg);
+    opacity: 0;
+  }
+}
+
+.cake-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.cake-blow-btn {
+  padding: 0.85rem 2.2rem;
+}
+
+.cake-swipe-hint {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  opacity: 0.8;
+}
+
+/* Wish Accepted Celebration Card */
+.cake-wish-card {
+  max-width: 520px;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(20, 27, 42, 0.95) 0%, rgba(12, 16, 26, 0.98) 100%);
+  border: 2px solid var(--border-gold-bright);
+  border-radius: 20px;
+  padding: clamp(1.8rem, 4.5vw, 2.6rem) clamp(1.4rem, 4vw, 2.2rem);
+  text-align: center;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 45px var(--gold-glow-strong);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  animation: cardFadeIn 0.8s var(--ease-out) forwards;
+}
+
+.cake-wish-card.active {
+  display: flex;
+}
+
+.wish-card-crown {
+  font-size: 2.2rem;
+}
+
+.wish-card-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 4.2vw, 2.3rem);
+  color: #ffd700;
+  font-weight: 700;
+  text-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+  line-height: 1.2;
+}
+
+.wish-card-text {
+  font-size: 1.08rem;
+  line-height: 1.65;
+  color: #f1f5f9;
+}
+
+.wish-next-btn {
+  margin-top: 0.4rem;
+  padding: 0.9rem 2rem;
 }
 
 /* --------------------------------------------------------------------------

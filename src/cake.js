@@ -1,0 +1,356 @@
+import { soundCtrl } from './audio.js';
+import confetti from 'canvas-confetti';
+
+export class BirthdayCake {
+  constructor(container, onComplete) {
+    this.container = container;
+    this.onComplete = onComplete;
+    this.audioContext = null;
+    this.mediaStream = null;
+    this.analyser = null;
+    this.isListening = false;
+    this.isExtinguished = false;
+    this.animFrameId = null;
+
+    this.candleCount = 5;
+    this.extinguishedCount = 0;
+    this.touchStartY = 0;
+  }
+
+  init() {
+    this.render();
+    this.setupListeners();
+  }
+
+  render() {
+    this.container.innerHTML = `
+      <div class="cake-scene-wrap" id="cake-scene-wrap">
+        <!-- Room Dim Vignette Overlay -->
+        <div class="cake-room-vignette" id="cake-vignette"></div>
+
+        <div class="cake-content">
+          <!-- Text Prompt Sequence -->
+          <div class="cake-prompt-box">
+            <span class="tagline-accent">Особенная традиция</span>
+            <h2 class="cake-prompt-title" id="cake-prompt-title">
+              Папа, закрой глаза и загадай самое заветное желание...
+            </h2>
+            <div class="cake-mic-status" id="cake-mic-status"></div>
+          </div>
+
+          <!-- Cake Illustration with Living Candles -->
+          <div class="cake-stage" id="cake-stage">
+            <div class="cake-platter"></div>
+
+            <!-- The Cake Base & Layers -->
+            <div class="cake-body">
+              <div class="cake-layer-top">
+                <div class="cake-drips">
+                  <span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+                <div class="cake-berries">
+                  <span>🍓</span><span>🫐</span><span>🍓</span><span>🫐</span>
+                </div>
+              </div>
+              <div class="cake-layer-bottom"></div>
+            </div>
+
+            <!-- 5 Golden Candles -->
+            <div class="cake-candles" id="cake-candles">
+              ${Array.from({ length: this.candleCount }).map((_, i) => `
+                <div class="candle" data-index="${i}">
+                  <div class="flame" id="flame-${i}">
+                    <div class="flame-inner"></div>
+                    <div class="flame-glow"></div>
+                  </div>
+                  <div class="smoke-wisp" id="smoke-${i}"></div>
+                  <div class="wick"></div>
+                  <div class="candle-stem"></div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Alternative Controls / Fallback Button -->
+          <div class="cake-actions" id="cake-actions">
+            <button id="btn-blow-candles" class="btn btn-luxury cake-blow-btn">
+              <span>Задуть свечи 💨</span>
+            </button>
+            <div class="cake-swipe-hint">Или смахните вверх по экрану 👆</div>
+          </div>
+
+          <!-- Success Message after Blowing Out -->
+          <div class="cake-wish-card" id="cake-wish-card">
+            <div class="wish-card-crown">🎉 🎂 ✨</div>
+            <h3 class="wish-card-title">ЖЕЛАНИЕ ПРИНЯТО К ИСПОЛНЕНИЮ!</h3>
+            <p class="wish-card-text">
+              Оно обязательно сбудется в этом году! Крепкого здоровья, неиссякаемой энергии и счастья, наш любимый Папа! ❤️
+            </p>
+            <button id="btn-cake-next" class="btn btn-luxury wish-next-btn">
+              <span>К финальным словам ❤️</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    this.vignette = this.container.querySelector('#cake-vignette');
+    this.promptTitle = this.container.querySelector('#cake-prompt-title');
+    this.micStatus = this.container.querySelector('#cake-mic-status');
+    this.actionsBox = this.container.querySelector('#cake-actions');
+    this.wishCard = this.container.querySelector('#cake-wish-card');
+
+    // Prompt change after 3.8 seconds
+    setTimeout(() => {
+      if (!this.isExtinguished && this.promptTitle) {
+        this.promptTitle.classList.add('fade-transition');
+        this.promptTitle.textContent = 'А теперь подуй в экран, чтобы оно сбылось! 💨';
+        this.promptTitle.classList.remove('fade-transition');
+      }
+    }, 3800);
+  }
+
+  setupListeners() {
+    // Blow button click
+    const btnBlow = this.container.querySelector('#btn-blow-candles');
+    btnBlow.addEventListener('click', () => {
+      this.extinguishAllCandles();
+    });
+
+    // Next button
+    const btnNext = this.container.querySelector('#btn-cake-next');
+    btnNext.addEventListener('click', () => {
+      if (this.onComplete) this.onComplete();
+    });
+
+    // Touch swipe up on cake stage
+    const stage = this.container.querySelector('#cake-stage');
+    stage.addEventListener('touchstart', (e) => {
+      if (e.touches[0]) {
+        this.touchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    stage.addEventListener('touchend', (e) => {
+      if (e.changedTouches[0]) {
+        const deltaY = this.touchStartY - e.changedTouches[0].clientY;
+        if (deltaY > 50 && !this.isExtinguished) {
+          // Swiped up -> blow out candles
+          this.extinguishAllCandles();
+        }
+      }
+    }, { passive: true });
+  }
+
+  startListening() {
+    if (!this.isExtinguished && !this.isListening) {
+      this.initMicrophoneBlowDetection();
+    }
+  }
+
+  stopListening() {
+    this.isListening = false;
+    if (this.animFrameId) {
+      cancelAnimationFrame(this.animFrameId);
+      this.animFrameId = null;
+    }
+    if (this.mediaStream) {
+      this.mediaStream.getTracks().forEach(track => track.stop());
+      this.mediaStream = null;
+    }
+    if (this.audioContext && this.audioContext.state !== 'closed') {
+      this.audioContext.close().catch(() => {});
+      this.audioContext = null;
+    }
+  }
+
+  async initMicrophoneBlowDetection() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      if (this.micStatus) {
+        this.micStatus.textContent = 'Поддерживается задувание кнопкой или свайпом 💨';
+      }
+      return;
+    }
+
+    try {
+      this.mediaStream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: false
+        }
+      });
+
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      this.audioContext = new AudioCtx();
+      const source = this.audioContext.createMediaStreamSource(this.mediaStream);
+
+      // Lowpass filter 400Hz to specifically capture turbulent breath & blowing air
+      const filter = this.audioContext.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(400, this.audioContext.currentTime);
+
+      this.analyser = this.audioContext.createAnalyser();
+      this.analyser.fftSize = 512;
+      this.analyser.smoothingTimeConstant = 0.3;
+
+      source.connect(filter);
+      filter.connect(this.analyser);
+
+      this.isListening = true;
+      this.micStatus.innerHTML = '<span class="mic-live-dot"></span> Микрофон активен: подуйте в телефон или микрофон!';
+      this.listenForBlow();
+    } catch {
+      // Permission denied or mic unavailable - gracefully fallback
+      this.micStatus.textContent = 'Используйте кнопку «Задуть свечи» или смахните вверх!';
+    }
+  }
+
+  listenForBlow() {
+    if (!this.isListening || this.isExtinguished) return;
+
+    const dataArray = new Uint8Array(this.analyser.frequencyBinCount);
+    let blowStreak = 0;
+
+    const checkAudio = () => {
+      if (!this.isListening || this.isExtinguished) return;
+
+      this.analyser.getByteFrequencyData(dataArray);
+
+      // Calculate low frequency breath energy
+      let lowEnergy = 0;
+      const count = Math.min(30, dataArray.length);
+      for (let i = 0; i < count; i++) {
+        lowEnergy += dataArray[i];
+      }
+      const avg = lowEnergy / count;
+
+      // Candle flame deflection reaction
+      this.flickerFlames(avg);
+
+      // If breath volume is high enough
+      if (avg > 72) {
+        blowStreak++;
+        if (blowStreak >= 3) {
+          this.extinguishAllCandles();
+          return;
+        }
+      } else {
+        blowStreak = Math.max(0, blowStreak - 1);
+      }
+
+      this.animFrameId = requestAnimationFrame(checkAudio);
+    };
+
+    checkAudio();
+  }
+
+  flickerFlames(energy) {
+    const flames = this.container.querySelectorAll('.flame');
+    const factor = Math.min(energy / 60, 1.8);
+    flames.forEach((flame, i) => {
+      if (flame.classList.contains('extinguished')) return;
+      const tilt = (i - 2) * 5 + factor * (Math.random() * 25 - 12);
+      const scaleY = Math.max(0.4, 1 - factor * 0.4);
+      flame.style.transform = `rotate(${tilt}deg) scaleY(${scaleY})`;
+    });
+  }
+
+  extinguishAllCandles() {
+    if (this.isExtinguished) return;
+    this.isExtinguished = true;
+    this.isListening = false;
+
+    // Stop microphone stream to release hardware
+    if (this.mediaStream) {
+      this.mediaStream.getTracks().forEach(track => track.stop());
+    }
+    if (this.audioContext && this.audioContext.state !== 'closed') {
+      this.audioContext.close().catch(() => {});
+    }
+    if (this.animFrameId) {
+      cancelAnimationFrame(this.animFrameId);
+    }
+
+    // Extinguish each candle in quick succession
+    for (let i = 0; i < this.candleCount; i++) {
+      setTimeout(() => {
+        const flame = this.container.querySelector(`#flame-${i}`);
+        const smoke = this.container.querySelector(`#smoke-${i}`);
+        if (flame) {
+          flame.classList.add('extinguished');
+          soundCtrl.playBlowCandleSound();
+        }
+        if (smoke) {
+          smoke.classList.add('active');
+        }
+      }, i * 160);
+    }
+
+    // Once all are extinguished, trigger the celebration!
+    setTimeout(() => {
+      this.triggerCelebration();
+    }, this.candleCount * 160 + 400);
+  }
+
+  triggerCelebration() {
+    // 1. Room lights turn on (vignette disappears)
+    if (this.vignette) {
+      this.vignette.classList.add('lights-on');
+    }
+
+    // 2. Play party popper & cheer fanfare
+    soundCtrl.playCelebrationCheer();
+
+    // 3. Hide blow action button
+    if (this.actionsBox) {
+      this.actionsBox.style.display = 'none';
+    }
+    if (this.promptTitle) {
+      this.promptTitle.style.display = 'none';
+    }
+    if (this.micStatus) {
+      this.micStatus.style.display = 'none';
+    }
+
+    // 4. Massive Golden & Rainbow Confetti Burst
+    try {
+      confetti({
+        particleCount: 120,
+        spread: 100,
+        origin: { y: 0.55 },
+        colors: ['#ffd700', '#f5d78e', '#ff6b6b', '#4ecdc4', '#ffffff']
+      });
+      setTimeout(() => {
+        confetti({
+          particleCount: 70,
+          angle: 60,
+          spread: 70,
+          origin: { x: 0.15, y: 0.6 },
+          colors: ['#ffd700', '#f5d78e', '#ffffff']
+        });
+        confetti({
+          particleCount: 70,
+          angle: 120,
+          spread: 70,
+          origin: { x: 0.85, y: 0.6 },
+          colors: ['#ffd700', '#f5d78e', '#ffffff']
+        });
+      }, 350);
+    } catch (e) {
+      console.warn('Confetti error:', e);
+    }
+
+    // 5. Reveal the wish-accepted card
+    if (this.wishCard) {
+      this.wishCard.classList.add('active');
+    }
+  }
+
+  reset() {
+    this.stopListening();
+    this.isExtinguished = false;
+    this.render();
+    this.setupListeners();
+  }
+}

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="description" content="Поздравительный сайт ко дню рождения папы с реалистичной 3D-коробкой, душевными пожеланиями и семейным альбомом." />
+  <meta name="description" content="Поздравительный сайт ко дню рождения папы с реалистичной 3D-коробкой, счастливой лотереей 777, праздничным тортом со свечами и семейным альбомом." />
   <meta name="theme-color" content="#07090e" />
   <title>С днём рождения, папа! | Для самого лучшего папы</title>
 
@@ -39,17 +39,11 @@
     </button>
   </header>
 
-  <!-- Opening Status Notification Pill -->
-  <div id="opening-status" class="opening-status-bar" role="status" aria-live="polite">
-    <span class="status-sparkle">✨</span>
-    <span>Подарок открывается...</span>
-  </div>
-
   <!-- Main Viewport Application Screens -->
   <main class="app-viewport">
     
     <!-- ====================================================================
-         SCREEN 1: HERO / INTRO (Framed cleanly above and below 3D box)
+         SCREEN 1: HERO / INTRO
          ==================================================================== -->
     <section id="screen-intro" class="screen-section active" aria-label="Главный экран">
       <div class="intro-header">
@@ -63,11 +57,22 @@
           <span>Открыть подарок</span>
           <span class="btn-sparkle" aria-hidden="true">✨</span>
         </button>
+
+        <!-- Opening Status Notification Pill inside same container to prevent overlapping -->
+        <div id="opening-status" class="opening-status-bar" role="status" aria-live="polite">
+          <span class="status-sparkle">✨</span>
+          <span>Подарок открывается...</span>
+        </div>
       </div>
     </section>
 
     <!-- ====================================================================
-         SCREEN 2: GREETING MESSAGE
+         SCREEN 2: SCRATCH LOTTERY 777 (NEW)
+         ==================================================================== -->
+    <section id="screen-lottery" class="screen-section" aria-label="Лотерея Счастливый билет 777"></section>
+
+    <!-- ====================================================================
+         SCREEN 3: GREETING MESSAGE
          ==================================================================== -->
     <section id="screen-greeting" class="screen-section" aria-label="Поздравление">
       <div class="greeting-card">
@@ -85,7 +90,7 @@
     </section>
 
     <!-- ====================================================================
-         SCREEN 3: SINGLE-PHOTO ALBUM SLIDER (1 фото за раз без пробелов)
+         SCREEN 4: SINGLE-PHOTO ALBUM SLIDER
          ==================================================================== -->
     <section id="screen-gallery" class="screen-section" aria-label="Семейный альбом">
       <div class="album-container">
@@ -125,8 +130,8 @@
 
         <div class="album-footer">
           <button id="btn-finish-gallery" class="btn btn-luxury">
-            <span>Завершить</span>
-            <span aria-hidden="true">❤️</span>
+            <span>Загадать желание</span>
+            <span aria-hidden="true">🎂</span>
           </button>
           <button id="btn-back-to-greeting" class="btn btn-outline">
             <span>Назад к поздравлению</span>
@@ -136,7 +141,12 @@
     </section>
 
     <!-- ====================================================================
-         SCREEN 4: FINALE
+         SCREEN 5: BIRTHDAY CAKE WITH CANDLES (NEW)
+         ==================================================================== -->
+    <section id="screen-cake" class="screen-section" aria-label="Праздничный торт со свечами"></section>
+
+    <!-- ====================================================================
+         SCREEN 6: FINALE
          ==================================================================== -->
     <section id="screen-finale" class="screen-section" aria-label="Финальное поздравление">
       <div class="finale-card">
@@ -146,13 +156,14 @@
         <p class="finale-birthday">С днём рождения!</p>
 
         <div class="finale-actions">
-          <button id="btn-back-to-photos" class="btn btn-luxury">
-            <span>Посмотреть альбом снова</span>
-            <span aria-hidden="true">📸</span>
+          <button id="btn-back-to-cake" class="btn btn-luxury">
+            <span>Вернуться к торту 🎂</span>
+          </button>
+          <button id="btn-back-to-photos" class="btn btn-outline">
+            <span>Посмотреть альбом 📸</span>
           </button>
           <button id="btn-restart" class="btn btn-outline">
-            <span>Повторить поздравление</span>
-            <span aria-hidden="true">↺</span>
+            <span>Повторить с начала ↺</span>
           </button>
         </div>
       </div>
