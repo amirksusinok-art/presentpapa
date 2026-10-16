@@ -1,4 +1,5 @@
 import { soundCtrl } from './audio.js';
+import { haptics } from './haptics.js';
 import confetti from 'canvas-confetti';
 
 export class ScratchLottery {
@@ -83,12 +84,14 @@ export class ScratchLottery {
     // Instant reveal button
     const btnScratchAll = this.container.querySelector('#btn-scratch-all');
     btnScratchAll.addEventListener('click', () => {
+      haptics.medium();
       this.revealAll();
     });
 
     // Claim win button
     const btnClaim = this.container.querySelector('#btn-lottery-claim');
     btnClaim.addEventListener('click', () => {
+      haptics.medium();
       this.modalElement.classList.remove('active');
       if (this.onComplete) this.onComplete();
     });
@@ -186,6 +189,7 @@ export class ScratchLottery {
       ctx.fill();
 
       soundCtrl.playScratchSound();
+      haptics.light();
       this.checkClearing(cell, ctx, w, h);
     };
 
@@ -293,6 +297,7 @@ export class ScratchLottery {
   }
 
   triggerJackpotWin() {
+    haptics.success();
     // 1. Show glowing golden winning streak line
     if (this.winLine) {
       this.winLine.classList.add('active');

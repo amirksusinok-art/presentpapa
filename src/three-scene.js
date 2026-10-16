@@ -67,16 +67,19 @@ export class GiftScene {
     this.camera.lookAt(this.camLookAt);
 
     // Renderer
+    const isMobile = window.innerWidth < 768;
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
+      antialias: !isMobile,
       alpha: true,
       powerPreference: 'high-performance'
     });
     this.renderer.setSize(width, height);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.25 : 1.75));
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.1;
     this.container.appendChild(this.renderer.domElement);
+
+    this.isPaused = false;
 
     // Components
     this.createLighting();
@@ -90,6 +93,23 @@ export class GiftScene {
 
     this.animate();
     return true;
+  }
+
+  pause() {
+    this.isPaused = true;
+    if (this.animId) {
+      cancelAnimationFrame(this.animId);
+      this.animId = null;
+    }
+  }
+
+  resume() {
+    if (!this.isPaused) return;
+    this.isPaused = false;
+    this.clock.getDelta();
+    if (!this.animId) {
+      this.animate();
+    }
   }
 
   updateCameraDistance() {
@@ -405,7 +425,8 @@ export class GiftScene {
   }
 
   createParticles() {
-    const particleCount = 180;
+    const isMobile = window.innerWidth < 768;
+    const particleCount = isMobile ? 45 : 120;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     this.particleData = [];
@@ -490,9 +511,9 @@ export class GiftScene {
     setTimeout(() => {
       soundCtrl.playBoxOpeningChime();
       soundCtrl.startAmbientMusic();
-    }, 1100);
+    }, 750);
 
-    const duration = 3000; // 3.0s smooth, fluid, responsive pacing
+    const duration = 2000; // 2.0s responsive, smooth opening
     const startTime = performance.now();
     const startCamZ = this.camera.position.z;
 
@@ -626,6 +647,7 @@ export class GiftScene {
   }
 
   animate() {
+    if (this.isPaused) return;
     this.animId = requestAnimationFrame(this.animate.bind(this));
 
     const delta = this.clock.getDelta();
@@ -635,14 +657,14 @@ export class GiftScene {
     this.mouse.x += (this.mouse.targetX - this.mouse.x) * 0.04;
     this.mouse.y += (this.mouse.targetY - this.mouse.y) * 0.04;
 
-    // Idle gentle hover
-    if (this.boxGroup) {
-      const hoverY = -0.32 + Math.sin(elapsedTime * 1.2) * 0.05;
+    // Idle gentle hover (only when not opened and not opening)
+    if (this.boxGroup && !this.isOpening && !this.isOpen) {
+      const hoverY = -0.32 + Math.sin(elapsedTime * 1.2) * 0.04;
       this.boxGroup.position.y = hoverY;
 
       const baseRotY = -Math.PI / 6;
-      this.boxGroup.rotation.y = baseRotY + this.mouse.x * 0.3 + Math.sin(elapsedTime * 0.5) * 0.03;
-      this.boxGroup.rotation.x = 0.1 - this.mouse.y * 0.2;
+      this.boxGroup.rotation.y = baseRotY + this.mouse.x * 0.25 + Math.sin(elapsedTime * 0.5) * 0.025;
+      this.boxGroup.rotation.x = 0.1 - this.mouse.y * 0.15;
     }
 
     // Camera ease

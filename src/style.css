@@ -43,6 +43,14 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+button, .btn, .btn-luxury, .btn-outline, [role="button"], #btn-open-gift {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+  -webkit-touch-callout: none !important;
+  touch-action: manipulation !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
 html, body {
   width: 100%;
   min-height: 100dvh;
@@ -203,12 +211,14 @@ html, body {
 }
 
 .intro-footer {
-  pointer-events: auto;
+  pointer-events: auto !important;
   max-width: 400px;
   width: 100%;
   display: flex;
   justify-content: center;
-  padding-bottom: 1.5rem;
+  padding-bottom: calc(2.2rem + env(safe-area-inset-bottom, 0px));
+  position: relative;
+  z-index: 25;
   animation: introFadeIn 1.3s var(--ease-out) forwards;
 }
 
@@ -2926,20 +2936,59 @@ body:has(#screen-rocket.active) .top-bar {
     min-height: 36px;
   }
 
-  .btn {
-    padding: 0.75rem 1.2rem;
-    font-size: 0.9rem;
-    white-space: nowrap;
-    min-height: 46px;
+  /* Mobile Optimization for Background Ambient Glow */
+  .ambient-glow {
+    animation: none;
+    filter: blur(36px);
+    opacity: 0.45;
+  }
+
+  /* Spacious, comfortable, finger-friendly touch targets */
+  .btn, .btn-luxury, .btn-outline {
+    padding: 0.95rem 1.6rem;
+    font-size: 1.05rem;
+    font-weight: 600;
+    min-height: 54px;
+    letter-spacing: 0.03em;
+    width: 100%;
+    max-width: 320px;
+    border-radius: 999px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
   }
 
   .hero-title {
     font-size: 2.1rem;
   }
 
+  .intro-footer {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+    padding: 0 1rem calc(2.2rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  .intro-footer #btn-open-gift {
+    width: 100%;
+    max-width: 320px;
+    min-height: 56px;
+    font-size: 1.1rem;
+    padding: 1.05rem 1.8rem;
+  }
+
   .lottery-ticket {
     padding: 1.1rem 0.8rem;
     max-width: 95vw;
+  }
+
+  .ticket-controls .ticket-scratch-all-btn,
+  .jackpot-card .jackpot-claim-btn {
+    width: 100%;
+    max-width: 320px;
+    min-height: 52px;
   }
 
   .scratch-grid {
@@ -2964,14 +3013,20 @@ body:has(#screen-rocket.active) .top-bar {
     line-height: 1.65;
   }
 
+  .greeting-card .btn {
+    width: 100%;
+    max-width: 320px;
+    min-height: 54px;
+  }
+
   .album-stage {
     gap: 0.4rem;
   }
 
   .album-nav-btn {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
     font-size: 1.35rem;
   }
 
@@ -2980,9 +3035,21 @@ body:has(#screen-rocket.active) .top-bar {
     min-height: 240px;
   }
 
+  .album-actions .btn {
+    width: 100%;
+    max-width: 320px;
+    min-height: 52px;
+  }
+
   .cake-stage {
     transform: scale(0.86);
     transform-origin: bottom center;
+  }
+
+  .cake-actions .btn {
+    width: 100%;
+    max-width: 320px;
+    min-height: 54px;
   }
 
   .cola-stage {
@@ -2990,23 +3057,47 @@ body:has(#screen-rocket.active) .top-bar {
     transform-origin: center center;
   }
 
+  .cola-actions .btn {
+    width: 100%;
+    max-width: 320px;
+    min-height: 54px;
+  }
+
   .finale-actions {
     flex-direction: column;
     width: 100%;
+    align-items: center;
   }
 
   .finale-actions .btn {
     width: 100%;
+    max-width: 320px;
+    min-height: 54px;
   }
 
   /* Rocket Screen Mobile Adjustments */
+  .btn-launch-activation {
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    justify-content: center;
+  }
+
   .btn-launch-activation .launch-btn-inner {
-    min-width: 240px;
-    padding: 0.95rem 1.5rem;
+    width: 100%;
+    min-width: unset;
+    min-height: 56px;
+    padding: 1.05rem 1.6rem;
   }
 
   .launch-btn-text {
-    font-size: 0.92rem;
+    font-size: 0.98rem;
+  }
+
+  .emergency-power-btn {
+    width: 100%;
+    max-width: 320px;
+    min-height: 52px;
   }
 
   .hologram-card {

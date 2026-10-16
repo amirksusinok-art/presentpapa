@@ -1,4 +1,5 @@
 import { soundCtrl } from './audio.js';
+import { haptics } from './haptics.js';
 import confetti from 'canvas-confetti';
 
 export class CokaColaCan {
@@ -141,10 +142,11 @@ export class CokaColaCan {
       }, { passive: true });
     }
 
-    // Success button: leads to Finale screen
+    // Success button: leads to Rocket screen
     const btnFinish = this.container.querySelector('#btn-cola-finish');
     if (btnFinish) {
       btnFinish.addEventListener('click', () => {
+        haptics.medium();
         if (this.onComplete) this.onComplete();
       });
     }
@@ -157,9 +159,7 @@ export class CokaColaCan {
     // Step 1: Initial tab tension / lift
     this.tabElement.classList.add('tab-lifting');
     soundCtrl.playCanTabClick();
-    if (navigator.vibrate) {
-      try { navigator.vibrate(20); } catch { /* ignore */ }
-    }
+    haptics.medium();
 
     // Step 2: Pop / Metal puncture after 140ms
     setTimeout(() => {
@@ -168,17 +168,11 @@ export class CokaColaCan {
       this.canElement.classList.add('can-opened');
 
       soundCtrl.playCanOpenFizz();
-      if (navigator.vibrate) {
-        try { navigator.vibrate(80); } catch { /* ignore */ }
-      }
+      haptics.heavy();
 
       // Step 3: Carbonation gas hiss & fizzy bubble vibration after 80ms
       setTimeout(() => {
-        if (navigator.vibrate) {
-          try {
-            navigator.vibrate([15, 10, 15, 10, 15, 10, 20, 10, 15, 10, 15, 10]);
-          } catch { /* ignore */ }
-        }
+        haptics.fizz();
 
         // Step 4: Fizz fountain eruption
         if (this.fountainElement) {

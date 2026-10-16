@@ -4,6 +4,7 @@ import { ScratchLottery } from './lottery.js';
 import { BirthdayCake } from './cake.js';
 import { CokaColaCan } from './cola.js';
 import { CosmicRocketModule } from './rocket.js';
+import { haptics } from './haptics.js';
 import confetti from 'canvas-confetti';
 
 // Fallback photos list
@@ -173,6 +174,7 @@ class App {
     window.addEventListener('touchstart', unlockAudio, { once: true });
 
     this.btnSoundToggle.addEventListener('click', () => {
+      haptics.light();
       const isMuted = soundCtrl.toggleMute();
       this.soundIcon.textContent = isMuted ? '🔇' : '🔊';
       this.soundText.textContent = isMuted ? 'Без звука' : 'Звук';
@@ -184,35 +186,60 @@ class App {
   }
 
   initNavigation() {
-    this.btnOpenGift.addEventListener('click', () => {
+    const triggerGiftOpen = (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       this.startGiftOpening();
-    });
+    };
+
+    this.btnOpenGift.addEventListener('click', triggerGiftOpen);
+    this.btnOpenGift.addEventListener('touchend', triggerGiftOpen, { passive: false });
 
     if (this.canvasContainer) {
       this.canvasContainer.addEventListener('click', () => {
-        if (this.currentScreen === 'intro' && this.giftScene && !this.giftScene.isOpening && !this.giftScene.isOpen) {
+        if (this.currentScreen === 'intro') {
+          this.startGiftOpening();
+        }
+      });
+      this.canvasContainer.addEventListener('touchend', () => {
+        if (this.currentScreen === 'intro') {
+          this.startGiftOpening();
+        }
+      });
+    }
+
+    if (this.screens.intro) {
+      this.screens.intro.addEventListener('click', (e) => {
+        if (e.target.closest('#btn-open-gift') || e.target.closest('.intro-header')) return;
+        if (this.currentScreen === 'intro') {
           this.startGiftOpening();
         }
       });
     }
 
     this.btnViewPhotos.addEventListener('click', () => {
+      haptics.medium();
       this.showScreen('gallery');
       this.scrollToTop();
     });
 
     this.btnFinishGallery.addEventListener('click', () => {
+      haptics.medium();
       this.showScreen('cake');
       this.scrollToTop();
     });
 
     this.btnBackToGreeting.addEventListener('click', () => {
+      haptics.medium();
       this.showScreen('greeting');
       this.scrollToTop();
     });
 
     if (this.btnBackToCola) {
       this.btnBackToCola.addEventListener('click', () => {
+        haptics.medium();
         this.showScreen('cola');
         this.scrollToTop();
       });
@@ -220,17 +247,20 @@ class App {
 
     if (this.btnBackToCake) {
       this.btnBackToCake.addEventListener('click', () => {
+        haptics.medium();
         this.showScreen('cake');
         this.scrollToTop();
       });
     }
 
     this.btnBackToPhotos.addEventListener('click', () => {
+      haptics.medium();
       this.showScreen('gallery');
       this.scrollToTop();
     });
 
     this.btnRestart.addEventListener('click', () => {
+      haptics.medium();
       this.restartExperience();
       this.scrollToTop();
     });
@@ -267,8 +297,22 @@ class App {
       topBar.style.display = (name === 'rocket') ? 'none' : 'flex';
     }
 
-    if (this.rocket && name === 'rocket') {
-      this.rocket.onWindowResize();
+    // Manage Three.js rendering loops to prevent background lag on mobile
+    if (this.giftScene) {
+      if (name === 'intro') {
+        this.giftScene.resume();
+      } else {
+        this.giftScene.pause();
+      }
+    }
+
+    if (this.rocket) {
+      if (name === 'rocket') {
+        this.rocket.startRendering();
+        this.rocket.onWindowResize();
+      } else {
+        this.rocket.stopRendering();
+      }
     }
 
     // Pause video playback if navigating away from gallery
@@ -288,6 +332,11 @@ class App {
   }
 
   startGiftOpening() {
+    if (this._isOpeningGift) return;
+    this._isOpeningGift = true;
+
+    haptics.medium();
+
     // Gracefully fade out the button without intermediate loading delay
     this.btnOpenGift.style.opacity = '0';
     this.btnOpenGift.style.pointerEvents = 'none';
@@ -299,39 +348,34 @@ class App {
     setTimeout(() => {
       try {
         confetti({
-          particleCount: 75,
-          spread: 75,
+          particleCount: 50,
+          spread: 70,
           origin: { y: 0.58 },
           colors: ['#f5d78e', '#dcb355', '#ffffff', '#ba8c2d', '#ffe8a3'],
           disableForReducedMotion: true
         });
-        setTimeout(() => {
-          confetti({
-            particleCount: 40,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0.15, y: 0.65 },
-            colors: ['#f5d78e', '#dcb355', '#ffe8a3'],
-            disableForReducedMotion: true
-          });
-          confetti({
-            particleCount: 40,
-            angle: 120,
-            spread: 55,
-            origin: { x: 0.85, y: 0.65 },
-            colors: ['#f5d78e', '#dcb355', '#ffe8a3'],
-            disableForReducedMotion: true
-          });
-        }, 260);
       } catch (e) {
         console.warn('Confetti launch error:', e);
       }
-    }, 1200);
+    }, 800);
+
+    let completed = false;
+    const finishOpen = () => {
+      if (completed) return;
+      completed = true;
+      this._isOpeningGift = false;
+      this.showScreen('lottery');
+      this.scrollToTop();
+      haptics.success();
+    };
+
+    // Safety fallback: if anything stalls or takes too long, never leave user stuck!
+    const safetyTimer = setTimeout(finishOpen, 2400);
 
     if (this.hasWebGL && this.giftScene) {
       this.giftScene.openBox(() => {
-        this.showScreen('lottery');
-        this.scrollToTop();
+        clearTimeout(safetyTimer);
+        finishOpen();
       });
     } else {
       this.cssFallback.classList.add('opened');
@@ -339,16 +383,17 @@ class App {
       setTimeout(() => {
         soundCtrl.playBoxOpeningChime();
         soundCtrl.startAmbientMusic();
-      }, 1000);
+      }, 700);
 
       setTimeout(() => {
-        this.showScreen('lottery');
-        this.scrollToTop();
-      }, 2800);
+        clearTimeout(safetyTimer);
+        finishOpen();
+      }, 1800);
     }
   }
 
   restartExperience() {
+    this._isOpeningGift = false;
     if (this.hasWebGL && this.giftScene) {
       this.giftScene.resetBox();
     } else {
@@ -443,7 +488,11 @@ class App {
   }
 
   displayPhoto(idx) {
+    const prevIdx = this.currentPhotoIdx;
     this.currentPhotoIdx = (idx + this.photos.length) % this.photos.length;
+    if (prevIdx !== this.currentPhotoIdx) {
+      haptics.selection();
+    }
     const item = this.photos[this.currentPhotoIdx];
     const isVideo = item.type === 'video' || item.file.endsWith('.mp4');
 
@@ -647,6 +696,7 @@ class App {
   }
 
   openLightbox(idx) {
+    haptics.light();
     this.currentPhotoIdx = idx;
     this.updateLightboxContent();
     this.lightbox.classList.add('active');
@@ -655,6 +705,7 @@ class App {
   }
 
   closeLightbox() {
+    haptics.light();
     if (this.lightboxVideo) {
       this.lightboxVideo.pause();
     }

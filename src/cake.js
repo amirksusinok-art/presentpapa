@@ -1,4 +1,5 @@
 import { soundCtrl } from './audio.js';
+import { haptics } from './haptics.js';
 import confetti from 'canvas-confetti';
 
 export class BirthdayCake {
@@ -143,6 +144,7 @@ export class BirthdayCake {
     const btnBlow = this.container.querySelector('#btn-blow-candles');
     if (btnBlow) {
       btnBlow.addEventListener('click', () => {
+        haptics.medium();
         this.extinguishAllCandles();
       });
     }
@@ -151,6 +153,7 @@ export class BirthdayCake {
     const btnNext = this.container.querySelector('#btn-cake-next');
     if (btnNext) {
       btnNext.addEventListener('click', () => {
+        haptics.medium();
         if (this.onComplete) this.onComplete();
       });
     }
@@ -319,6 +322,7 @@ export class BirthdayCake {
         if (flame) {
           flame.classList.add('extinguished');
           soundCtrl.playBlowCandleSound();
+          haptics.medium();
         }
         if (aura) {
           aura.classList.add('extinguished');
@@ -336,6 +340,7 @@ export class BirthdayCake {
   }
 
   triggerCelebration() {
+    haptics.success();
     // 1. Room lights turn on (vignette disappears)
     if (this.vignette) {
       this.vignette.classList.add('lights-on');

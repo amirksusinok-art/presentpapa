@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { haptics } from './haptics.js';
 
 /**
  * Web Audio Procedural Synthesizer for Space Rocket Launch
@@ -421,13 +422,14 @@ export class CosmicRocketModule {
     this.camera.lookAt(this.cameraLookTarget);
 
     // 3. Renderer
+    const isMobile = window.innerWidth < 768;
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
+      antialias: !isMobile,
       alpha: false,
       powerPreference: 'high-performance'
     });
     this.renderer.setSize(width, height);
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.25 : 1.75));
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.35;
     mount.appendChild(this.renderer.domElement);
@@ -441,8 +443,23 @@ export class CosmicRocketModule {
     this.createCryoSteam();
     this.createFlameAndSmoke();
 
-    // 5. Start Render Loop
+    // Do NOT run render loop until rocket screen is active
+    this.isPaused = true;
+  }
+
+  startRendering() {
+    if (!this.isPaused && this.animFrameId) return;
+    this.isPaused = false;
+    this.clock.getDelta();
     this.animate();
+  }
+
+  stopRendering() {
+    this.isPaused = true;
+    if (this.animFrameId) {
+      cancelAnimationFrame(this.animFrameId);
+      this.animFrameId = null;
+    }
   }
 
   createLights() {
@@ -488,7 +505,8 @@ export class CosmicRocketModule {
   }
 
   createStarfield() {
-    const starCount = 1400;
+    const isMobile = window.innerWidth < 768;
+    const starCount = isMobile ? 450 : 1200;
     const starGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
 
@@ -842,7 +860,8 @@ export class CosmicRocketModule {
     this.launchPadGroup.add(this.shockwaveRing);
 
     // 4. Trailing Soft Fire & Smoke Particles (Soft round texture, NO square artifacts)
-    const fireCount = 120;
+    const isMobile = window.innerWidth < 768;
+    const fireCount = isMobile ? 45 : 100;
     const fireGeo = new THREE.BufferGeometry();
     const firePos = new Float32Array(fireCount * 3);
     this.flameParticleData = [];
@@ -877,22 +896,31 @@ export class CosmicRocketModule {
 
   setupListeners() {
     // Launch button click
-    this.btnActivate.addEventListener('click', () => {
+    const handleLaunch = () => {
+      haptics.heavy();
       this.startCountdown();
-    });
+    };
+    this.btnActivate.addEventListener('click', handleLaunch);
+    this.btnActivate.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      handleLaunch();
+    }, { passive: false });
 
     // Emergency power-off lever
     this.btnBreakerLever.addEventListener('click', () => {
+      haptics.heavy();
       this.triggerPowerOff();
     });
 
     // Repeat launch button
     this.btnRocketRepeat.addEventListener('click', () => {
+      haptics.medium();
       this.resetToStandby();
     });
 
     // Restart from post-credits
     this.btnPostRestart.addEventListener('click', () => {
+      haptics.medium();
       if (this.onRestart) this.onRestart();
     });
 
@@ -936,6 +964,7 @@ export class CosmicRocketModule {
     const timer = setInterval(() => {
       count--;
       if (count > 0) {
+        haptics.medium();
         this.countdownDigit.textContent = count;
         this.countdownDigit.style.transform = 'scale(1.35)';
         setTimeout(() => {
@@ -944,6 +973,7 @@ export class CosmicRocketModule {
         this.audio.playRadioBeep();
       } else {
         clearInterval(timer);
+        haptics.heavy();
         this.countdownDigit.textContent = 'ПУСК!';
         this.countdownSubtext.textContent = 'ТЯГА 100% // ЗАЖИГАНИЕ';
         this.countdownDigit.classList.add('ignite-fire');
@@ -978,10 +1008,8 @@ export class CosmicRocketModule {
     // Start engine rumble synthesizer
     this.audio.startRocketRumble();
 
-    // Haptic feedback burst on mobile
-    if ('vibrate' in navigator) {
-      navigator.vibrate([100, 40, 150, 40, 200, 50, 250, 60, 300]);
-    }
+    // Physical haptic engine rumble
+    haptics.rocketRumble();
 
     // Flame & lights visible
     this.flameCore.material.opacity = 0.95;
@@ -1058,9 +1086,7 @@ export class CosmicRocketModule {
       } else {
         // Reveal hologram message card
         this.hologramWrap.classList.add('active');
-        if ('vibrate' in navigator) {
-          navigator.vibrate([80, 50, 80]);
-        }
+        haptics.success();
       }
     };
     requestAnimationFrame(animFairing);
@@ -1131,6 +1157,7 @@ export class CosmicRocketModule {
   }
 
   animate() {
+    if (this.isPaused) return;
     this.animFrameId = requestAnimationFrame(this.animate.bind(this));
 
     const delta = this.clock.getDelta();
