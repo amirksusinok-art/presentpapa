@@ -7,21 +7,21 @@ import confetti from 'canvas-confetti';
 
 // Fallback photos list
 const DEFAULT_PHOTOS = [
-  { id: 1, file: 'photos/photo-01.jpg', aspect: 0.75 },
-  { id: 2, file: 'photos/photo-02.jpg', aspect: 1.33 },
-  { id: 3, file: 'photos/photo-03.jpg', aspect: 0.75 },
-  { id: 4, file: 'photos/photo-04.jpg', aspect: 0.75 },
-  { id: 5, file: 'photos/photo-05.jpg', aspect: 1.33 },
-  { id: 6, file: 'photos/photo-06.jpg', aspect: 0.75 },
-  { id: 7, file: 'photos/photo-07.jpg', aspect: 1.33 },
-  { id: 8, file: 'photos/photo-08.jpg', aspect: 0.75 },
-  { id: 9, file: 'photos/photo-09.jpg', aspect: 0.75 },
-  { id: 10, file: 'photos/photo-10.jpg', aspect: 0.75 },
-  { id: 11, file: 'photos/photo-11.jpg', aspect: 0.75 },
-  { id: 12, file: 'photos/photo-12.jpg', aspect: 0.75 },
-  { id: 13, file: 'photos/photo-13.jpg', aspect: 0.75 },
-  { id: 14, file: 'photos/photo-14.jpg', aspect: 1.33 },
-  { id: 15, file: 'photos/avrora.mp4', poster: 'photos/avrora-poster.jpg', type: 'video', aspect: 1.777 }
+  { id: 1, file: 'photos/photo-01.jpg', caption: 'Самые тёплые воспоминания', aspect: 0.75 },
+  { id: 2, file: 'photos/photo-02.jpg', caption: 'Семейные улыбки и радость', aspect: 1.33 },
+  { id: 3, file: 'photos/photo-03.jpg', caption: 'Моменты, согревающие душу', aspect: 0.75 },
+  { id: 4, file: 'photos/photo-04.jpg', caption: 'Счастливые дни вместе', aspect: 0.75 },
+  { id: 5, file: 'photos/photo-05.jpg', caption: 'Любимый папа рядом', aspect: 1.33 },
+  { id: 6, file: 'photos/photo-06.jpg', caption: 'Наши путешествия и прогулки', aspect: 0.75 },
+  { id: 7, file: 'photos/photo-07.jpg', caption: 'Уют и тепло родного дома', aspect: 1.33 },
+  { id: 8, file: 'photos/photo-08.jpg', caption: 'Гордимся тобой каждый день', aspect: 0.75 },
+  { id: 9, file: 'photos/photo-09.jpg', caption: 'Счастье в каждом кадре', aspect: 0.75 },
+  { id: 10, file: 'photos/photo-10.jpg', caption: 'Твоя забота и поддержка', aspect: 0.75 },
+  { id: 11, file: 'photos/photo-11.jpg', caption: 'Лучшие мгновения жизни', aspect: 0.75 },
+  { id: 12, file: 'photos/photo-12.jpg', caption: 'Улыбка, дарящая свет', aspect: 0.75 },
+  { id: 13, file: 'photos/photo-13.jpg', caption: 'Вместе сквозь года', aspect: 0.75 },
+  { id: 14, file: 'photos/photo-14.jpg', caption: 'Бесценные моменты счастья', aspect: 1.33 },
+  { id: 15, file: 'photos/avrora.mp4', poster: 'photos/avrora-poster.jpg', caption: 'Аврора: наше маленькое чудо ✨', type: 'video', aspect: 1.777 }
 ];
 
 class App {
@@ -71,12 +71,14 @@ class App {
     this.viewerImg = document.getElementById('viewer-img');
     this.viewerVideo = document.getElementById('viewer-video');
     this.viewerSkeleton = document.getElementById('viewer-skeleton');
+    this.photoCaption = document.getElementById('photo-caption');
     this.thumbsStrip = document.getElementById('thumbs-strip');
 
     // Lightbox Modal
     this.lightbox = document.getElementById('lightbox');
     this.lightboxImg = document.getElementById('lightbox-img');
     this.lightboxVideo = document.getElementById('lightbox-video');
+    this.lightboxCaption = document.getElementById('lightbox-caption');
     this.lightboxCounter = document.getElementById('lightbox-counter');
     this.lightboxClose = document.getElementById('lightbox-close');
     this.lightboxPrev = document.getElementById('lightbox-prev');
@@ -172,6 +174,14 @@ class App {
       this.startGiftOpening();
     });
 
+    if (this.canvasContainer) {
+      this.canvasContainer.addEventListener('click', () => {
+        if (this.currentScreen === 'intro' && this.giftScene && !this.giftScene.isOpening && !this.giftScene.isOpen) {
+          this.startGiftOpening();
+        }
+      });
+    }
+
     this.btnViewPhotos.addEventListener('click', () => {
       this.showScreen('gallery');
       this.scrollToTop();
@@ -249,12 +259,14 @@ class App {
   }
 
   startGiftOpening() {
-    // Hide button completely to prevent any overlap with opening status bar
-    this.btnOpenGift.style.display = 'none';
-    this.btnOpenGift.classList.add('opening-state');
-    this.openingStatus.style.display = 'inline-flex';
+    // Gracefully fade out the button without intermediate loading delay
+    this.btnOpenGift.style.opacity = '0';
+    this.btnOpenGift.style.pointerEvents = 'none';
+    if (this.openingStatus) {
+      this.openingStatus.style.display = 'none';
+    }
 
-    // Golden festive confetti celebration when lid opens
+    // Festive golden confetti burst right when lid lifts up
     setTimeout(() => {
       try {
         confetti({
@@ -281,15 +293,14 @@ class App {
             colors: ['#f5d78e', '#dcb355', '#ffe8a3'],
             disableForReducedMotion: true
           });
-        }, 350);
+        }, 260);
       } catch (e) {
         console.warn('Confetti launch error:', e);
       }
-    }, 2200);
+    }, 1200);
 
     if (this.hasWebGL && this.giftScene) {
       this.giftScene.openBox(() => {
-        this.openingStatus.style.display = 'none';
         this.showScreen('lottery');
         this.scrollToTop();
       });
@@ -299,13 +310,12 @@ class App {
       setTimeout(() => {
         soundCtrl.playBoxOpeningChime();
         soundCtrl.startAmbientMusic();
-      }, 1500);
+      }, 1000);
 
       setTimeout(() => {
-        this.openingStatus.style.display = 'none';
         this.showScreen('lottery');
         this.scrollToTop();
-      }, 4200);
+      }, 2800);
     }
   }
 
@@ -329,9 +339,13 @@ class App {
     }
 
     this.btnOpenGift.style.display = 'inline-flex';
+    this.btnOpenGift.style.opacity = '1';
+    this.btnOpenGift.style.pointerEvents = 'auto';
     this.btnOpenGift.classList.remove('opening-state');
     this.btnOpenGift.innerHTML = '<span>Открыть подарок</span> <span class="btn-sparkle" aria-hidden="true">✨</span>';
-    this.openingStatus.style.display = 'none';
+    if (this.openingStatus) {
+      this.openingStatus.style.display = 'none';
+    }
     this.currentPhotoIdx = 0;
     this.displayPhoto(0);
     this.showScreen('intro');
@@ -441,8 +455,11 @@ class App {
       };
     }
 
-    // Update counter
+    // Update counter & caption
     this.albumCounter.textContent = `${this.currentPhotoIdx + 1} из ${this.photos.length}`;
+    if (this.photoCaption) {
+      this.photoCaption.textContent = item.caption || `Фотография ${this.currentPhotoIdx + 1}`;
+    }
 
     // Highlight thumbnail and scroll into view smoothly
     const thumbs = this.thumbsStrip.querySelectorAll('.thumb-item');
@@ -636,6 +653,9 @@ class App {
       };
     }
     this.lightboxCounter.textContent = `${this.currentPhotoIdx + 1} / ${this.photos.length}`;
+    if (this.lightboxCaption) {
+      this.lightboxCaption.textContent = item.caption || `Фотография ${this.currentPhotoIdx + 1}`;
+    }
   }
 }
 

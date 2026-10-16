@@ -105,15 +105,21 @@
             <div id="viewer-skeleton" class="skeleton-shimmer"></div>
             <img id="viewer-img" class="viewer-image" src="" alt="Семейная фотография" />
             <video id="viewer-video" class="viewer-video" playsinline controls loop preload="metadata" style="display: none;"></video>
-            <div class="viewer-tap-hint" id="viewer-tap-hint">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <button class="viewer-tap-hint" id="viewer-tap-hint" aria-label="Открыть на весь экран">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"></path>
               </svg>
               <span>На весь экран</span>
-            </div>
+            </button>
           </div>
 
           <button id="album-next" class="album-nav-btn album-next" aria-label="Следующий слайд">›</button>
+        </div>
+
+        <!-- Caption Bar & Mobile Swipe Notice -->
+        <div class="album-caption-bar">
+          <p class="photo-caption" id="photo-caption">Самые тёплые воспоминания</p>
+          <div class="photo-swipe-hint">‹ смахивайте для листания ›</div>
         </div>
 
         <!-- Mini thumbnail strip for fast navigation -->
@@ -167,14 +173,21 @@
        LIGHTBOX FULLSCREEN MODAL
        ====================================================================== -->
   <div id="lightbox" class="lightbox-modal" role="dialog" aria-modal="true" aria-label="Просмотр фотографии или видео на весь экран">
-    <button id="lightbox-close" class="lightbox-btn lightbox-close" aria-label="Закрыть просмотр (Escape)">✕</button>
+    <button id="lightbox-close" class="lightbox-btn lightbox-close" aria-label="Закрыть полноэкранный режим (Escape)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M18 6L6 18M6 6l12 12"></path>
+      </svg>
+    </button>
     <button id="lightbox-prev" class="lightbox-btn lightbox-prev" aria-label="Предыдущий слайд">‹</button>
     <button id="lightbox-next" class="lightbox-btn lightbox-next" aria-label="Следующий слайд">›</button>
 
     <div class="lightbox-content-wrap">
       <img id="lightbox-img" class="lightbox-image" src="" alt="Семейная фотография" />
       <video id="lightbox-video" class="lightbox-video" playsinline controls loop preload="metadata" style="display: none;"></video>
-      <div id="lightbox-counter" class="lightbox-counter">1 / 15</div>
+      <div class="lightbox-info-bar">
+        <div id="lightbox-caption" class="lightbox-caption">Самые тёплые воспоминания</div>
+        <div id="lightbox-counter" class="lightbox-counter">1 / 15</div>
+      </div>
     </div>
   </div>
 

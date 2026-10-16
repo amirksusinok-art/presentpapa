@@ -67,28 +67,13 @@ export class CokaColaCan {
                 <div class="can-highlight-strip"></div>
                 <div class="can-shadow-rim"></div>
 
-                <!-- Condensation Dew Droplets for Ice-Cold Refreshment -->
-                <div class="can-condensation" aria-hidden="true">
-                  <span class="drop d1"></span>
-                  <span class="drop d2"></span>
-                  <span class="drop d3"></span>
-                  <span class="drop d4"></span>
-                  <span class="drop d5"></span>
-                  <span class="drop d6"></span>
-                  <span class="drop d7"></span>
-                  <span class="drop d8"></span>
-                  <span class="drop d9"></span>
-                  <span class="drop d10"></span>
-                  <span class="drop d11"></span>
-                  <span class="drop d12"></span>
-                </div>
-
-                <!-- Iconic White Spencerian Script Brand -->
+                <!-- Clean Iconic Spencerian Script Brand & Wave Ribbon -->
                 <div class="can-brand-wrap">
-                  <div class="can-logo-text">CokaCola</div>
+                  <div class="can-logo-text">Coca-Cola</div>
+                  <div class="can-dynamic-wave"></div>
                 </div>
 
-                <!-- Subtle bottom aluminum rim reflection -->
+                <!-- Clean bottom aluminum rim reflection -->
                 <div class="can-bottom-rim"></div>
               </div>
 

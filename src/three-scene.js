@@ -480,7 +480,7 @@ export class GiftScene {
   }
 
   /**
-   * Refined, Smooth Box Opening Animation
+   * Refined, Tactile & Smooth Box Opening Animation
    */
   openBox(onComplete) {
     if (this.isOpen || this.isOpening) return;
@@ -490,9 +490,9 @@ export class GiftScene {
     setTimeout(() => {
       soundCtrl.playBoxOpeningChime();
       soundCtrl.startAmbientMusic();
-    }, 1600);
+    }, 1100);
 
-    const duration = 5800; // 5.8s elegant pacing
+    const duration = 3000; // 3.0s smooth, fluid, responsive pacing
     const startTime = performance.now();
     const startCamZ = this.camera.position.z;
 
@@ -501,64 +501,75 @@ export class GiftScene {
       const t = Math.min(elapsed / duration, 1);
       this.openProgress = t;
 
-      // 1. Subtle Camera ease (gentle zoom in, then settles into background view)
-      if (t < 0.35) {
-        const p1 = t / 0.35;
-        this.camTargetPos.z = startCamZ - 0.7 * (1 - Math.pow(1 - p1, 2));
+      // 1. Tactile Box Wobble / Anticipation on tap (0.0 to 0.16)
+      if (t < 0.16) {
+        const wobbleProgress = t / 0.16;
+        // Gentle dynamic wobble response to tap
+        const wobbleAngle = Math.sin(wobbleProgress * Math.PI * 3) * 0.045 * (1 - wobbleProgress);
+        this.boxGroup.rotation.z = wobbleAngle;
+        this.boxGroup.position.y = -0.32 - Math.sin(wobbleProgress * Math.PI) * 0.025;
       } else {
-        const p2 = (t - 0.35) / 0.65;
-        const easeP2 = 1 - Math.pow(1 - p2, 3);
-        this.camTargetPos.z = (startCamZ - 0.7) + 0.9 * easeP2;
-        this.camTargetPos.y = 0.6 + 0.25 * easeP2;
+        this.boxGroup.rotation.z = 0;
       }
 
-      // 2. Ribbon loops dissolve gracefully (0.1 to 0.4)
-      if (t >= 0.1 && t <= 0.4) {
-        const bowT = (t - 0.1) / 0.3;
+      // 2. Subtle Camera ease (gentle zoom in, then settles into background view)
+      if (t < 0.4) {
+        const p1 = t / 0.4;
+        this.camTargetPos.z = startCamZ - 0.55 * (1 - Math.pow(1 - p1, 2));
+      } else {
+        const p2 = (t - 0.4) / 0.6;
+        const easeP2 = 1 - Math.pow(1 - p2, 3);
+        this.camTargetPos.z = (startCamZ - 0.55) + 0.75 * easeP2;
+        this.camTargetPos.y = 0.6 + 0.2 * easeP2;
+      }
+
+      // 3. Ribbon bow loops dissolve and untie gracefully (0.12 to 0.42)
+      if (t >= 0.12 && t <= 0.42) {
+        const bowT = (t - 0.12) / 0.30;
         const bowScale = Math.max(0.001, 1 - bowT);
         this.ribbonParts.forEach(part => {
           part.scale.set(bowScale, bowScale, bowScale);
         });
-      } else if (t > 0.4) {
+      } else if (t > 0.42) {
         this.ribbonParts.forEach(part => {
           part.scale.set(0.001, 0.001, 0.001);
         });
       }
 
-      // 3. Lid lifts up cleanly and tilts backward (0.24 to 0.75)
-      if (t >= 0.22) {
-        const lidT = Math.min((t - 0.22) / 0.52, 1);
+      // 4. Lid slowly and smoothly lifts up and tilts backward (0.22 to 0.82)
+      if (t >= 0.20) {
+        const lidT = Math.min((t - 0.20) / 0.62, 1);
         const lidEase = 1 - Math.pow(1 - lidT, 3);
 
-        this.lidGroup.position.y = this.lidInitY + lidEase * 1.7;
-        this.lidGroup.position.z = -lidEase * 0.95;
-        this.lidGroup.position.x = -lidEase * 0.4;
-        this.lidGroup.rotation.x = -lidEase * 0.58;
-        this.lidGroup.rotation.z = lidEase * 0.25;
+        this.lidGroup.position.y = this.lidInitY + lidEase * 1.85;
+        this.lidGroup.position.z = -lidEase * 1.05;
+        this.lidGroup.position.x = -lidEase * 0.42;
+        this.lidGroup.rotation.x = -lidEase * 0.62;
+        this.lidGroup.rotation.z = lidEase * 0.22;
       }
 
-      // 4. Inner warm light and stardust particle burst (0.3 to 0.85)
-      if (t >= 0.28) {
-        const lightT = Math.min((t - 0.28) / 0.42, 1);
+      // 5. Inner warm golden glow and rising particles (0.28 to 0.90)
+      if (t >= 0.26) {
+        const lightT = Math.min((t - 0.26) / 0.48, 1);
         const lightEase = Math.sin(lightT * Math.PI * 0.5);
 
-        this.innerLight.intensity = lightEase * 4.2;
+        this.innerLight.intensity = lightEase * 4.4;
 
         if (this.openingGlow) {
-          this.openingGlow.material.opacity = lightEase * 0.90;
+          this.openingGlow.material.opacity = lightEase * 0.92;
         }
 
         if (this.innerBed) {
-          this.innerBed.material.opacity = lightEase * 0.60;
+          this.innerBed.material.opacity = lightEase * 0.65;
         }
 
         if (this.lightBeam && this.beamSideMat) {
-          this.beamSideMat.opacity = lightEase * 0.85;
+          this.beamSideMat.opacity = lightEase * 0.88;
           this.lightBeam.scale.y = lightEase;
         }
 
         if (this.particles) {
-          this.particles.material.opacity = Math.min(lightEase * 0.9, 0.85);
+          this.particles.material.opacity = Math.min(lightEase * 0.95, 0.9);
           this.particleData.forEach(p => p.active = true);
         }
       }
@@ -582,6 +593,11 @@ export class GiftScene {
 
     this.updateCameraDistance();
     this.camTargetPos = { x: 0, y: 0.6, z: this.camInitDist };
+
+    if (this.boxGroup) {
+      this.boxGroup.rotation.z = 0;
+      this.boxGroup.position.y = -0.32;
+    }
 
     this.lidGroup.position.set(0, this.lidInitY, 0);
     this.lidGroup.rotation.set(0, 0, 0);

@@ -37,7 +37,7 @@ export class BirthdayCake {
             <div class="cake-mic-status" id="cake-mic-status"></div>
           </div>
 
-          <!-- Masterpiece Gourmet Cake Stage -->
+          <!-- Gourmet Birthday Cake Stage -->
           <div class="cake-stage" id="cake-stage">
             
             <!-- Metallic Gold Pedestal Cake Stand -->
@@ -48,85 +48,55 @@ export class BirthdayCake {
               <div class="platter-shadow"></div>
             </div>
 
-            <!-- The Gourmet Cake Layers -->
-            <div class="cake-body">
-              
-              <!-- Upper Tier: Mirror Glaze & Fruit Toppings -->
-              <div class="cake-tier-top">
-                <div class="cake-glaze-surface">
+            <!-- Clean & Elegant Gourmet Cake Container -->
+            <div class="cake-assembly">
+              <div class="cake-body">
+                <!-- Smooth Mirror Glaze Top with Soft Warm Sheen -->
+                <div class="cake-top-surface">
                   <div class="glaze-reflection"></div>
-                </div>
-
-                <!-- Piped Buttercream Rosettes with Gold Sugar Pearls -->
-                <div class="cake-rosettes">
-                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                </div>
-
-                <!-- Rich Gourmet Fruits: Strawberries & Blueberries -->
-                <div class="cake-fresh-fruits">
-                  <div class="fruit-item berry-strawberry s1">
-                    <div class="berry-leaf"></div>
-                    <div class="berry-core"></div>
-                  </div>
-                  <div class="fruit-item berry-blueberry b1">
-                    <div class="blue-shine"></div>
-                  </div>
-                  <div class="fruit-item berry-strawberry s2">
-                    <div class="berry-leaf"></div>
-                    <div class="berry-core"></div>
-                  </div>
-                  <div class="fruit-item berry-blueberry b2">
-                    <div class="blue-shine"></div>
-                  </div>
-                  <div class="fruit-item berry-strawberry s3">
-                    <div class="berry-leaf"></div>
-                    <div class="berry-core"></div>
+                  <!-- Sockets where candles firmly plant into the glaze -->
+                  <div class="cake-candle-sockets">
+                    <span class="socket s0"></span>
+                    <span class="socket s1"></span>
+                    <span class="socket s2"></span>
+                    <span class="socket s3"></span>
+                    <span class="socket s4"></span>
                   </div>
                 </div>
 
-                <!-- Organic Rich Chocolate Ganache Drips -->
-                <div class="cake-glaze-drips">
-                  <span class="drip d1"></span>
-                  <span class="drip d2"></span>
-                  <span class="drip d3"></span>
-                  <span class="drip d4"></span>
-                  <span class="drip d5"></span>
-                  <span class="drip d6"></span>
-                  <span class="drip d7"></span>
+                <!-- Rich Chocolate Sponge Tier with Gold Trim Base -->
+                <div class="cake-side-cylinder">
+                  <div class="cake-gold-fillet"></div>
                 </div>
               </div>
 
-              <!-- Lower Tier: Rich Sponge with Velvety Cream Layer -->
-              <div class="cake-tier-bottom">
-                <div class="tier-cream-line"></div>
-                <div class="tier-chocolate-base"></div>
+              <!-- 5 Golden Candles firmly planted into the cake top -->
+              <div class="cake-candles" id="cake-candles">
+                ${Array.from({ length: this.candleCount }).map((_, i) => `
+                  <div class="candle" data-index="${i}">
+                    <!-- Pulsating Candle Light Glow onto cake -->
+                    <div class="flame-ambient-aura" id="aura-${i}"></div>
+                    
+                    <div class="flame" id="flame-${i}">
+                      <div class="flame-blue"></div>
+                      <div class="flame-core"></div>
+                      <div class="flame-glow"></div>
+                    </div>
+                    
+                    <!-- Smoke wisps upon extinguishing -->
+                    <div class="smoke-wisp" id="smoke-${i}">
+                      <span class="smoke-puff s1"></span>
+                      <span class="smoke-puff s2"></span>
+                    </div>
+                    
+                    <div class="wick"></div>
+                    <div class="candle-wax-socket"></div>
+                    <div class="candle-stem"></div>
+                    <!-- Grounding shadow at the candle base touching the cake -->
+                    <div class="candle-base-shadow"></div>
+                  </div>
+                `).join('')}
               </div>
-            </div>
-
-            <!-- 5 Luxurious Golden Candles with Realistic Multi-Layer Flames -->
-            <div class="cake-candles" id="cake-candles">
-              ${Array.from({ length: this.candleCount }).map((_, i) => `
-                <div class="candle" data-index="${i}">
-                  <!-- Pulsating Candle Light Glow onto cake -->
-                  <div class="flame-ambient-aura" id="aura-${i}"></div>
-                  
-                  <div class="flame" id="flame-${i}">
-                    <div class="flame-blue"></div>
-                    <div class="flame-core"></div>
-                    <div class="flame-glow"></div>
-                  </div>
-                  
-                  <!-- Curling smoke wisps after extinguish -->
-                  <div class="smoke-wisp" id="smoke-${i}">
-                    <span class="smoke-puff s1"></span>
-                    <span class="smoke-puff s2"></span>
-                  </div>
-                  
-                  <div class="wick"></div>
-                  <div class="candle-wax-socket"></div>
-                  <div class="candle-stem"></div>
-                </div>
-              `).join('')}
             </div>
           </div>
 

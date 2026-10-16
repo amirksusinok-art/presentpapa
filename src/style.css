@@ -566,48 +566,70 @@ html, body {
   position: absolute;
   bottom: 14px;
   right: 14px;
-  background: rgba(10, 14, 22, 0.82);
-  border: 1px solid var(--border-subtle);
+  background: rgba(12, 17, 27, 0.88);
+  border: 1px solid var(--border-gold);
   border-radius: 999px;
-  padding: 0.28rem 0.7rem;
+  padding: 0.38rem 0.85rem;
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  backdrop-filter: blur(8px);
-  opacity: 0.85;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
-}
-
-.photo-viewer-card:hover .viewer-tap-hint {
-  opacity: 1;
-  color: var(--gold-light);
-}
-
-/* Swipe Gesture Hint for Mobile */
-.swipe-hint {
-  display: none;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   font-size: 0.78rem;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-  opacity: 0.85;
+  font-weight: 500;
+  color: #ffffff;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
+  transition: all 0.22s var(--ease-out);
+  z-index: 5;
   user-select: none;
+}
+
+.viewer-tap-hint:hover {
+  background: rgba(24, 34, 52, 0.96);
+  border-color: var(--border-gold-bright);
+  color: var(--gold-light);
+  transform: scale(1.05);
+}
+
+.viewer-tap-hint:active {
+  transform: scale(0.96);
+}
+
+/* Album Caption & Mobile Swipe Guidance */
+.album-caption-bar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  text-align: center;
+  width: 100%;
+  max-width: 580px;
   margin-top: -0.2rem;
 }
 
-.swipe-icon {
-  color: var(--gold-light);
-  font-size: 0.85rem;
+.photo-caption {
+  font-family: var(--font-serif);
+  font-size: clamp(1.02rem, 2.3vw, 1.22rem);
+  font-weight: 500;
+  color: #fff9ea;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+}
+
+.photo-swipe-hint {
+  display: none;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.8;
+  user-select: none;
 }
 
 @media (max-width: 768px) {
-  .swipe-hint {
-    display: flex;
+  .photo-swipe-hint {
+    display: block;
   }
 }
 
@@ -788,11 +810,29 @@ html, body {
   transition: opacity 0.25s var(--ease-out);
 }
 
+.lightbox-info-bar {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.lightbox-caption {
+  font-family: var(--font-serif);
+  font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+  color: #fff9eb;
+  font-weight: 500;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.85);
+}
+
 .lightbox-counter {
-  margin-top: 0.8rem;
-  font-size: 0.88rem;
-  letter-spacing: 0.08em;
-  color: var(--text-muted);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  color: var(--gold-light);
+  font-weight: 500;
+  opacity: 0.9;
 }
 
 .lightbox-btn {
@@ -1615,218 +1655,110 @@ html, body {
   margin-top: -6px;
 }
 
-/* Gourmet Cake Tiers & Rich Ganache Glaze */
-.cake-body {
+/* Clean & Elegant Gourmet Cake Container & Assembly */
+.cake-assembly {
+  position: relative;
   width: 250px;
-  height: 145px;
-  position: relative;
+  height: 185px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
   z-index: 2;
-  margin-bottom: 12px;
-  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.75));
+  margin-bottom: 8px;
 }
 
-.cake-tier-top {
-  width: 230px;
-  height: 70px;
-  margin: 0 auto;
+/* Gourmet Cake Cylinder & Rich Ganache Glaze */
+.cake-body {
   position: relative;
-  z-index: 4;
-  border-radius: 50% / 22px;
-  background: linear-gradient(180deg, #3d2314 0%, #201107 100%);
-  box-shadow: inset 0 2px 8px rgba(255, 215, 120, 0.3);
+  width: 240px;
+  height: 100px;
+  z-index: 2;
+  filter: drop-shadow(0 15px 24px rgba(0, 0, 0, 0.75));
 }
 
-.cake-glaze-surface {
+.cake-top-surface {
   position: absolute;
-  inset: 0;
-  border-radius: 50% / 22px;
-  background: radial-gradient(ellipse at 42% 38%, #5a3219 0%, #2e160a 75%, #180903 100%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 46% 40%, #54311c 0%, #2e170a 65%, #190a03 100%);
+  border: 1.5px solid rgba(220, 179, 85, 0.45);
+  box-shadow: inset 0 2px 10px rgba(255, 220, 130, 0.35), 0 0 15px rgba(255, 195, 77, 0.2);
+  z-index: 3;
   overflow: hidden;
 }
 
 .glaze-reflection {
   position: absolute;
   top: 6px;
-  left: 28px;
-  width: 95px;
-  height: 22px;
+  left: 30px;
+  width: 80px;
+  height: 18px;
   border-radius: 50%;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 240, 200, 0.1) 70%, transparent 100%);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 240, 200, 0.08) 75%, transparent 100%);
   transform: rotate(-10deg);
   filter: blur(2px);
+  pointer-events: none;
 }
 
-/* Buttercream Rosettes */
-.cake-rosettes {
+/* Sockets on the cake surface for the candles */
+.cake-candle-sockets {
   position: absolute;
-  inset: 2px;
-  border-radius: 50% / 20px;
-  pointer-events: none;
+  inset: 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 0 10px;
-}
-
-.cake-rosettes span {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #fff5d6 0%, #e2b968 60%, #9e7523 100%);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5), inset 0 1px 2px #ffffff;
-  position: relative;
-}
-
-.cake-rosettes span::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #ffd700;
-  box-shadow: 0 0 3px #ffe680;
-}
-
-/* Fresh 3D Fruits */
-.cake-fresh-fruits {
-  position: absolute;
-  top: -6px;
-  left: 18px;
-  right: 18px;
-  height: 35px;
+  padding: 0 26px;
   pointer-events: none;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  z-index: 6;
 }
 
-.fruit-item {
-  position: relative;
-  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6));
-}
-
-.berry-strawberry {
-  width: 20px;
-  height: 24px;
-  background: radial-gradient(circle at 35% 30%, #ff5266 0%, #b80d22 65%, #66030e 100%);
-  border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
-  transform: rotate(-8deg);
-  position: relative;
-}
-
-.berry-strawberry.s2 {
-  transform: rotate(12deg) scale(0.92);
-}
-
-.berry-strawberry.s3 {
-  transform: rotate(-15deg) scale(0.85);
-}
-
-.berry-leaf {
-  position: absolute;
-  top: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 12px;
-  height: 6px;
-  background: #38a169;
-  border-radius: 50% 50% 20% 20%;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
-}
-
-.berry-blueberry {
+.cake-candle-sockets .socket {
   width: 14px;
-  height: 14px;
-  background: radial-gradient(circle at 35% 30%, #5c7cfa 0%, #22387a 65%, #101c40 100%);
+  height: 7px;
   border-radius: 50%;
-  position: relative;
+  background: rgba(14, 6, 2, 0.9);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.95), 0 0 5px rgba(255, 215, 0, 0.25);
+  border: 1px solid rgba(212, 168, 67, 0.35);
 }
 
-.blue-shine {
+.cake-side-cylinder {
   position: absolute;
-  top: 2px;
-  left: 3px;
-  width: 4px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 50%;
-}
-
-/* Organic Chocolate Ganache Drips */
-.cake-glaze-drips {
-  position: absolute;
-  top: 26px;
-  left: 6px;
-  right: 6px;
-  display: flex;
-  justify-content: space-between;
-  pointer-events: none;
-  z-index: 5;
-}
-
-.cake-glaze-drips .drip {
-  width: 14px;
-  background: linear-gradient(180deg, #3d2314 0%, #281408 80%, #170902 100%);
-  border-radius: 0 0 10px 10px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6), inset -1px 0 2px rgba(255, 200, 120, 0.15);
-}
-
-.cake-glaze-drips .d1 { height: 26px; }
-.cake-glaze-drips .d2 { height: 36px; border-radius: 0 0 12px 12px; }
-.cake-glaze-drips .d3 { height: 22px; }
-.cake-glaze-drips .d4 { height: 32px; border-radius: 0 0 11px 11px; }
-.cake-glaze-drips .d5 { height: 20px; }
-.cake-glaze-drips .d6 { height: 38px; border-radius: 0 0 12px 12px; }
-.cake-glaze-drips .d7 { height: 24px; }
-
-/* Lower Tier */
-.cake-tier-bottom {
-  width: 250px;
-  height: 90px;
-  position: absolute;
-  top: 32px;
+  top: 25px;
   left: 0;
-  z-index: 2;
-  border-radius: 0 0 50% 50% / 0 0 28px 28px;
-  background: linear-gradient(180deg, #2c160b 0%, #1a0b04 100%);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.85);
+  width: 100%;
+  height: 75px;
+  border-radius: 0 0 50% 50% / 0 0 25px 25px;
+  background: linear-gradient(180deg, #2b1509 0%, #170a04 100%);
+  border-bottom: 2px solid #5a3812;
   overflow: hidden;
+  z-index: 2;
 }
 
-.tier-cream-line {
+.cake-gold-fillet {
   position: absolute;
-  top: 40px;
+  bottom: 6px;
   left: 0;
   right: 0;
   height: 5px;
-  background: linear-gradient(90deg, #c49938 0%, #fceda8 50%, #c49938 100%);
-  opacity: 0.65;
-  box-shadow: 0 0 8px rgba(252, 237, 168, 0.35);
+  background: linear-gradient(90deg, #916817 0%, #ffd700 50%, #916817 100%);
+  box-shadow: 0 0 8px rgba(255, 215, 0, 0.45);
+  opacity: 0.85;
 }
 
-.tier-chocolate-base {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 45px;
-  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%);
-}
-
-/* 5 Golden Striped Candles with Multi-Layer Flame */
+/* 5 Golden Striped Candles firmly standing on the cake */
 .cake-candles {
   position: absolute;
-  top: -8px;
-  left: 20px;
-  right: 20px;
+  bottom: 68px;
+  left: 24px;
+  right: 24px;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  height: 105px;
-  z-index: 8;
+  height: 85px;
+  z-index: 10;
   pointer-events: none;
 }
 
@@ -1838,9 +1770,18 @@ html, body {
   width: 22px;
 }
 
-.candle:nth-child(1), .candle:nth-child(5) { margin-bottom: 6px; }
-.candle:nth-child(2), .candle:nth-child(4) { margin-bottom: 2px; }
+.candle:nth-child(1), .candle:nth-child(5) { margin-bottom: 10px; }
+.candle:nth-child(2), .candle:nth-child(4) { margin-bottom: 4px; }
 .candle:nth-child(3) { margin-bottom: 0px; }
+
+.candle-base-shadow {
+  width: 14px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.8);
+  filter: blur(1.5px);
+  margin-top: -3px;
+}
 
 .flame-ambient-aura {
   position: absolute;
@@ -2382,55 +2323,51 @@ html, body {
   pointer-events: none;
 }
 
-/* Dew Condensation Droplets */
-.can-condensation {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.can-condensation .drop {
-  position: absolute;
-  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, rgba(0, 0, 0, 0.2) 100%);
-  border-radius: 50%;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-}
-
-.can-condensation .d1 { top: 25px; left: 24px; width: 5px; height: 5px; }
-.can-condensation .d2 { top: 40px; left: 38px; width: 4px; height: 6px; border-radius: 40% 40% 50% 50%; }
-.can-condensation .d3 { top: 75px; left: 20px; width: 6px; height: 6px; }
-.can-condensation .d4 { top: 110px; left: 32px; width: 5px; height: 8px; border-radius: 40% 40% 50% 50%; }
-.can-condensation .d5 { top: 160px; left: 22px; width: 4px; height: 4px; }
-.can-condensation .d6 { top: 195px; left: 35px; width: 6px; height: 7px; }
-.can-condensation .d7 { top: 45px; right: 26px; width: 5px; height: 5px; }
-.can-condensation .d8 { top: 85px; right: 38px; width: 4px; height: 4px; }
-.can-condensation .d9 { top: 130px; right: 20px; width: 6px; height: 8px; border-radius: 40% 40% 50% 50%; }
-.can-condensation .d10 { top: 175px; right: 34px; width: 5px; height: 5px; }
-.can-condensation .d11 { top: 215px; right: 22px; width: 4px; height: 5px; }
-.can-condensation .d12 { top: 140px; left: 70px; width: 5px; height: 5px; }
-
-/* Iconic CokaCola Brand Typography */
+/* Iconic Spencerian Brand & Classic Dynamic Ribbon */
 .can-brand-wrap {
   position: absolute;
-  top: 50%;
+  top: 52%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-90deg);
   width: 220px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   pointer-events: none;
+  z-index: 6;
 }
 
 .can-logo-text {
-  font-family: var(--font-serif);
+  font-family: 'Playfair Display', Georgia, cursive, serif;
   font-style: italic;
   font-weight: 700;
-  font-size: 2.85rem;
-  letter-spacing: 0.04em;
+  font-size: 2.5rem;
+  letter-spacing: 0.02em;
   color: #ffffff;
-  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6), 0 0 12px rgba(255, 255, 255, 0.4);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 10px rgba(255, 255, 255, 0.35);
   white-space: nowrap;
+}
+
+.can-dynamic-wave {
+  width: 135px;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 2px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  margin-top: 2px;
+  position: relative;
+}
+
+.can-dynamic-wave::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  left: 20px;
+  width: 75px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 1px;
 }
 
 .can-bottom-rim {
