@@ -289,24 +289,8 @@ export class CosmicRocketModule {
         <!-- 3D Canvas Mount -->
         <div class="rocket-canvas-container" id="rocket-canvas-container"></div>
 
-        <!-- Futuristic Aerospace HUD Overlay -->
+        <!-- Clean Cinematic Overlay -->
         <div class="rocket-hud" id="rocket-hud">
-          
-          <!-- Top Left Telemetry Panel -->
-          <div class="hud-panel hud-top-left">
-            <div class="hud-tag">MISSION: PAPA-2026 // FLIGHT 777</div>
-            <div class="hud-metric"><span class="hud-label">PROPULSION:</span> <span id="hud-fuel" class="hud-val">100% [READY]</span></div>
-            <div class="hud-metric"><span class="hud-label">VECTOR:</span> <span class="hud-val text-green">CALIBRATED</span></div>
-            <div class="hud-metric"><span class="hud-label">PAYLOAD:</span> <span class="hud-val text-gold">GOLD CAPSULE #1</span></div>
-          </div>
-
-          <!-- Top Right Orbit Readout -->
-          <div class="hud-panel hud-top-right">
-            <div class="hud-tag">ORBITAL METRICS</div>
-            <div class="hud-metric"><span class="hud-label">ALTITUDE:</span> <span id="hud-alt" class="hud-val">0.0 KM</span></div>
-            <div class="hud-metric"><span class="hud-label">VELOCITY:</span> <span id="hud-spd" class="hud-val">0.0 KM/S</span></div>
-            <div class="hud-metric"><span class="hud-label">STATUS:</span> <span id="hud-status" class="hud-val text-gold">STANDBY</span></div>
-          </div>
 
           <!-- Center Massive Countdown Display -->
           <div class="rocket-countdown-overlay" id="rocket-countdown-overlay" aria-hidden="true">
@@ -341,26 +325,26 @@ export class CosmicRocketModule {
                   <span>Повторить запуск ↺</span>
                 </button>
 
-                <!-- Power-off Breaker Toggle Lever with Safety Cover -->
-                <div class="breaker-switch-wrap">
-                  <div class="breaker-cover" id="breaker-cover" role="button" tabindex="0" title="Откинуть защитную крышку">
-                    <span class="cover-stripe"></span>
-                    <span class="cover-label">ОТКРЫТЬ</span>
-                  </div>
-                  <button id="btn-breaker-lever" class="breaker-lever-btn" aria-label="Рычаг обесточивания" disabled>
-                    <span class="lever-handle"></span>
-                    <span class="lever-text">ЗАВЕРШИТЬ МИССИЮ И ПОГАСИТЬ СВЕТ</span>
-                  </button>
-                </div>
+                <!-- Clean emergency power cutoff button -->
+                <button id="btn-breaker-lever" class="emergency-power-btn" aria-label="Завершить миссию и погасить свет">
+                  <span class="power-glow-dot" aria-hidden="true"></span>
+                  <span class="power-btn-text">ЗАВЕРШИТЬ МИССИЮ И ПОГАСИТЬ СВЕТ</span>
+                </button>
               </div>
             </div>
           </div>
 
           <!-- Bottom Action Bar (Phase 1 launch trigger) -->
           <div class="rocket-bottom-controls" id="rocket-bottom-controls">
-            <button id="btn-activate-launch" class="btn btn-luxury launch-trigger-btn">
-              <span class="launch-icon">🚀</span>
-              <span class="launch-text">АКТИВИРОВАТЬ ЗАПУСК</span>
+            <button id="btn-activate-launch" class="btn-launch-activation" aria-label="Активировать запуск ракеты" autofocus>
+              <span class="launch-btn-halo" aria-hidden="true"></span>
+              <span class="launch-btn-inner">
+                <span class="launch-beacon-dot" aria-hidden="true"></span>
+                <span class="launch-btn-text">АКТИВИРОВАТЬ ЗАПУСК</span>
+                <svg class="launch-btn-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+              </span>
             </button>
           </div>
         </div>
@@ -393,12 +377,7 @@ export class CosmicRocketModule {
     this.countdownDigit = this.container.querySelector('#countdown-digit');
     this.countdownSubtext = this.container.querySelector('#countdown-subtext');
     this.hologramWrap = this.container.querySelector('#rocket-hologram-wrap');
-    this.hudAlt = this.container.querySelector('#hud-alt');
-    this.hudSpd = this.container.querySelector('#hud-spd');
-    this.hudStatus = this.container.querySelector('#hud-status');
-    this.hudFuel = this.container.querySelector('#hud-fuel');
     this.bottomControls = this.container.querySelector('#rocket-bottom-controls');
-    this.breakerCover = this.container.querySelector('#breaker-cover');
     this.btnBreakerLever = this.container.querySelector('#btn-breaker-lever');
     this.btnRocketRepeat = this.container.querySelector('#btn-rocket-repeat');
     this.crtOverlay = this.container.querySelector('#crt-off-overlay');
@@ -406,14 +385,35 @@ export class CosmicRocketModule {
     this.btnPostRestart = this.container.querySelector('#btn-post-restart');
   }
 
+  createSoftParticleTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 128;
+    canvas.height = 128;
+    const ctx = canvas.getContext('2d');
+    const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    grad.addColorStop(0.2, 'rgba(255, 255, 255, 0.75)');
+    grad.addColorStop(0.45, 'rgba(255, 255, 255, 0.25)');
+    grad.addColorStop(0.75, 'rgba(255, 255, 255, 0.05)');
+    grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 128, 128);
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.wrapS = THREE.ClampToEdgeWrapping;
+    tex.wrapT = THREE.ClampToEdgeWrapping;
+    return tex;
+  }
+
   initThree() {
     const mount = this.container.querySelector('#rocket-canvas-container');
     const width = mount.clientWidth || window.innerWidth;
     const height = mount.clientHeight || window.innerHeight;
 
+    this.softTexture = this.createSoftParticleTexture();
+
     // 1. Scene
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.FogExp2(0x060913, 0.025);
+    this.scene.fog = new THREE.FogExp2(0x060913, 0.022);
 
     // 2. Camera
     this.camera = new THREE.PerspectiveCamera(44, width / height, 0.1, 1000);
@@ -429,7 +429,7 @@ export class CosmicRocketModule {
     this.renderer.setSize(width, height);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.25;
+    this.renderer.toneMappingExposure = 1.35;
     mount.appendChild(this.renderer.domElement);
 
     // 4. Construct 3D Elements
@@ -446,30 +446,49 @@ export class CosmicRocketModule {
   }
 
   createLights() {
-    // Ambient night sky blue
-    const ambient = new THREE.AmbientLight(0x1a2436, 1.2);
+    // 1. Ambient night sky blue fill
+    const ambient = new THREE.AmbientLight(0x283b58, 2.4);
     this.scene.add(ambient);
 
-    // Main Spaceport Key Floodlight
-    const keySpot = new THREE.SpotLight(0xdbeafe, 3.5);
-    keySpot.position.set(12, 16, 12);
-    keySpot.angle = Math.PI / 4;
-    keySpot.penumbra = 0.5;
-    this.scene.add(keySpot);
+    // 2. Main Spaceport Key Xenon Floodlight (Front-Right)
+    const keyLight = new THREE.DirectionalLight(0xe0f2fe, 4.0);
+    keyLight.position.set(6, 14, 10);
+    this.scene.add(keyLight);
 
-    // Golden Rim Light
-    const rimLight = new THREE.DirectionalLight(0xf5d78e, 2.0);
-    rimLight.position.set(-10, 8, -8);
+    // 3. Secondary Fill Floodlight (Front-Left)
+    const fillLight = new THREE.DirectionalLight(0x93c5fd, 2.4);
+    fillLight.position.set(-8, 10, 8);
+    this.scene.add(fillLight);
+
+    // 4. Golden Rim Light (from behind)
+    const rimLight = new THREE.DirectionalLight(0xfcd34d, 3.4);
+    rimLight.position.set(-6, 12, -10);
     this.scene.add(rimLight);
 
-    // Engine Flame PointLight (dynamic intensity)
-    this.flameLight = new THREE.PointLight(0xff6600, 0, 35);
+    // 5. Upward Ground Launchpad Floodlights
+    this.padSpot1 = new THREE.SpotLight(0xffedd5, 4.5, 25, Math.PI / 3, 0.4);
+    this.padSpot1.position.set(3.2, 0.2, 3.2);
+    this.padSpot1.target = this.rocketGroup;
+    this.scene.add(this.padSpot1);
+
+    this.padSpot2 = new THREE.SpotLight(0xdbeafe, 4.0, 25, Math.PI / 3, 0.4);
+    this.padSpot2.position.set(-3.2, 0.2, 3.2);
+    this.padSpot2.target = this.rocketGroup;
+    this.scene.add(this.padSpot2);
+
+    // 6. Tower red aviation warning beacon
+    this.beaconLight = new THREE.PointLight(0xff2222, 2.0, 15);
+    this.beaconLight.position.set(-3.2, 11.6, -1.2);
+    this.scene.add(this.beaconLight);
+
+    // 7. Engine Flame PointLight (dynamic intensity)
+    this.flameLight = new THREE.PointLight(0xff7700, 0, 50);
     this.flameLight.position.set(0, -0.6, 0);
     this.scene.add(this.flameLight);
   }
 
   createStarfield() {
-    const starCount = 1200;
+    const starCount = 1400;
     const starGeo = new THREE.BufferGeometry();
     const starPositions = new Float32Array(starCount * 3);
 
@@ -498,33 +517,32 @@ export class CosmicRocketModule {
 
   createEarth() {
     this.earthGroup = new THREE.Group();
-    // Position Earth so curvature is dramatic on orbit
     this.earthGroup.position.set(28, -65, -80);
     this.scene.add(this.earthGroup);
 
     // Planet sphere
     const earthGeo = new THREE.SphereGeometry(45, 64, 64);
     const earthMat = new THREE.MeshStandardMaterial({
-      color: 0x1a4b8c,
+      color: 0x1b4d8f,
       roughness: 0.8,
-      metalness: 0.1
+      metalness: 0.15
     });
     const earthMesh = new THREE.Mesh(earthGeo, earthMat);
     this.earthGroup.add(earthMesh);
 
     // Atmospheric rim glow
-    const atmosGeo = new THREE.SphereGeometry(46.2, 64, 64);
+    const atmosGeo = new THREE.SphereGeometry(46.3, 64, 64);
     const atmosMat = new THREE.MeshBasicMaterial({
       color: 0x38bdf8,
       transparent: true,
-      opacity: 0.28,
+      opacity: 0.32,
       blending: THREE.AdditiveBlending,
       side: THREE.BackSide
     });
     const atmosMesh = new THREE.Mesh(atmosGeo, atmosMat);
     this.earthGroup.add(atmosMesh);
 
-    this.earthGroup.visible = false; // Becomes visible upon orbital insertion
+    this.earthGroup.visible = false;
   }
 
   createLaunchPad() {
@@ -532,33 +550,60 @@ export class CosmicRocketModule {
     this.launchPadGroup.position.set(0, 0, 0);
     this.scene.add(this.launchPadGroup);
 
-    // Ground platform
+    // Ground platform - detailed metallic spaceport concrete and steel
     const padMat = new THREE.MeshStandardMaterial({
-      color: 0x1e2533,
-      roughness: 0.8,
-      metalness: 0.4
+      color: 0x242d3c,
+      roughness: 0.72,
+      metalness: 0.45
     });
-    const padGeo = new THREE.CylinderGeometry(6.5, 7.5, 0.8, 8);
+    const padGeo = new THREE.CylinderGeometry(7.0, 8.2, 0.9, 32);
     const pad = new THREE.Mesh(padGeo, padMat);
-    pad.position.y = -0.4;
+    pad.position.y = -0.45;
     this.launchPadGroup.add(pad);
 
-    // Launch Gantry Tower
+    // Inner flame trench rim ring
+    const trenchMat = new THREE.MeshStandardMaterial({
+      color: 0x141a24,
+      roughness: 0.85,
+      metalness: 0.2
+    });
+    const trenchGeo = new THREE.TorusGeometry(1.4, 0.15, 16, 32);
+    trenchGeo.rotateX(Math.PI / 2);
+    const trench = new THREE.Mesh(trenchGeo, trenchMat);
+    trench.position.y = 0.02;
+    this.launchPadGroup.add(trench);
+
+    // Launch Gantry Tower (SpaceX / NASA red steel truss)
     const towerMat = new THREE.MeshStandardMaterial({
-      color: 0x8b1e1e, // NASA/SpaceX red tower steel
-      roughness: 0.6,
+      color: 0x991b1b,
+      roughness: 0.55,
       metalness: 0.5
     });
-    const towerGeo = new THREE.BoxGeometry(0.8, 12, 0.8);
+    const towerGeo = new THREE.BoxGeometry(0.85, 12.5, 0.85);
     const tower = new THREE.Mesh(towerGeo, towerMat);
-    tower.position.set(-3.2, 5.6, -1.2);
+    tower.position.set(-3.2, 5.8, -1.2);
     this.launchPadGroup.add(tower);
 
-    // Tower Service Arm
-    const armGeo = new THREE.BoxGeometry(2.5, 0.4, 0.5);
-    const arm = new THREE.Mesh(armGeo, towerMat);
-    arm.position.set(-1.8, 7.5, -0.6);
-    this.launchPadGroup.add(arm);
+    // Red warning beacon sphere on tower top
+    const beaconGeo = new THREE.SphereGeometry(0.12, 16, 16);
+    const beaconMat = new THREE.MeshBasicMaterial({ color: 0xff3333 });
+    const beaconMesh = new THREE.Mesh(beaconGeo, beaconMat);
+    beaconMesh.position.set(-3.2, 12.0, -1.2);
+    this.launchPadGroup.add(beaconMesh);
+
+    // Tower Service Arms
+    const armMat = new THREE.MeshStandardMaterial({
+      color: 0x334155,
+      roughness: 0.5,
+      metalness: 0.6
+    });
+    const arm1 = new THREE.Mesh(new THREE.BoxGeometry(2.4, 0.35, 0.4), armMat);
+    arm1.position.set(-1.8, 7.5, -0.6);
+    this.launchPadGroup.add(arm1);
+
+    const arm2 = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.3, 0.35), armMat);
+    arm2.position.set(-1.9, 4.4, -0.6);
+    this.launchPadGroup.add(arm2);
   }
 
   createRocket() {
@@ -568,21 +613,27 @@ export class CosmicRocketModule {
 
     // PBR Materials
     const titaniumMat = new THREE.MeshStandardMaterial({
-      color: 0x242b38,
-      roughness: 0.32,
-      metalness: 0.88
+      color: 0x3d495c,
+      roughness: 0.35,
+      metalness: 0.72
     });
 
     const polishedMat = new THREE.MeshStandardMaterial({
-      color: 0xdde5f0,
-      roughness: 0.2,
-      metalness: 0.95
+      color: 0xf1f5f9,
+      roughness: 0.28,
+      metalness: 0.42
     });
 
     const goldMat = new THREE.MeshStandardMaterial({
       color: 0xf5d78e,
-      roughness: 0.25,
-      metalness: 0.85
+      roughness: 0.22,
+      metalness: 0.92
+    });
+
+    const darkTrimMat = new THREE.MeshStandardMaterial({
+      color: 0x1e2736,
+      roughness: 0.45,
+      metalness: 0.7
     });
 
     // 1. Booster Stage (Lower Cylinder)
@@ -591,17 +642,26 @@ export class CosmicRocketModule {
     this.boosterMesh.position.y = 2.1;
     this.rocketGroup.add(this.boosterMesh);
 
+    // Decorative aerodynamic raceway lines
+    const racewayGeo = new THREE.BoxGeometry(0.06, 3.8, 0.08);
+    const raceway1 = new THREE.Mesh(racewayGeo, darkTrimMat);
+    raceway1.position.set(0.72, 2.1, 0);
+    this.rocketGroup.add(raceway1);
+    const raceway2 = new THREE.Mesh(racewayGeo, darkTrimMat);
+    raceway2.position.set(-0.72, 2.1, 0);
+    this.rocketGroup.add(raceway2);
+
     // Engine Skirt Ring & Nozzles
-    const skirtGeo = new THREE.CylinderGeometry(0.74, 0.76, 0.4, 32);
-    const skirt = new THREE.Mesh(skirtGeo, titaniumMat);
+    const skirtGeo = new THREE.CylinderGeometry(0.74, 0.78, 0.4, 32);
+    const skirt = new THREE.Mesh(skirtGeo, darkTrimMat);
     skirt.position.y = 0.2;
     this.rocketGroup.add(skirt);
 
     // 3 Rocket Engine Nozzles at base
     for (let i = 0; i < 3; i++) {
       const angle = (i * Math.PI * 2) / 3;
-      const nozzleGeo = new THREE.CylinderGeometry(0.12, 0.24, 0.45, 16, 1, true);
-      const nozzle = new THREE.Mesh(nozzleGeo, titaniumMat);
+      const nozzleGeo = new THREE.CylinderGeometry(0.12, 0.26, 0.5, 24, 1, true);
+      const nozzle = new THREE.Mesh(nozzleGeo, darkTrimMat);
       nozzle.position.set(Math.cos(angle) * 0.32, -0.15, Math.sin(angle) * 0.32);
       this.rocketGroup.add(nozzle);
     }
@@ -609,101 +669,131 @@ export class CosmicRocketModule {
     // 4 Base Stabilizer Fins with Gold Edge
     for (let i = 0; i < 4; i++) {
       const angle = (i * Math.PI) / 2;
-      const finGeo = new THREE.BoxGeometry(0.08, 0.9, 0.65);
-      const fin = new THREE.Mesh(finGeo, goldMat);
-      fin.position.set(Math.cos(angle) * 0.92, 0.7, Math.sin(angle) * 0.92);
-      fin.rotation.y = angle;
-      this.rocketGroup.add(fin);
+      const finGroup = new THREE.Group();
+      finGroup.rotation.y = angle;
+
+      const finGeo = new THREE.BoxGeometry(0.05, 0.9, 0.7);
+      const fin = new THREE.Mesh(finGeo, darkTrimMat);
+      fin.position.set(0, 0.5, 0.85);
+      finGroup.add(fin);
+
+      const finTipGeo = new THREE.BoxGeometry(0.07, 0.1, 0.7);
+      const finTip = new THREE.Mesh(finTipGeo, goldMat);
+      finTip.position.set(0, 0.92, 0.85);
+      finGroup.add(finTip);
+
+      this.rocketGroup.add(finGroup);
     }
 
-    // 2. Second Stage (Upper Cylinder)
-    const upperGeo = new THREE.CylinderGeometry(0.68, 0.70, 2.8, 32);
-    const upperStage = new THREE.Mesh(upperGeo, polishedMat);
-    upperStage.position.y = 5.6;
-    this.rocketGroup.add(upperStage);
+    // 2. Interstage Ring (Gold Accent)
+    const interstageGeo = new THREE.CylinderGeometry(0.73, 0.73, 0.25, 32);
+    const interstage = new THREE.Mesh(interstageGeo, goldMat);
+    interstage.position.y = 4.3;
+    this.rocketGroup.add(interstage);
 
-    // Interstage Ring
-    const interRing = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.72, 0.25, 32), goldMat);
-    interRing.position.y = 4.25;
-    this.rocketGroup.add(interRing);
+    // 3. Second Stage Core (Polished Titanium / White)
+    const secondStageGeo = new THREE.CylinderGeometry(0.72, 0.72, 2.6, 32);
+    const secondStage = new THREE.Mesh(secondStageGeo, polishedMat);
+    secondStage.position.y = 5.7;
+    this.rocketGroup.add(secondStage);
 
-    // Gold Mission Emblem
-    const emblemGeo = new THREE.CylinderGeometry(0.24, 0.24, 0.05, 16);
-    const emblem = new THREE.Mesh(emblemGeo, goldMat);
-    emblem.position.set(0, 5.8, 0.7);
-    emblem.rotation.x = Math.PI / 2;
-    this.rocketGroup.add(emblem);
+    // Grid Fins (Gold Titanium)
+    for (let i = 0; i < 4; i++) {
+      const angle = (i * Math.PI) / 2 + Math.PI / 4;
+      const gridGeo = new THREE.BoxGeometry(0.04, 0.32, 0.35);
+      const gridFin = new THREE.Mesh(gridGeo, goldMat);
+      gridFin.position.set(Math.cos(angle) * 0.88, 6.8, Math.sin(angle) * 0.88);
+      gridFin.rotation.y = angle;
+      this.rocketGroup.add(gridFin);
+    }
 
-    // 3. Payload Capsule (Inside Nose Cone)
-    this.payloadCapsule = new THREE.Group();
-    this.payloadCapsule.position.set(0, 7.3, 0);
+    // 4. Payload Capsule (Inner Gold Core)
+    const capsuleGeo = new THREE.CylinderGeometry(0.38, 0.44, 1.1, 32);
+    this.payloadCapsule = new THREE.Mesh(capsuleGeo, goldMat);
+    this.payloadCapsule.position.y = 7.45;
     this.rocketGroup.add(this.payloadCapsule);
 
-    // Gold Capsule Base
-    const capGeo = new THREE.CylinderGeometry(0.38, 0.42, 0.8, 16);
-    const capMesh = new THREE.Mesh(capGeo, goldMat);
-    this.payloadCapsule.add(capMesh);
-
-    // 4 Deployable Petals
+    // Capsule Petals (4 hinged petals)
     this.capsulePetals = [];
     for (let i = 0; i < 4; i++) {
-      const ang = (i * Math.PI) / 2;
-      const petalGeo = new THREE.BoxGeometry(0.22, 0.5, 0.04);
-      petalGeo.translate(0, 0.25, 0);
-      const petal = new THREE.Mesh(petalGeo, goldMat);
-      petal.position.set(Math.cos(ang) * 0.35, 0.35, Math.sin(ang) * 0.35);
-      petal.rotation.y = ang;
-      this.payloadCapsule.add(petal);
-      this.capsulePetals.push({ mesh: petal, baseAngle: ang });
+      const angle = (i * Math.PI) / 2;
+      const petalHinge = new THREE.Group();
+      petalHinge.position.set(Math.cos(angle) * 0.36, 7.8, Math.sin(angle) * 0.36);
+      petalHinge.rotation.y = angle;
+
+      const petalGeo = new THREE.ConeGeometry(0.18, 0.65, 16);
+      petalGeo.rotateZ(Math.PI);
+      const petalMesh = new THREE.Mesh(petalGeo, goldMat);
+      petalMesh.position.y = 0.32;
+      petalHinge.add(petalMesh);
+
+      this.rocketGroup.add(petalHinge);
+      this.capsulePetals.push({ mesh: petalHinge, baseAngle: angle });
     }
 
-    // Volumetric Hologram Cone Projector Light
-    const holoConeGeo = new THREE.ConeGeometry(2.4, 4.5, 32, 1, true);
-    holoConeGeo.translate(0, 2.25, 0);
-    const holoConeMat = new THREE.MeshBasicMaterial({
+    // Hologram Projector Beam Cone (Semi-transparent additive)
+    const holoGeo = new THREE.ConeGeometry(1.6, 4.0, 32, 1, true);
+    holoGeo.translate(0, 2.0, 0);
+    const holoMat = new THREE.MeshBasicMaterial({
       color: 0xf5d78e,
       transparent: true,
       opacity: 0,
-      blending: THREE.AdditiveBlending,
       side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending,
       depthWrite: false
     });
-    this.hologramProjector = new THREE.Mesh(holoConeGeo, holoConeMat);
-    this.hologramProjector.position.set(0, 0.8, 0);
-    this.payloadCapsule.add(this.hologramProjector);
+    this.hologramProjector = new THREE.Mesh(holoGeo, holoMat);
+    this.hologramProjector.position.y = 8.0;
+    this.rocketGroup.add(this.hologramProjector);
 
-    // 4. Dual Fairing Clamshell Halves
+    // 5. Payload Fairing Cones (Split Left and Right halves)
     // Fairing Left
-    const fairingGeoL = new THREE.ConeGeometry(0.7, 1.8, 32, 1, false, 0, Math.PI);
+    const fairingGeoL = new THREE.ConeGeometry(0.72, 1.8, 32, 1, false, 0, Math.PI);
     this.fairingLeft = new THREE.Mesh(fairingGeoL, polishedMat);
     this.fairingLeft.position.set(0, 7.9, 0);
     this.rocketGroup.add(this.fairingLeft);
 
     // Fairing Right
-    const fairingGeoR = new THREE.ConeGeometry(0.7, 1.8, 32, 1, false, Math.PI, Math.PI);
+    const fairingGeoR = new THREE.ConeGeometry(0.72, 1.8, 32, 1, false, Math.PI, Math.PI);
     this.fairingRight = new THREE.Mesh(fairingGeoR, polishedMat);
     this.fairingRight.position.set(0, 7.9, 0);
     this.rocketGroup.add(this.fairingRight);
   }
 
   createCryoSteam() {
-    const pCount = 90;
+    const pCount = 50;
     const pGeo = new THREE.BufferGeometry();
     const pos = new Float32Array(pCount * 3);
+    this.cryoParticleData = [];
 
     for (let i = 0; i < pCount; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 1.8;
-      pos[i * 3 + 1] = Math.random() * 4.2;
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 1.8;
+      const isLeft = i % 2 === 0;
+      const startX = isLeft ? -0.74 : 0.74;
+      const startY = 4.2 + (Math.random() - 0.5) * 0.3;
+      const startZ = (Math.random() - 0.5) * 0.3;
+
+      pos[i * 3] = startX;
+      pos[i * 3 + 1] = startY - Math.random() * 2.5;
+      pos[i * 3 + 2] = startZ;
+
+      this.cryoParticleData.push({
+        origX: startX,
+        origY: startY,
+        origZ: startZ,
+        driftX: (isLeft ? -1 : 1) * (0.25 + Math.random() * 0.45),
+        speedY: 0.6 + Math.random() * 0.8
+      });
     }
     pGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
 
     const pMat = new THREE.PointsMaterial({
-      color: 0xdbeafe,
-      size: 0.35,
+      color: 0xc8e2ff,
+      size: 0.95,
+      map: this.softTexture,
       transparent: true,
-      opacity: 0.4,
-      blending: THREE.AdditiveBlending
+      opacity: 0.32,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
     });
 
     this.cryoParticles = new THREE.Points(pGeo, pMat);
@@ -711,11 +801,11 @@ export class CosmicRocketModule {
   }
 
   createFlameAndSmoke() {
-    // 1. Inner Plasma Core Flame (Cyan-White)
-    const coreGeo = new THREE.ConeGeometry(0.25, 2.2, 16);
-    coreGeo.translate(0, -1.1, 0);
+    // 1. Inner Mach Diamond Plasma Core Flame (Cyan-White)
+    const coreGeo = new THREE.ConeGeometry(0.3, 2.6, 24);
+    coreGeo.translate(0, -1.3, 0);
     const coreMat = new THREE.MeshBasicMaterial({
-      color: 0xd6f4ff,
+      color: 0x93e6ff,
       transparent: true,
       opacity: 0,
       blending: THREE.AdditiveBlending
@@ -725,10 +815,10 @@ export class CosmicRocketModule {
     this.rocketGroup.add(this.flameCore);
 
     // 2. Outer Supersonic Fire Plume (Orange-Gold)
-    const plumeGeo = new THREE.ConeGeometry(0.65, 4.8, 16);
-    plumeGeo.translate(0, -2.4, 0);
+    const plumeGeo = new THREE.ConeGeometry(0.8, 5.4, 24);
+    plumeGeo.translate(0, -2.7, 0);
     const plumeMat = new THREE.MeshBasicMaterial({
-      color: 0xff7700,
+      color: 0xff6600,
       transparent: true,
       opacity: 0,
       blending: THREE.AdditiveBlending
@@ -737,31 +827,48 @@ export class CosmicRocketModule {
     this.flamePlume.position.y = -0.15;
     this.rocketGroup.add(this.flamePlume);
 
-    // 3. Trailing Fire & Smoke Particles
-    const fireCount = 140;
+    // 3. Shockwave ring at ignition
+    const ringGeo = new THREE.RingGeometry(0.6, 1.4, 32);
+    ringGeo.rotateX(-Math.PI / 2);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color: 0xffaa33,
+      transparent: true,
+      opacity: 0,
+      side: THREE.DoubleSide,
+      blending: THREE.AdditiveBlending
+    });
+    this.shockwaveRing = new THREE.Mesh(ringGeo, ringMat);
+    this.shockwaveRing.position.y = 0.05;
+    this.launchPadGroup.add(this.shockwaveRing);
+
+    // 4. Trailing Soft Fire & Smoke Particles (Soft round texture, NO square artifacts)
+    const fireCount = 120;
     const fireGeo = new THREE.BufferGeometry();
     const firePos = new Float32Array(fireCount * 3);
     this.flameParticleData = [];
 
     for (let i = 0; i < fireCount; i++) {
       firePos[i * 3] = (Math.random() - 0.5) * 0.4;
-      firePos[i * 3 + 1] = -0.2 - Math.random() * 4;
+      firePos[i * 3 + 1] = -0.2 - Math.random() * 5.0;
       firePos[i * 3 + 2] = (Math.random() - 0.5) * 0.4;
 
       this.flameParticleData.push({
-        origY: firePos[i * 3 + 1],
-        speedY: 4 + Math.random() * 6,
-        life: Math.random()
+        origY: -0.2,
+        speedY: 6 + Math.random() * 8,
+        driftX: (Math.random() - 0.5) * 1.2,
+        driftZ: (Math.random() - 0.5) * 1.2
       });
     }
 
     fireGeo.setAttribute('position', new THREE.BufferAttribute(firePos, 3));
     const fireMat = new THREE.PointsMaterial({
-      color: 0xffaa22,
-      size: 0.55,
+      color: 0xff9922,
+      size: 1.4,
+      map: this.softTexture,
       transparent: true,
       opacity: 0,
-      blending: THREE.AdditiveBlending
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
     });
 
     this.flameParticles = new THREE.Points(fireGeo, fireMat);
@@ -774,14 +881,7 @@ export class CosmicRocketModule {
       this.startCountdown();
     });
 
-    // Flip safety breaker cover
-    this.breakerCover.addEventListener('click', () => {
-      this.breakerCover.classList.add('flipped');
-      this.btnBreakerLever.removeAttribute('disabled');
-      this.audio.playRadioBeep();
-    });
-
-    // Flip breaker power-off lever
+    // Emergency power-off lever
     this.btnBreakerLever.addEventListener('click', () => {
       this.triggerPowerOff();
     });
@@ -829,9 +929,6 @@ export class CosmicRocketModule {
     this.triggerVoiceAnnouncement();
 
     this.countdownOverlay.classList.add('active');
-    this.hudStatus.textContent = 'IGNITION SEQ';
-    this.hudStatus.classList.remove('text-gold');
-    this.hudStatus.classList.add('text-orange');
 
     let count = 3;
     this.countdownDigit.textContent = count;
@@ -841,12 +938,14 @@ export class CosmicRocketModule {
       if (count > 0) {
         this.countdownDigit.textContent = count;
         this.countdownDigit.style.transform = 'scale(1.35)';
-        setTimeout(() => this.countdownDigit.style.transform = 'scale(1)', 150);
+        setTimeout(() => {
+          if (this.countdownDigit) this.countdownDigit.style.transform = 'scale(1)';
+        }, 150);
         this.audio.playRadioBeep();
       } else {
         clearInterval(timer);
         this.countdownDigit.textContent = 'ПУСК!';
-        this.countdownSubtext.textContent = 'ТЯГА 100% // LIFTOFF';
+        this.countdownSubtext.textContent = 'ТЯГА 100% // ЗАЖИГАНИЕ';
         this.countdownDigit.classList.add('ignite-fire');
 
         setTimeout(() => {
@@ -888,15 +987,10 @@ export class CosmicRocketModule {
     this.flameCore.material.opacity = 0.95;
     this.flamePlume.material.opacity = 0.90;
     this.flameParticles.material.opacity = 0.85;
-    this.flameLight.intensity = 8.5;
-
-    this.hudStatus.textContent = 'ASCENT // MAX-Q';
-    this.hudStatus.classList.remove('text-orange');
-    this.hudStatus.classList.add('text-red');
-    this.hudFuel.textContent = '92% [PROPULSION FULL]';
+    this.flameLight.intensity = 14.0;
 
     // Shake camera
-    this.shakeIntensity = 0.38;
+    this.shakeIntensity = 0.45;
   }
 
   /**
@@ -924,15 +1018,8 @@ export class CosmicRocketModule {
     this.scene.fog.density = 0.001;
 
     // Reposition camera for grand cinematic orbital vista
-    this.cameraTargetPos.set(0, 8.2, 7.8);
-    this.cameraLookTarget.set(0, 7.0, 0);
-
-    this.hudStatus.textContent = 'PARKING ORBIT';
-    this.hudStatus.classList.remove('text-red');
-    this.hudStatus.classList.add('text-green');
-    this.hudAlt.textContent = '412.5 KM';
-    this.hudSpd.textContent = '7.78 KM/S';
-    this.hudFuel.textContent = '35% [ORBIT INSERTION OK]';
+    this.cameraTargetPos.set(0, 7.8, 8.2);
+    this.cameraLookTarget.set(0, 6.8, 0);
 
     // Deploy payload sequence after 1.4s
     setTimeout(() => {
@@ -958,7 +1045,7 @@ export class CosmicRocketModule {
       // 2. Petals open
       if (p > 0.4) {
         const petalP = (p - 0.4) / 0.6;
-        this.capsulePetals.forEach(({ mesh, baseAngle }) => {
+        this.capsulePetals.forEach(({ mesh }) => {
           mesh.rotation.x = petalP * 1.1;
         });
 
@@ -1002,7 +1089,6 @@ export class CosmicRocketModule {
 
   resetToStandby() {
     this.phase = 'idle';
-    this.altitude = 0;
     this.shakeIntensity = 0;
     this.audio.stopSpaceAmbient(0.5);
 
@@ -1010,6 +1096,11 @@ export class CosmicRocketModule {
     this.rocketGroup.position.set(0, 0, 0);
     this.rocketGroup.rotation.set(0, 0, 0);
     this.launchPadGroup.position.set(0, 0, 0);
+
+    if (this.shockwaveRing) {
+      this.shockwaveRing.scale.set(1, 1, 1);
+      this.shockwaveRing.material.opacity = 0;
+    }
 
     this.fairingLeft.position.set(0, 7.9, 0);
     this.fairingLeft.rotation.set(0, 0, 0);
@@ -1024,7 +1115,7 @@ export class CosmicRocketModule {
     this.hologramProjector.material.opacity = 0;
     this.earthGroup.visible = false;
     this.scene.fog.color.setHex(0x060913);
-    this.scene.fog.density = 0.025;
+    this.scene.fog.density = 0.022;
 
     // Reset Camera
     this.cameraTargetPos.set(0, 3.8, 11);
@@ -1035,15 +1126,6 @@ export class CosmicRocketModule {
     this.bottomControls.style.opacity = '1';
     this.bottomControls.style.pointerEvents = 'auto';
 
-    this.hudStatus.textContent = 'STANDBY';
-    this.hudStatus.classList.remove('text-green', 'text-red', 'text-orange');
-    this.hudStatus.classList.add('text-gold');
-    this.hudAlt.textContent = '0.0 KM';
-    this.hudSpd.textContent = '0.0 KM/S';
-    this.hudFuel.textContent = '100% [READY]';
-
-    this.breakerCover.classList.remove('flipped');
-    this.btnBreakerLever.setAttribute('disabled', 'true');
     this.crtOverlay.classList.remove('active');
     this.postCreditsOverlay.classList.remove('active');
   }
@@ -1054,12 +1136,23 @@ export class CosmicRocketModule {
     const delta = this.clock.getDelta();
     const elapsed = this.clock.getElapsedTime();
 
-    // Cryo steam billowing
+    // Tower aviation red beacon blink
+    if (this.beaconLight) {
+      this.beaconLight.intensity = (Math.sin(elapsed * 5.0) > 0.3) ? 2.2 : 0.2;
+    }
+
+    // Cryo steam billowing from oxygen bleed valves
     if (this.cryoParticles && this.phase === 'idle') {
       const pos = this.cryoParticles.geometry.attributes.position.array;
-      for (let i = 0; i < pos.length / 3; i++) {
-        pos[i * 3 + 1] -= delta * 0.9;
-        if (pos[i * 3 + 1] < 0) pos[i * 3 + 1] = 4.2;
+      for (let i = 0; i < this.cryoParticleData.length; i++) {
+        const d = this.cryoParticleData[i];
+        pos[i * 3] += d.driftX * delta;
+        pos[i * 3 + 1] -= d.speedY * delta;
+        if (pos[i * 3 + 1] < 0.2) {
+          pos[i * 3] = d.origX;
+          pos[i * 3 + 1] = d.origY;
+          pos[i * 3 + 2] = d.origZ + (Math.random() - 0.5) * 0.2;
+        }
       }
       this.cryoParticles.geometry.attributes.position.needsUpdate = true;
     }
@@ -1068,39 +1161,49 @@ export class CosmicRocketModule {
     if (this.phase === 'liftoff') {
       const ascentDuration = elapsed - this.liftoffTime;
 
-      // Vertical climb with acceleration
-      this.altitude += delta * (8 + ascentDuration * 14);
-      this.rocketGroup.position.y += delta * (4 + ascentDuration * 6.5);
-      this.launchPadGroup.position.y -= delta * (3 + ascentDuration * 4);
+      // Realistic rocket ascent physics:
+      // Heavy initial inertia: slow lift-off, then accelerating climb
+      const speed = Math.pow(ascentDuration, 1.6) * 2.2;
+      this.rocketGroup.position.y += speed * delta;
+      this.launchPadGroup.position.y -= speed * 0.7 * delta;
 
-      // Camera smoothly tracks rocket
-      this.cameraTargetPos.y = this.rocketGroup.position.y + 1.8;
-      this.cameraLookTarget.y = this.rocketGroup.position.y + 3.2;
+      // Expand shockwave ring
+      if (this.shockwaveRing && ascentDuration < 1.8) {
+        const ringP = ascentDuration / 1.8;
+        this.shockwaveRing.scale.set(1 + ringP * 8, 1 + ringP * 8, 1);
+        this.shockwaveRing.material.opacity = (1 - ringP) * 0.8;
+      } else if (this.shockwaveRing) {
+        this.shockwaveRing.material.opacity = 0;
+      }
 
-      // Flame flickering
-      const flameScaleY = 1 + Math.sin(elapsed * 45) * 0.15;
+      // Dynamic flame length & turbulence
+      const flameScaleY = 1.0 + Math.min(ascentDuration * 0.5, 2.0) + Math.sin(elapsed * 55) * 0.15;
       this.flameCore.scale.set(1, flameScaleY, 1);
-      this.flamePlume.scale.set(1, flameScaleY, 1);
+      this.flamePlume.scale.set(1, flameScaleY * 1.15, 1);
 
-      // Trailing fire particles
+      // Trailing fire & smoke particles
       if (this.flameParticles) {
         const fPos = this.flameParticles.geometry.attributes.position.array;
         for (let i = 0; i < this.flameParticleData.length; i++) {
           const p = this.flameParticleData[i];
-          fPos[i * 3 + 1] -= p.speedY * delta;
-          if (fPos[i * 3 + 1] < -6.5) {
-            fPos[i * 3 + 1] = -0.2;
+          fPos[i * 3 + 1] -= (p.speedY + speed * 0.4) * delta;
+          fPos[i * 3] += p.driftX * delta;
+          fPos[i * 3 + 2] += p.driftZ * delta;
+          if (fPos[i * 3 + 1] < -8.5) {
+            fPos[i * 3 + 1] = p.origY;
+            fPos[i * 3] = (Math.random() - 0.5) * 0.35;
+            fPos[i * 3 + 2] = (Math.random() - 0.5) * 0.35;
           }
         }
         this.flameParticles.geometry.attributes.position.needsUpdate = true;
       }
 
-      // Update telemetry display
-      if (this.hudAlt && this.hudSpd) {
-        this.hudAlt.textContent = `${this.altitude.toFixed(1)} KM`;
-        const speed = (this.altitude * 0.08).toFixed(2);
-        this.hudSpd.textContent = `${speed} KM/S`;
-      }
+      // Camera smoothly tracks rocket with upward cinematic pitch
+      this.cameraTargetPos.y = this.rocketGroup.position.y + 1.4;
+      this.cameraLookTarget.y = this.rocketGroup.position.y + 3.2;
+
+      // Camera shake: heavy at liftoff, decaying as rocket clears atmosphere
+      this.shakeIntensity = Math.max(0, 0.42 - ascentDuration * 0.065);
 
       // Transition to orbit once altitude target is reached (~5.5 seconds of ascent)
       if (ascentDuration > 5.5) {
@@ -1110,8 +1213,8 @@ export class CosmicRocketModule {
 
     if (this.phase === 'orbit') {
       // Gentle orbital micro-rotation
-      this.rocketGroup.rotation.y += delta * 0.06;
-      this.rocketGroup.rotation.x = Math.sin(elapsed * 0.4) * 0.04;
+      this.rocketGroup.rotation.y += delta * 0.08;
+      this.rocketGroup.rotation.x = Math.sin(elapsed * 0.4) * 0.03;
 
       // Slowly rotate Earth below
       if (this.earthGroup) {
@@ -1120,7 +1223,7 @@ export class CosmicRocketModule {
 
       // Hologram light pulse
       if (this.hologramProjector && this.hologramProjector.material.opacity > 0.01) {
-        this.hologramProjector.material.opacity = 0.38 + Math.sin(elapsed * 3.5) * 0.08;
+        this.hologramProjector.material.opacity = 0.42 + Math.sin(elapsed * 3.5) * 0.1;
       }
     }
 

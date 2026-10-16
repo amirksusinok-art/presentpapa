@@ -2412,6 +2412,7 @@ html, body {
   z-index: 1;
 }
 
+/* Clean Rocket Screen Overlay (NO side menus) */
 .rocket-hud {
   position: absolute;
   inset: 0;
@@ -2424,80 +2425,12 @@ html, body {
   box-sizing: border-box;
 }
 
-.hud-panel {
-  background: rgba(8, 14, 26, 0.82);
-  border: 1px solid rgba(56, 189, 248, 0.32);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-radius: 10px;
-  padding: 0.75rem 1rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: 0.76rem;
-  color: #94a3b8;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), inset 0 0 16px rgba(56, 189, 248, 0.06);
-  pointer-events: auto;
-}
-
-.hud-top-left {
-  max-width: 290px;
-  align-self: flex-start;
-}
-
-.hud-top-right {
-  position: absolute;
-  top: calc(1rem + env(safe-area-inset-top, 0px));
-  right: 1.25rem;
-  min-width: 195px;
-  text-align: left;
-}
-
-.hud-tag {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  color: #38bdf8;
-  margin-bottom: 0.4rem;
-  border-bottom: 1px solid rgba(56, 189, 248, 0.22);
-  padding-bottom: 0.3rem;
-}
-
-.hud-metric {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.85rem;
-  margin: 0.25rem 0;
-  font-size: 0.75rem;
-}
-
-.hud-label {
-  color: #64748b;
-  font-weight: 500;
-}
-
-.hud-val {
-  color: #f1f5f9;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-
-.text-green {
-  color: #4ade80 !important;
-  text-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
-}
-
-.text-gold {
-  color: #f5d78e !important;
-  text-shadow: 0 0 8px rgba(245, 215, 142, 0.6);
-}
-
-.text-orange {
-  color: #fb923c !important;
-  text-shadow: 0 0 8px rgba(251, 146, 60, 0.7);
-}
-
-.text-red {
-  color: #f87171 !important;
-  text-shadow: 0 0 8px rgba(248, 113, 113, 0.8);
+/* Hide top navigation bar while rocket screen is active for 100% immersive cinematic mode */
+body:has(#screen-rocket.active) .top-bar {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
 }
 
 /* Big Aerospace Countdown */
@@ -2671,119 +2604,69 @@ html, body {
   max-width: 320px;
 }
 
-/* Industrial Breaker Switch with Safety Flip Cover */
-.breaker-switch-wrap {
-  position: relative;
+/* Master Emergency Power-Off Button (Clean, no mirrored text) */
+.emergency-power-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
   width: 100%;
   max-width: 320px;
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.25);
-  border-radius: 12px;
-  padding: 0.75rem;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  perspective: 600px;
-}
-
-.breaker-cover {
-  position: relative;
-  width: 100%;
-  height: 38px;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform-origin: top center;
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
-  z-index: 5;
-  background: repeating-linear-gradient(45deg, #eab308, #eab308 12px, #18181b 12px, #18181b 24px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.breaker-cover:hover {
-  filter: brightness(1.1);
-}
-
-.breaker-cover.flipped {
-  transform: rotateX(-120deg);
-  pointer-events: none;
-  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.6);
-}
-
-.cover-label {
-  background: #09090b;
-  color: #facc15;
-  font-family: ui-monospace, monospace;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.14em;
-  padding: 0.2rem 0.7rem;
-  border-radius: 4px;
-  border: 1px solid #eab308;
-  pointer-events: none;
-}
-
-.breaker-lever-btn {
-  position: relative;
-  width: 100%;
   min-height: 48px;
-  border-radius: 8px;
-  border: 1.5px solid rgba(239, 68, 68, 0.4);
-  background: linear-gradient(180deg, #1f2937, #111827);
+  padding: 0.85rem 1.4rem;
+  border-radius: 10px;
+  border: 1.5px solid rgba(239, 68, 68, 0.55);
+  background: linear-gradient(180deg, #241418 0%, #15090c 100%);
   color: #fca5a5;
-  font-family: ui-monospace, monospace;
-  font-size: 0.76rem;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
   cursor: pointer;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
-.breaker-lever-btn[disabled] {
-  opacity: 0.38;
-  cursor: not-allowed;
-  border-color: rgba(148, 163, 184, 0.2);
-  color: #64748b;
-}
-
-.breaker-lever-btn:not([disabled]):hover {
-  background: linear-gradient(180deg, #374151, #1f2937);
+.emergency-power-btn:hover {
+  background: linear-gradient(180deg, #381a20 0%, #200d11 100%);
   border-color: #ef4444;
-  color: #fecaca;
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+  color: #fee2e2;
+  box-shadow: 0 0 25px rgba(239, 68, 68, 0.45);
+  transform: translateY(-1px);
 }
 
-.breaker-lever-btn:not([disabled]):active {
-  transform: scale(0.98);
+.emergency-power-btn:active {
+  transform: translateY(1px);
   background: #7f1d1d;
 }
 
-.lever-handle {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
+.power-glow-dot {
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   background: #ef4444;
-  box-shadow: 0 0 8px #ef4444;
+  box-shadow: 0 0 8px #ef4444, 0 0 16px #ef4444;
+  animation: beaconPulse 1.4s ease-in-out infinite;
+}
+
+@keyframes beaconPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.85);
+  }
 }
 
 /* Bottom Controls Bar for Launch Initiation */
 .rocket-bottom-controls {
   position: absolute;
-  bottom: calc(2.2rem + env(safe-area-inset-bottom, 0px));
+  bottom: calc(2.4rem + env(safe-area-inset-bottom, 0px));
   left: 50%;
   transform: translateX(-50%);
-  z-index: 15;
+  z-index: 30;
   pointer-events: auto;
   width: 100%;
   display: flex;
@@ -2792,37 +2675,96 @@ html, body {
   transition: opacity 0.4s ease;
 }
 
-.launch-trigger-btn {
-  min-width: 280px;
-  padding: 1.15rem 2.4rem;
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+/* Authentic Aerospace Activation Button */
+.btn-launch-activation {
+  position: relative;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  touch-action: manipulation;
+}
+
+.launch-btn-halo {
+  position: absolute;
+  inset: -3px;
+  background: linear-gradient(135deg, rgba(245, 215, 142, 0.6), rgba(56, 189, 248, 0.4), rgba(245, 215, 142, 0.6));
+  border-radius: 14px;
+  filter: blur(8px);
+  opacity: 0.75;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+  animation: launchHaloPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes launchHaloPulse {
+  0%, 100% {
+    opacity: 0.65;
+    filter: blur(7px);
+    transform: scale(0.99);
+  }
+  50% {
+    opacity: 0.95;
+    filter: blur(11px);
+    transform: scale(1.02);
+  }
+}
+
+.launch-btn-inner {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
+  gap: 0.85rem;
+  padding: 1.15rem 2.4rem;
+  min-width: 280px;
+  background: linear-gradient(180deg, #162032 0%, #0a101b 100%);
+  border: 1.5px solid rgba(245, 215, 142, 0.75);
   border-radius: 12px;
-  border: 1.5px solid rgba(245, 215, 142, 0.7);
-  background: linear-gradient(135deg, rgba(220, 179, 85, 0.95), rgba(186, 140, 45, 0.95));
-  color: #060913;
-  box-shadow: 0 0 35px rgba(245, 215, 142, 0.4), 0 12px 35px rgba(0, 0, 0, 0.6);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
-.launch-trigger-btn:hover {
+.launch-btn-text {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #f8fafc;
+  text-shadow: 0 0 12px rgba(245, 215, 142, 0.6);
+  text-transform: uppercase;
+}
+
+.launch-beacon-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f59e0b;
+  box-shadow: 0 0 10px #f59e0b, 0 0 20px #f59e0b;
+  animation: beaconPulse 1.2s ease-in-out infinite;
+}
+
+.launch-btn-chevron {
+  color: #f5d78e;
+  transition: transform 0.2s ease;
+}
+
+.btn-launch-activation:hover .launch-btn-halo {
+  opacity: 1;
+  filter: blur(12px);
+}
+
+.btn-launch-activation:hover .launch-btn-inner {
   transform: translateY(-2px);
-  box-shadow: 0 0 50px rgba(245, 215, 142, 0.65), 0 16px 40px rgba(0, 0, 0, 0.7);
+  border-color: #f5d78e;
 }
 
-.launch-trigger-btn:active {
+.btn-launch-activation:hover .launch-btn-chevron {
+  transform: translateX(4px);
+}
+
+.btn-launch-activation:active .launch-btn-inner {
   transform: translateY(1px);
-}
-
-.launch-icon {
-  font-size: 1.3rem;
 }
 
 /* CRT Screen Off Collapse Animation */
@@ -3058,21 +3000,13 @@ html, body {
   }
 
   /* Rocket Screen Mobile Adjustments */
-  .hud-panel {
-    padding: 0.55rem 0.75rem;
-    font-size: 0.7rem;
-    max-width: calc(100vw - 2.5rem);
+  .btn-launch-activation .launch-btn-inner {
+    min-width: 240px;
+    padding: 0.95rem 1.5rem;
   }
 
-  .hud-top-left {
-    max-width: calc(100vw - 2.5rem);
-  }
-
-  .hud-top-right {
-    position: static;
-    margin-top: 0.5rem;
-    min-width: auto;
-    width: fit-content;
+  .launch-btn-text {
+    font-size: 0.92rem;
   }
 
   .hologram-card {
@@ -3085,12 +3019,6 @@ html, body {
   }
 
   .hologram-text {
-    font-size: 0.95rem;
-  }
-
-  .launch-trigger-btn {
-    min-width: 240px;
-    padding: 0.95rem 1.8rem;
     font-size: 0.95rem;
   }
 }

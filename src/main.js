@@ -261,6 +261,12 @@ class App {
       this.canvasContainer.style.display = (name === 'rocket') ? 'none' : 'block';
     }
 
+    // Hide top bar during rocket launch so there's no overlapping text / sound button over rocket view
+    const topBar = document.querySelector('.top-bar');
+    if (topBar) {
+      topBar.style.display = (name === 'rocket') ? 'none' : 'flex';
+    }
+
     if (this.rocket && name === 'rocket') {
       this.rocket.onWindowResize();
     }
@@ -367,6 +373,11 @@ class App {
 
     if (this.canvasContainer) {
       this.canvasContainer.style.display = 'block';
+    }
+
+    const topBar = document.querySelector('.top-bar');
+    if (topBar) {
+      topBar.style.display = 'flex';
     }
 
     this.btnOpenGift.style.display = 'inline-flex';
