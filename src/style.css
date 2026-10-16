@@ -1079,133 +1079,26 @@ html, body {
 
 .lottery-ticket-wrapper {
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Authentic Vintage Soviet/Paper Lottery Ticket */
-.lottery-ticket.vintage-ticket {
+/* Clean, Simplified Elegant Lottery Ticket */
+.lottery-ticket.simple-ticket {
   width: 100%;
-  background: 
-    radial-gradient(circle at 50% 50%, rgba(220, 179, 85, 0.08) 0%, transparent 70%),
-    repeating-linear-gradient(45deg, rgba(184, 134, 11, 0.03) 0px, rgba(184, 134, 11, 0.03) 2px, transparent 2px, transparent 8px),
-    linear-gradient(135deg, #fdfaf2 0%, #f6edd9 50%, #f9f2e3 100%);
-  color: #1f1912;
-  border: 3px double #b8860b;
-  border-radius: 12px;
+  background: linear-gradient(135deg, #fdfaf2 0%, #f6ecda 100%);
+  color: #2b1f0d;
+  border: 2px solid #c9962b;
+  border-radius: 20px;
   padding: 1.6rem 1.3rem;
-  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.8), 0 0 35px rgba(220, 179, 85, 0.25);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(220, 179, 85, 0.25);
   position: relative;
-  overflow: visible;
-  outline: 1px dashed rgba(184, 134, 11, 0.45);
-  outline-offset: -7px;
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Ccircle cx='18' cy='18' r='16' fill='%23f5d78e' stroke='%23b8860b' stroke-width='2'/%3E%3Ccircle cx='18' cy='18' r='13' fill='%23e6be58' stroke='%23d4a843' stroke-width='1' stroke-dasharray='3 2'/%3E%3Ctext x='18' y='23' font-size='14' font-family='serif' font-weight='bold' fill='%235c3f08' text-anchor='middle'%3E★%3C/text%3E%3C/svg%3E") 18 18, crosshair;
+  overflow: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Ccircle cx='18' cy='18' r='16' fill='%23f5d78e' stroke='%23b8860b' stroke-width='2'/%3E%3Ccircle cx='18' cy='18' r='13' fill='%23e6be58' stroke='%23d4a843' stroke-width='1'/%3E%3Ctext x='18' y='23' font-size='14' font-family='serif' font-weight='bold' fill='%235c3f08' text-anchor='middle'%3E★%3C/text%3E%3C/svg%3E") 18 18, crosshair;
   animation: cardFadeIn 0.8s var(--ease-out) forwards;
-}
-
-/* Perforated tear notches on ticket edges */
-.ticket-tear-edge {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 14px;
-  height: 28px;
-  background: var(--bg-dark);
-  border: 2px solid #b8860b;
-  z-index: 5;
-}
-
-.ticket-tear-edge.left {
-  left: -8px;
-  border-radius: 0 14px 14px 0;
-  border-left: none;
-}
-
-.ticket-tear-edge.right {
-  right: -8px;
-  border-radius: 14px 0 0 14px;
-  border-right: none;
-}
-
-/* Guilloche Corner Rosettes */
-.guilloche-corner {
-  position: absolute;
-  width: 22px;
-  height: 22px;
-  pointer-events: none;
-  z-index: 3;
-}
-
-.guilloche-corner.top-left {
-  top: 9px;
-  left: 9px;
-  border-top: 2px solid #b8860b;
-  border-left: 2px solid #b8860b;
-}
-
-.guilloche-corner.top-right {
-  top: 9px;
-  right: 9px;
-  border-top: 2px solid #b8860b;
-  border-right: 2px solid #b8860b;
-}
-
-.guilloche-corner.bottom-left {
-  bottom: 9px;
-  left: 9px;
-  border-bottom: 2px solid #b8860b;
-  border-left: 2px solid #b8860b;
-}
-
-.guilloche-corner.bottom-right {
-  bottom: 9px;
-  right: 9px;
-  border-bottom: 2px solid #b8860b;
-  border-right: 2px solid #b8860b;
-}
-
-/* Vintage Official Red Stamp Seal */
-.ticket-retro-seal {
-  position: absolute;
-  top: 10px;
-  right: 12px;
-  width: 52px;
-  height: 52px;
-  border: 2px dashed #b91c1c;
-  border-radius: 50%;
-  color: #b91c1c;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Courier New', monospace;
-  font-size: 0.65rem;
-  font-weight: 800;
-  transform: rotate(-14deg);
-  opacity: 0.78;
-  pointer-events: none;
-  letter-spacing: 0.05em;
-  line-height: 1.1;
-}
-
-.ticket-retro-seal small {
-  font-size: 0.52rem;
-}
-
-.ticket-watermark {
-  position: absolute;
-  top: 16%;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-serif);
-  font-size: 7.5rem;
-  font-weight: 800;
-  color: rgba(184, 134, 11, 0.07);
-  pointer-events: none;
-  line-height: 1;
 }
 
 .ticket-header {
@@ -1214,21 +1107,19 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 0.35rem;
-  border-bottom: 1.5px solid #d4a843;
-  padding-bottom: 0.85rem;
-  position: relative;
-  z-index: 2;
+  border-bottom: 1.5px solid rgba(201, 150, 43, 0.4);
+  padding-bottom: 0.75rem;
 }
 
 .ticket-badge {
-  font-size: 0.66rem;
-  letter-spacing: 0.22em;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
   color: #8c6314;
   text-transform: uppercase;
   font-weight: 700;
-  background: rgba(220, 179, 85, 0.14);
-  padding: 0.2rem 0.65rem;
-  border-radius: 4px;
+  background: rgba(220, 179, 85, 0.2);
+  padding: 0.25rem 0.8rem;
+  border-radius: 999px;
 }
 
 .ticket-title {
@@ -1236,45 +1127,26 @@ html, body {
   font-size: clamp(1.8rem, 4.5vw, 2.3rem);
   font-weight: 700;
   color: #2b1f0d;
-  letter-spacing: 0.06em;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.02em;
   margin: 0.1rem 0;
-}
-
-/* Red Stamped Serial Number Box */
-.ticket-serial-box {
-  display: inline-flex;
-  gap: 0.4rem;
-  font-family: 'Courier New', monospace;
-  font-size: 0.74rem;
-  color: #b91c1c;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  background: rgba(185, 28, 28, 0.06);
-  border: 1px dashed rgba(185, 28, 28, 0.4);
-  padding: 0.2rem 0.6rem;
-  border-radius: 3px;
 }
 
 .ticket-instruction {
   text-align: center;
-  padding: 0.75rem 0.5rem 0.6rem;
-  font-size: 0.82rem;
-  color: #423522;
+  padding: 0.65rem 0.4rem 0.4rem;
+  font-size: 0.84rem;
+  color: #554125;
   font-weight: 500;
   line-height: 1.4;
-  position: relative;
-  z-index: 2;
 }
 
-/* 3x3 Scratch Grid with Vintage Security Frame */
+/* 3x3 Scratch Grid */
 .scratch-grid-wrap {
   position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 0.4rem 0;
-  z-index: 2;
+  margin: 0.5rem 0;
 }
 
 .scratch-grid {
@@ -1288,14 +1160,14 @@ html, body {
 .scratch-cell {
   position: relative;
   aspect-ratio: 1 / 1;
-  background: #1a1714;
+  background: #181410;
   border: 2px solid #c49938;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8), 0 2px 5px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.85);
   user-select: none;
 }
 
@@ -1315,11 +1187,11 @@ html, body {
 .cell-icon {
   font-size: 1.95rem;
   line-height: 1;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.7));
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.7));
 }
 
 .cell-label {
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   letter-spacing: 0.08em;
   color: #fce8a6;
   font-weight: 600;
@@ -1332,7 +1204,7 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: inherit;
   z-index: 2;
   touch-action: none;
@@ -1366,60 +1238,9 @@ html, body {
 }
 
 .ticket-scratch-all-btn {
-  background: #2a2012;
-  color: #fce8a6;
-  border-color: #b8860b;
-  padding: 0.58rem 1.45rem;
-  font-size: 0.85rem;
-  min-height: 38px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-}
-
-.ticket-scratch-all-btn:hover {
-  background: #3d2e18;
-  border-color: #ffd700;
-  color: #ffffff;
-}
-
-/* Ticket Footer with Retro Barcode */
-.ticket-footer {
-  margin-top: 1rem;
-  border-top: 1.5px solid #d4a843;
-  padding-top: 0.75rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  position: relative;
-  z-index: 2;
-}
-
-.ticket-barcode {
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  height: 22px;
-}
-
-.ticket-barcode span {
-  width: 2px;
-  height: 100%;
-  background: #332615;
-}
-
-.ticket-barcode span:nth-child(even) {
-  width: 3px;
-}
-
-.ticket-barcode span:nth-child(3n) {
-  width: 1px;
-}
-
-.ticket-security-code {
-  font-size: 0.64rem;
-  letter-spacing: 0.18em;
-  color: #634f33;
-  font-weight: 700;
+  padding: 0.65rem 1.6rem;
+  font-size: 0.88rem;
+  min-height: 42px;
 }
 
 /* Jackpot Celebration Modal */
@@ -2549,6 +2370,602 @@ html, body {
   }
 }
 
+/* ==========================================================================
+   COSMIC ROCKET LAUNCH 3D MODULE (GRAND FINALE)
+   ========================================================================== */
+
+#screen-rocket.rocket-screen {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 60;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #03060c;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.8s var(--ease-out);
+}
+
+#screen-rocket.rocket-screen.active {
+  display: flex !important;
+  opacity: 1;
+}
+
+.rocket-viewport {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 60%, #0c1426 0%, #03060c 100%);
+}
+
+.rocket-canvas-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.rocket-hud {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: calc(1rem + env(safe-area-inset-top, 0px)) 1.25rem calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  box-sizing: border-box;
+}
+
+.hud-panel {
+  background: rgba(8, 14, 26, 0.82);
+  border: 1px solid rgba(56, 189, 248, 0.32);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.76rem;
+  color: #94a3b8;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6), inset 0 0 16px rgba(56, 189, 248, 0.06);
+  pointer-events: auto;
+}
+
+.hud-top-left {
+  max-width: 290px;
+  align-self: flex-start;
+}
+
+.hud-top-right {
+  position: absolute;
+  top: calc(1rem + env(safe-area-inset-top, 0px));
+  right: 1.25rem;
+  min-width: 195px;
+  text-align: left;
+}
+
+.hud-tag {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  color: #38bdf8;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.22);
+  padding-bottom: 0.3rem;
+}
+
+.hud-metric {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.85rem;
+  margin: 0.25rem 0;
+  font-size: 0.75rem;
+}
+
+.hud-label {
+  color: #64748b;
+  font-weight: 500;
+}
+
+.hud-val {
+  color: #f1f5f9;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.text-green {
+  color: #4ade80 !important;
+  text-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+}
+
+.text-gold {
+  color: #f5d78e !important;
+  text-shadow: 0 0 8px rgba(245, 215, 142, 0.6);
+}
+
+.text-orange {
+  color: #fb923c !important;
+  text-shadow: 0 0 8px rgba(251, 146, 60, 0.7);
+}
+
+.text-red {
+  color: #f87171 !important;
+  text-shadow: 0 0 8px rgba(248, 113, 113, 0.8);
+}
+
+/* Big Aerospace Countdown */
+.rocket-countdown-overlay {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+  z-index: 20;
+}
+
+.rocket-countdown-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.countdown-digit {
+  font-size: clamp(5.5rem, 18vw, 10rem);
+  font-weight: 900;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: #f8fafc;
+  text-shadow: 0 0 35px rgba(56, 189, 248, 0.9), 0 0 70px rgba(56, 189, 248, 0.5);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  transition: transform 0.15s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.countdown-digit.ignite-fire {
+  color: #f59e0b;
+  text-shadow: 0 0 45px rgba(245, 158, 11, 0.95), 0 0 90px rgba(239, 68, 68, 0.8);
+  transform: scale(1.15);
+}
+
+.countdown-subtext {
+  font-family: ui-monospace, monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #38bdf8;
+  margin-top: 1rem;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(56, 189, 248, 0.7);
+}
+
+/* Orbital Hologram Message Container & Card */
+.rocket-hologram-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.92);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.9s;
+  z-index: 25;
+  width: min(92vw, 490px);
+  max-height: 88vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.rocket-hologram-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.rocket-hologram-wrap.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.hologram-card {
+  position: relative;
+  background: linear-gradient(145deg, rgba(10, 20, 36, 0.88), rgba(6, 12, 22, 0.95));
+  border: 1.5px solid rgba(245, 215, 142, 0.5);
+  border-radius: 20px;
+  padding: 2.2rem 1.8rem;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(245, 215, 142, 0.25), inset 0 0 30px rgba(56, 189, 248, 0.1);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.hologram-beam-ring {
+  position: absolute;
+  top: -1px;
+  left: 15%;
+  right: 15%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f5d78e, transparent);
+  box-shadow: 0 0 12px #f5d78e;
+}
+
+.hologram-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+}
+
+.hologram-icon {
+  color: #f5d78e;
+  font-size: 1.1rem;
+  text-shadow: 0 0 10px rgba(245, 215, 142, 0.8);
+}
+
+.hologram-badge {
+  font-family: ui-monospace, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #f5d78e;
+  letter-spacing: 0.12em;
+  border: 1px solid rgba(245, 215, 142, 0.4);
+  padding: 0.28rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(245, 215, 142, 0.1);
+  text-transform: uppercase;
+}
+
+.hologram-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2rem, 5.5vw, 2.6rem);
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 20px rgba(245, 215, 142, 0.6);
+  margin: 0 0 0.9rem;
+  line-height: 1.2;
+}
+
+.hologram-divider {
+  width: 80px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #f5d78e, transparent);
+  margin: 0 auto 1.3rem;
+}
+
+.hologram-text {
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: #e2e8f0;
+  margin-bottom: 1.2rem;
+  font-weight: 400;
+}
+
+.hologram-signature {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: #f5d78e;
+  margin-bottom: 2rem;
+  text-shadow: 0 0 10px rgba(245, 215, 142, 0.4);
+}
+
+.hologram-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  align-items: center;
+  width: 100%;
+}
+
+.rocket-action-btn {
+  width: 100%;
+  max-width: 320px;
+}
+
+/* Industrial Breaker Switch with Safety Flip Cover */
+.breaker-switch-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 12px;
+  padding: 0.75rem;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  perspective: 600px;
+}
+
+.breaker-cover {
+  position: relative;
+  width: 100%;
+  height: 38px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-origin: top center;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+  z-index: 5;
+  background: repeating-linear-gradient(45deg, #eab308, #eab308 12px, #18181b 12px, #18181b 24px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.breaker-cover:hover {
+  filter: brightness(1.1);
+}
+
+.breaker-cover.flipped {
+  transform: rotateX(-120deg);
+  pointer-events: none;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.cover-label {
+  background: #09090b;
+  color: #facc15;
+  font-family: ui-monospace, monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  padding: 0.2rem 0.7rem;
+  border-radius: 4px;
+  border: 1px solid #eab308;
+  pointer-events: none;
+}
+
+.breaker-lever-btn {
+  position: relative;
+  width: 100%;
+  min-height: 48px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(239, 68, 68, 0.4);
+  background: linear-gradient(180deg, #1f2937, #111827);
+  color: #fca5a5;
+  font-family: ui-monospace, monospace;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.breaker-lever-btn[disabled] {
+  opacity: 0.38;
+  cursor: not-allowed;
+  border-color: rgba(148, 163, 184, 0.2);
+  color: #64748b;
+}
+
+.breaker-lever-btn:not([disabled]):hover {
+  background: linear-gradient(180deg, #374151, #1f2937);
+  border-color: #ef4444;
+  color: #fecaca;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+}
+
+.breaker-lever-btn:not([disabled]):active {
+  transform: scale(0.98);
+  background: #7f1d1d;
+}
+
+.lever-handle {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 8px #ef4444;
+}
+
+/* Bottom Controls Bar for Launch Initiation */
+.rocket-bottom-controls {
+  position: absolute;
+  bottom: calc(2.2rem + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  pointer-events: auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 1rem;
+  transition: opacity 0.4s ease;
+}
+
+.launch-trigger-btn {
+  min-width: 280px;
+  padding: 1.15rem 2.4rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border-radius: 12px;
+  border: 1.5px solid rgba(245, 215, 142, 0.7);
+  background: linear-gradient(135deg, rgba(220, 179, 85, 0.95), rgba(186, 140, 45, 0.95));
+  color: #060913;
+  box-shadow: 0 0 35px rgba(245, 215, 142, 0.4), 0 12px 35px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.launch-trigger-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 50px rgba(245, 215, 142, 0.65), 0 16px 40px rgba(0, 0, 0, 0.7);
+}
+
+.launch-trigger-btn:active {
+  transform: translateY(1px);
+}
+
+.launch-icon {
+  font-size: 1.3rem;
+}
+
+/* CRT Screen Off Collapse Animation */
+.crt-off-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000000;
+  z-index: 9990;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.06s ease, visibility 0.06s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.crt-off-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.crt-white-dot {
+  width: 0%;
+  height: 2px;
+  background: #ffffff;
+  box-shadow: 0 0 25px 5px #ffffff, 0 0 60px 10px rgba(56, 189, 248, 0.8);
+  border-radius: 50%;
+  opacity: 0;
+}
+
+.crt-off-overlay.active .crt-white-dot {
+  animation: crtCollapse 1.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes crtCollapse {
+  0% {
+    width: 100%;
+    height: 100%;
+    opacity: 1;
+    border-radius: 0;
+  }
+  35% {
+    width: 100%;
+    height: 3px;
+    opacity: 1;
+    border-radius: 0;
+  }
+  65% {
+    width: 6px;
+    height: 6px;
+    opacity: 1;
+    border-radius: 50%;
+  }
+  85% {
+    width: 4px;
+    height: 4px;
+    opacity: 0.9;
+    border-radius: 50%;
+  }
+  100% {
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+}
+
+/* Post-Credits Scene ("Сцена после титров: Иди обниматься!") */
+.post-credits-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: radial-gradient(circle at center, #0f172a 0%, #03050a 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.2s;
+}
+
+.post-credits-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.post-credits-heart {
+  font-size: clamp(3.5rem, 10vw, 5rem);
+  margin-bottom: 1.5rem;
+  animation: heartBeatPulse 1.8s ease-in-out infinite;
+  filter: drop-shadow(0 0 25px rgba(239, 68, 68, 0.8));
+}
+
+@keyframes heartBeatPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.15);
+  }
+  40% {
+    transform: scale(0.98);
+  }
+  60% {
+    transform: scale(1.22);
+  }
+}
+
+.post-credits-box {
+  max-width: 480px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post-credits-code {
+  font-family: ui-monospace, monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #64748b;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+  text-transform: uppercase;
+}
+
+.post-credits-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(1.7rem, 5.5vw, 2.3rem);
+  font-weight: 600;
+  color: #f8fafc;
+  line-height: 1.35;
+  margin-bottom: 2rem;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+}
+
 /* Mobile Screens (width <= 480px) */
 @media (max-width: 480px) {
   .top-bar {
@@ -2638,6 +3055,43 @@ html, body {
 
   .finale-actions .btn {
     width: 100%;
+  }
+
+  /* Rocket Screen Mobile Adjustments */
+  .hud-panel {
+    padding: 0.55rem 0.75rem;
+    font-size: 0.7rem;
+    max-width: calc(100vw - 2.5rem);
+  }
+
+  .hud-top-left {
+    max-width: calc(100vw - 2.5rem);
+  }
+
+  .hud-top-right {
+    position: static;
+    margin-top: 0.5rem;
+    min-width: auto;
+    width: fit-content;
+  }
+
+  .hologram-card {
+    padding: 1.5rem 1.1rem;
+    border-radius: 16px;
+  }
+
+  .hologram-title {
+    font-size: 1.75rem;
+  }
+
+  .hologram-text {
+    font-size: 0.95rem;
+  }
+
+  .launch-trigger-btn {
+    min-width: 240px;
+    padding: 0.95rem 1.8rem;
+    font-size: 0.95rem;
   }
 }
 

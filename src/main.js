@@ -3,6 +3,7 @@ import { soundCtrl } from './audio.js';
 import { ScratchLottery } from './lottery.js';
 import { BirthdayCake } from './cake.js';
 import { CokaColaCan } from './cola.js';
+import { CosmicRocketModule } from './rocket.js';
 import confetti from 'canvas-confetti';
 
 // Fallback photos list
@@ -34,6 +35,7 @@ class App {
     this.lottery = null;
     this.cake = null;
     this.cola = null;
+    this.rocket = null;
 
     // Screens
     this.screens = {
@@ -43,6 +45,7 @@ class App {
       gallery: document.getElementById('screen-gallery'),
       cake: document.getElementById('screen-cake'),
       cola: document.getElementById('screen-cola'),
+      rocket: document.getElementById('screen-rocket'),
       finale: document.getElementById('screen-finale')
     };
 
@@ -95,6 +98,7 @@ class App {
     this.initLotteryModule();
     this.initCakeModule();
     this.initColaModule();
+    this.initRocketModule();
     this.initNavigation();
     this.initAlbumSlider();
     this.initLightbox();
@@ -125,10 +129,20 @@ class App {
   initColaModule() {
     if (this.screens.cola) {
       this.cola = new CokaColaCan(this.screens.cola, () => {
-        this.showScreen('finale');
+        this.showScreen('rocket');
         this.scrollToTop();
       });
       this.cola.init();
+    }
+  }
+
+  initRocketModule() {
+    if (this.screens.rocket) {
+      this.rocket = new CosmicRocketModule(this.screens.rocket, () => {
+        this.restartExperience();
+        this.scrollToTop();
+      });
+      this.rocket.init();
     }
   }
 
@@ -235,11 +249,20 @@ class App {
       }
     });
 
-    // Dim 3D scene when inside interactive lottery, photo album, cake, cola, or finale
-    if (name === 'gallery' || name === 'finale' || name === 'lottery' || name === 'cake' || name === 'cola') {
+    // Dim 3D scene when inside interactive lottery, photo album, cake, cola, rocket, or finale
+    if (name === 'gallery' || name === 'finale' || name === 'lottery' || name === 'cake' || name === 'cola' || name === 'rocket') {
       this.canvasContainer.classList.add('dimmed');
     } else {
       this.canvasContainer.classList.remove('dimmed');
+    }
+
+    // Hide background gift canvas during rocket launch so rocket WebGL scene has full stage
+    if (this.canvasContainer) {
+      this.canvasContainer.style.display = (name === 'rocket') ? 'none' : 'block';
+    }
+
+    if (this.rocket && name === 'rocket') {
+      this.rocket.onWindowResize();
     }
 
     // Pause video playback if navigating away from gallery
@@ -336,6 +359,14 @@ class App {
 
     if (this.cola) {
       this.cola.reset();
+    }
+
+    if (this.rocket) {
+      this.rocket.resetToStandby();
+    }
+
+    if (this.canvasContainer) {
+      this.canvasContainer.style.display = 'block';
     }
 
     this.btnOpenGift.style.display = 'inline-flex';

@@ -89,7 +89,7 @@ export class CokaColaCan {
               За твоё здоровье, улыбки и счастье всей нашей семьи! ❤️
             </p>
             <button id="btn-cola-finish" class="btn btn-luxury cola-finish-btn">
-              <span>К финальным словам ❤️</span>
+              <span>Запустить ракету для папы 🚀</span>
             </button>
           </div>
 

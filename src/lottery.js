@@ -31,39 +31,16 @@ export class ScratchLottery {
   render() {
     this.container.innerHTML = `
       <div class="lottery-ticket-wrapper">
-        <!-- Authentic Retro Paper Lottery Ticket -->
-        <div class="lottery-ticket vintage-ticket" id="lottery-ticket">
+        <!-- Clean & Elegant Lottery Ticket -->
+        <div class="lottery-ticket simple-ticket" id="lottery-ticket">
           
-          <!-- Perforated Tear Notches (authentic retro tear-off stub effect) -->
-          <div class="ticket-tear-edge left" aria-hidden="true"></div>
-          <div class="ticket-tear-edge right" aria-hidden="true"></div>
-
-          <!-- Guilloche Ornamental Corner Rosettes -->
-          <div class="guilloche-corner top-left" aria-hidden="true"></div>
-          <div class="guilloche-corner top-right" aria-hidden="true"></div>
-          <div class="guilloche-corner bottom-left" aria-hidden="true"></div>
-          <div class="guilloche-corner bottom-right" aria-hidden="true"></div>
-
           <!-- Ticket Header -->
           <div class="ticket-header">
-            <!-- Vintage Official Family Seal Stamp -->
-            <div class="ticket-retro-seal" aria-hidden="true">
-              <span>★ ОТК ★</span>
-              <small>СЕМЬЯ</small>
-            </div>
-
-            <div class="ticket-badge">СЕМЕЙНАЯ МОМЕНТАЛЬНАЯ ЛОТЕРЕЯ • ТИРАЖ № 1</div>
-            <h2 class="ticket-title">СЧАСТЛИВЫЙ БИЛЕТ 777</h2>
-            
-            <!-- Red Vintage Rubber-Stamped Serial Box -->
-            <div class="ticket-serial-box">
-              <span class="serial-label">СЕРИЯ: ЛУЧШИЙ-ПАПА</span>
-              <span class="serial-num">№ 777-2026</span>
-            </div>
-          </div>
-
-          <div class="ticket-instruction">
-            <span>✨ Сотрите монеткой защитный слой в ячейках. Соберите 3 кубка в ряд для победы!</span>
+            <div class="ticket-badge">СЕМЕЙНЫЙ БИЛЕТ № 777</div>
+            <h2 class="ticket-title">Счастливый билет</h2>
+            <p class="ticket-instruction">
+              Сотрите защитный слой — соберите 3 кубка в ряд для победы!
+            </p>
           </div>
 
           <!-- Scratch Grid 3x3 -->
@@ -74,18 +51,9 @@ export class ScratchLottery {
 
           <!-- Helper Controls -->
           <div class="ticket-controls">
-            <button id="btn-scratch-all" class="btn btn-outline ticket-scratch-all-btn">
-              <span>Стереть всё монеткой ✨</span>
+            <button id="btn-scratch-all" class="btn btn-luxury ticket-scratch-all-btn">
+              <span>Стереть всё ✨</span>
             </button>
-          </div>
-
-          <!-- Ticket Footer with Guilloche Security Barcode & Guarantee -->
-          <div class="ticket-footer">
-            <div class="ticket-barcode" aria-hidden="true">
-              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-            </div>
-            <div class="ticket-security-code">100% ВЫИГРЫШ • ГАРАНТИЯ СЧАСТЬЯ СЕМЬИ</div>
           </div>
         </div>
 
@@ -181,36 +149,26 @@ export class ScratchLottery {
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
     cell.ctx = ctx;
 
-    // Draw authentic metallic scratch foil layer (rich brass/gold gradient)
+    // Draw clean smooth gold metallic foil layer
     const grad = ctx.createLinearGradient(0, 0, w, h);
-    grad.addColorStop(0, '#f5d98b');
-    grad.addColorStop(0.25, '#d4a843');
-    grad.addColorStop(0.5, '#fae19c');
-    grad.addColorStop(0.75, '#c9962b');
-    grad.addColorStop(1, '#edd082');
+    grad.addColorStop(0, '#f7df9e');
+    grad.addColorStop(0.4, '#d8ad47');
+    grad.addColorStop(0.7, '#f4dc98');
+    grad.addColorStop(1, '#c5942b');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    // Subtle guilloche security hatch pattern
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
-    ctx.lineWidth = 1;
-    for (let i = -w; i < w * 2; i += 12) {
-      ctx.beginPath();
-      ctx.moveTo(i, 0);
-      ctx.lineTo(i + h, h);
-      ctx.stroke();
-    }
-
-    // Vintage star watermark pattern
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
-    ctx.font = 'bold 20px serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('★ 777 ★', w / 2, h / 2);
-
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    // Clean subtle border
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
     ctx.lineWidth = 1.5;
     ctx.strokeRect(3, 3, w - 6, h - 6);
+
+    // Elegant clean star
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.65)';
+    ctx.font = '22px serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('★', w / 2, h / 2);
 
     // Attach mouse & touch scratching handlers
     this.attachScratchEvents(cell, canvas, ctx, w, h);
