@@ -45,7 +45,6 @@
 
 html, body {
   width: 100%;
-  height: 100%;
   min-height: 100dvh;
   background-color: var(--bg-dark);
   background-image: var(--bg-gradient);
@@ -121,6 +120,7 @@ html, body {
   color: var(--gold-light);
   opacity: 0.9;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .sound-toggle-btn {
@@ -263,6 +263,7 @@ html, body {
   min-height: 50px;
   position: relative;
   overflow: hidden;
+  white-space: nowrap;
   transition: all 0.3s var(--ease-out);
 }
 
@@ -301,19 +302,22 @@ html, body {
   color: var(--gold-light);
 }
 
-/* Outline Secondary Button */
+/* Outline Secondary Button - High Contrast WCAG compliant */
 .btn-outline {
-  background: rgba(16, 21, 32, 0.7);
-  border: 1px solid var(--border-subtle);
-  color: var(--text-muted);
-  backdrop-filter: blur(12px);
+  background: rgba(20, 27, 40, 0.92);
+  border: 1px solid rgba(224, 185, 95, 0.5);
+  color: #f1f5f9;
+  backdrop-filter: blur(14px);
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
 }
 
 .btn-outline:hover {
-  background: rgba(24, 32, 48, 0.85);
-  border-color: var(--border-gold);
-  color: var(--text-main);
+  background: rgba(30, 42, 64, 0.98);
+  border-color: var(--border-gold-bright);
+  color: #ffffff;
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45), 0 0 16px var(--gold-glow);
 }
 
 .btn-outline:active {
@@ -519,10 +523,8 @@ html, body {
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 620px;
-  height: 58vh;
-  min-height: 380px;
-  max-height: 560px;
+  max-width: 580px;
+  height: clamp(230px, 42vh, 460px);
   overflow: hidden;
   cursor: pointer;
   touch-action: pan-y;
@@ -553,16 +555,16 @@ html, body {
 
 .viewer-tap-hint {
   position: absolute;
-  bottom: 16px;
-  right: 16px;
-  background: rgba(10, 14, 22, 0.8);
+  bottom: 14px;
+  right: 14px;
+  background: rgba(10, 14, 22, 0.82);
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
-  padding: 0.3rem 0.75rem;
+  padding: 0.28rem 0.7rem;
   display: flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.75rem;
+  font-size: 0.74rem;
   color: var(--text-muted);
   backdrop-filter: blur(8px);
   opacity: 0.85;
@@ -573,6 +575,31 @@ html, body {
 .photo-viewer-card:hover .viewer-tap-hint {
   opacity: 1;
   color: var(--gold-light);
+}
+
+/* Swipe Gesture Hint for Mobile */
+.swipe-hint {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+  user-select: none;
+  margin-top: -0.2rem;
+}
+
+.swipe-icon {
+  color: var(--gold-light);
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .swipe-hint {
+    display: flex;
+  }
 }
 
 /* Skeleton Loading Shimmer */
@@ -643,9 +670,9 @@ html, body {
 
 .thumb-item.active {
   opacity: 1;
-  border: 2px solid var(--gold);
-  box-shadow: 0 0 12px var(--gold-glow);
-  transform: scale(1.1);
+  border: 2px solid var(--gold-light);
+  box-shadow: 0 0 14px rgba(245, 218, 140, 0.5);
+  transform: scale(1.12);
 }
 
 .album-footer {
@@ -793,12 +820,18 @@ html, body {
 }
 
 .finale-card {
-  max-width: 640px;
+  max-width: 620px;
   width: 100%;
+  background: rgba(12, 16, 26, 0.86);
+  border: 1px solid var(--border-gold);
+  border-radius: 20px;
+  padding: clamp(2rem, 5vw, 3.2rem) clamp(1.4rem, 4vw, 2.5rem);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75), 0 0 35px var(--gold-glow);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.6rem;
+  gap: 1.3rem;
   animation: cardFadeIn 1s var(--ease-out) forwards;
 }
 
@@ -943,4 +976,134 @@ html, body {
 
 .css-fallback-container.opened .css-gift-glow {
   opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE DESIGN & ONE-SCREEN FIT
+   -------------------------------------------------------------------------- */
+
+/* Medium-height screens / Laptops (height <= 850px) */
+@media (max-height: 850px) {
+  #screen-intro {
+    padding: 3.8rem 1.2rem 2rem;
+  }
+
+  #screen-greeting {
+    padding: 3.8rem 1.2rem 2rem;
+  }
+
+  .greeting-card {
+    padding: 1.8rem 1.4rem;
+    gap: 1rem;
+  }
+
+  #screen-gallery {
+    padding: 3.5rem 1rem 1.2rem;
+  }
+
+  .album-container {
+    gap: 0.75rem;
+  }
+
+  .album-title {
+    font-size: 1.7rem;
+  }
+
+  .album-counter-badge {
+    margin-top: 0;
+  }
+
+  .photo-viewer-card {
+    height: clamp(200px, 39vh, 340px);
+  }
+
+  .thumbs-strip {
+    padding: 0.15rem 0;
+    gap: 0.45rem;
+  }
+
+  .thumb-item {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  .album-footer {
+    margin-top: 0.2rem;
+    gap: 0.75rem;
+  }
+
+  .btn {
+    min-height: 44px;
+    padding: 0.72rem 1.4rem;
+    font-size: 0.92rem;
+  }
+
+  #screen-finale {
+    padding: 3.5rem 1.2rem 2rem;
+  }
+
+  .finale-card {
+    padding: 1.8rem 1.4rem;
+    gap: 1rem;
+  }
+
+  .finale-title {
+    font-size: clamp(2.2rem, 5.5vw, 3.4rem);
+  }
+}
+
+/* Mobile Screens (width <= 480px) */
+@media (max-width: 480px) {
+  .top-bar {
+    padding: 0.75rem 1rem;
+  }
+
+  .brand-label {
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+  }
+
+  .sound-toggle-btn {
+    padding: 0.38rem 0.75rem;
+    font-size: 0.76rem;
+    min-height: 36px;
+  }
+
+  .btn {
+    padding: 0.75rem 1.2rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    min-height: 46px;
+  }
+
+  .hero-title {
+    font-size: 2.1rem;
+  }
+
+  .greeting-title {
+    font-size: 2rem;
+  }
+
+  .greeting-body {
+    font-size: 0.98rem;
+    line-height: 1.65;
+  }
+
+  .album-stage {
+    gap: 0.4rem;
+  }
+
+  .album-nav-btn {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    font-size: 1.35rem;
+  }
+
+  .photo-viewer-card {
+    height: 46vh;
+    min-height: 250px;
+  }
 }

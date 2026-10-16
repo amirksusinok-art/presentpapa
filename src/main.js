@@ -1,5 +1,6 @@
 import { GiftScene } from './three-scene.js';
 import { soundCtrl } from './audio.js';
+import confetti from 'canvas-confetti';
 
 // Fallback photos list
 const DEFAULT_PHOTOS = [
@@ -82,6 +83,12 @@ class App {
     this.setupAlbumView();
   }
 
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
+    document.body.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   init3DScene() {
     this.giftScene = new GiftScene(this.canvasContainer);
     this.hasWebGL = this.giftScene.init();
@@ -120,27 +127,27 @@ class App {
 
     this.btnViewPhotos.addEventListener('click', () => {
       this.showScreen('gallery');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.scrollToTop();
     });
 
     this.btnFinishGallery.addEventListener('click', () => {
       this.showScreen('finale');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.scrollToTop();
     });
 
     this.btnBackToGreeting.addEventListener('click', () => {
       this.showScreen('greeting');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.scrollToTop();
     });
 
     this.btnBackToPhotos.addEventListener('click', () => {
       this.showScreen('gallery');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.scrollToTop();
     });
 
     this.btnRestart.addEventListener('click', () => {
       this.restartExperience();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.scrollToTop();
     });
   }
 
@@ -155,8 +162,8 @@ class App {
       }
     });
 
-    // Dim 3D scene when inside photo album to give full focus to family memories
-    if (name === 'gallery') {
+    // Dim 3D scene when inside photo album or finale so text and memories have full clarity
+    if (name === 'gallery' || name === 'finale') {
       this.canvasContainer.classList.add('dimmed');
     } else {
       this.canvasContainer.classList.remove('dimmed');
@@ -167,6 +174,39 @@ class App {
     this.btnOpenGift.classList.add('opening-state');
     this.btnOpenGift.innerHTML = '<span>Открываем...</span> <span class="btn-sparkle">✨</span>';
     this.openingStatus.style.display = 'inline-flex';
+
+    // Golden festive confetti celebration when lid opens
+    setTimeout(() => {
+      try {
+        confetti({
+          particleCount: 75,
+          spread: 75,
+          origin: { y: 0.58 },
+          colors: ['#f5d78e', '#dcb355', '#ffffff', '#ba8c2d', '#ffe8a3'],
+          disableForReducedMotion: true
+        });
+        setTimeout(() => {
+          confetti({
+            particleCount: 40,
+            angle: 60,
+            spread: 55,
+            origin: { x: 0.15, y: 0.65 },
+            colors: ['#f5d78e', '#dcb355', '#ffe8a3'],
+            disableForReducedMotion: true
+          });
+          confetti({
+            particleCount: 40,
+            angle: 120,
+            spread: 55,
+            origin: { x: 0.85, y: 0.65 },
+            colors: ['#f5d78e', '#dcb355', '#ffe8a3'],
+            disableForReducedMotion: true
+          });
+        }, 350);
+      } catch (e) {
+        console.warn('Confetti launch error:', e);
+      }
+    }, 2200);
 
     if (this.hasWebGL && this.giftScene) {
       this.giftScene.openBox(() => {
