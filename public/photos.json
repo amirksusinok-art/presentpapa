@@ -110,5 +110,15 @@
     "width": 1920,
     "height": 1440,
     "aspect": 1.33
+  },
+  {
+    "id": 15,
+    "file": "photos/avrora.mp4",
+    "poster": "photos/avrora-poster.jpg",
+    "type": "video",
+    "originalName": "avrora.mp4",
+    "width": 1920,
+    "height": 1080,
+    "aspect": 1.777
   }
 ]

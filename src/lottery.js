@@ -31,13 +31,35 @@ export class ScratchLottery {
   render() {
     this.container.innerHTML = `
       <div class="lottery-ticket-wrapper">
-        <div class="lottery-ticket" id="lottery-ticket">
+        <!-- Authentic Retro Paper Lottery Ticket -->
+        <div class="lottery-ticket vintage-ticket" id="lottery-ticket">
+          
+          <!-- Perforated Tear Notches (authentic retro tear-off stub effect) -->
+          <div class="ticket-tear-edge left" aria-hidden="true"></div>
+          <div class="ticket-tear-edge right" aria-hidden="true"></div>
+
+          <!-- Guilloche Ornamental Corner Rosettes -->
+          <div class="guilloche-corner top-left" aria-hidden="true"></div>
+          <div class="guilloche-corner top-right" aria-hidden="true"></div>
+          <div class="guilloche-corner bottom-left" aria-hidden="true"></div>
+          <div class="guilloche-corner bottom-right" aria-hidden="true"></div>
+
           <!-- Ticket Header -->
           <div class="ticket-header">
-            <div class="ticket-watermark">777</div>
+            <!-- Vintage Official Family Seal Stamp -->
+            <div class="ticket-retro-seal" aria-hidden="true">
+              <span>★ ОТК ★</span>
+              <small>СЕМЬЯ</small>
+            </div>
+
             <div class="ticket-badge">СЕМЕЙНАЯ МОМЕНТАЛЬНАЯ ЛОТЕРЕЯ • ТИРАЖ № 1</div>
             <h2 class="ticket-title">СЧАСТЛИВЫЙ БИЛЕТ 777</h2>
-            <div class="ticket-serial">Серия: ЛУЧШИЙ-ПАПА • № 777-2026</div>
+            
+            <!-- Red Vintage Rubber-Stamped Serial Box -->
+            <div class="ticket-serial-box">
+              <span class="serial-label">СЕРИЯ: ЛУЧШИЙ-ПАПА</span>
+              <span class="serial-num">№ 777-2026</span>
+            </div>
           </div>
 
           <div class="ticket-instruction">
@@ -57,7 +79,7 @@ export class ScratchLottery {
             </button>
           </div>
 
-          <!-- Ticket Footer with Barcode -->
+          <!-- Ticket Footer with Guilloche Security Barcode & Guarantee -->
           <div class="ticket-footer">
             <div class="ticket-barcode" aria-hidden="true">
               <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
@@ -71,17 +93,13 @@ export class ScratchLottery {
         <div class="jackpot-modal" id="jackpot-modal">
           <div class="jackpot-card">
             <div class="jackpot-glow-ring"></div>
-            <div class="jackpot-crown">🎰 🏆 🏆 🏆 🎰</div>
-            <h3 class="jackpot-title">СУПЕР-ДЖЕКПОТ 777!</h3>
+            <h3 class="jackpot-title">СУПЕР-ДЖЕКПОТ!</h3>
             <div class="jackpot-divider"></div>
             <p class="jackpot-text">
-              Вы выиграли <strong>любовь, заботу и безграничную гордость всей семьи</strong> на 100 лет вперёд!
+              Любовь, забота и гордость всей семьи — для самого лучшего папы!
             </p>
-            <div class="jackpot-note">
-              (Выигрыш не облагается налогом и выплачивается ежедневно в виде тёплых объятий ❤️)
-            </div>
             <button id="btn-lottery-claim" class="btn btn-luxury jackpot-claim-btn">
-              <span>Забрать выигрыш и перейти к поздравлениям ✨</span>
+              <span>Перейти к поздравлениям ✨</span>
             </button>
           </div>
         </div>
@@ -163,24 +181,35 @@ export class ScratchLottery {
     ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
     cell.ctx = ctx;
 
-    // Draw luxury metallic gold scratch layer
+    // Draw authentic metallic scratch foil layer (rich brass/gold gradient)
     const grad = ctx.createLinearGradient(0, 0, w, h);
-    grad.addColorStop(0, '#f2d07e');
-    grad.addColorStop(0.3, '#d4a843');
-    grad.addColorStop(0.7, '#f7db91');
-    grad.addColorStop(1, '#be8e28');
+    grad.addColorStop(0, '#f5d98b');
+    grad.addColorStop(0.25, '#d4a843');
+    grad.addColorStop(0.5, '#fae19c');
+    grad.addColorStop(0.75, '#c9962b');
+    grad.addColorStop(1, '#edd082');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
 
-    // Subtle star watermark pattern
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.22)';
-    ctx.font = 'bold 22px system-ui';
+    // Subtle guilloche security hatch pattern
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
+    ctx.lineWidth = 1;
+    for (let i = -w; i < w * 2; i += 12) {
+      ctx.beginPath();
+      ctx.moveTo(i, 0);
+      ctx.lineTo(i + h, h);
+      ctx.stroke();
+    }
+
+    // Vintage star watermark pattern
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+    ctx.font = 'bold 20px serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('★', w / 2, h / 2);
+    ctx.fillText('★ 777 ★', w / 2, h / 2);
 
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.lineWidth = 1.5;
     ctx.strokeRect(3, 3, w - 6, h - 6);
 
     // Attach mouse & touch scratching handlers
@@ -218,7 +247,7 @@ export class ScratchLottery {
       cell.isDrawing = false;
     });
 
-    // Touch events (with passive: false to prevent scrolling while scratching)
+    // Touch events ({ passive: false } prevents unwanted viewport scroll during scratching)
     canvas.addEventListener('touchstart', (e) => {
       if (cell.isCleared) return;
       e.preventDefault();
@@ -253,7 +282,7 @@ export class ScratchLottery {
       const imgData = ctx.getImageData(0, 0, realW, realH);
       const data = imgData.data;
       let transparentCount = 0;
-      const step = 28; // Sample every 28th pixel for smooth performance
+      const step = 28; // Sample every 28th pixel for fast 60fps performance
       const totalSamples = Math.floor(data.length / step);
 
       for (let i = 3; i < data.length; i += step) {
@@ -263,11 +292,12 @@ export class ScratchLottery {
       }
 
       const percent = transparentCount / totalSamples;
-      if (percent > 0.48) {
+      // Auto-clear threshold > 55%
+      if (percent > 0.55) {
         this.clearCell(cell);
       }
     } catch {
-      // If getImageData fails due to any reason, clear on interaction
+      // If getImageData is restricted or fails, clear on user interaction
       this.clearCell(cell);
     }
   }

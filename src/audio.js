@@ -282,6 +282,101 @@ class SoundController {
   }
 
   /**
+   * Metallic soda can tab initial click / tension sound
+   */
+  playCanTabClick() {
+    this.resume();
+    if (!this.ctx || this.isMuted) return;
+
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator();
+    const gain = this.ctx.createGain();
+
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(1800, t);
+    osc.frequency.exponentialRampToValueAtTime(600, t + 0.06);
+
+    gain.gain.setValueAtTime(0.12, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+
+    osc.connect(gain);
+    gain.connect(this.ctx.destination);
+
+    osc.start(t);
+    osc.stop(t + 0.06);
+  }
+
+  /**
+   * Juicy realistic CokaCola can opening pop and gas fizz
+   */
+  playCanOpenFizz() {
+    this.resume();
+    if (!this.ctx || this.isMuted || !this.noiseBuffer) return;
+
+    const t = this.ctx.currentTime;
+
+    // 1. Sharp metallic "CLACK!" puncture
+    const clackOsc = this.ctx.createOscillator();
+    const clackGain = this.ctx.createGain();
+    clackOsc.type = 'triangle';
+    clackOsc.frequency.setValueAtTime(2400, t);
+    clackOsc.frequency.exponentialRampToValueAtTime(180, t + 0.09);
+
+    clackGain.gain.setValueAtTime(0.35, t);
+    clackGain.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+
+    clackOsc.connect(clackGain);
+    clackGain.connect(this.ctx.destination);
+    clackOsc.start(t);
+    clackOsc.stop(t + 0.09);
+
+    // 2. High-pressure gas burst ("Psssshh!")
+    const hissNoise = this.ctx.createBufferSource();
+    hissNoise.buffer = this.noiseBuffer;
+    hissNoise.loop = true;
+
+    const hissFilter = this.ctx.createBiquadFilter();
+    hissFilter.type = 'highpass';
+    hissFilter.frequency.setValueAtTime(2800, t);
+    hissFilter.frequency.exponentialRampToValueAtTime(1200, t + 1.2);
+
+    const hissGain = this.ctx.createGain();
+    hissGain.gain.setValueAtTime(0.001, t);
+    hissGain.gain.linearRampToValueAtTime(0.38, t + 0.02);
+    hissGain.gain.exponentialRampToValueAtTime(0.08, t + 0.6);
+    hissGain.gain.exponentialRampToValueAtTime(0.0001, t + 1.8);
+
+    hissNoise.connect(hissFilter);
+    hissFilter.connect(hissGain);
+    hissGain.connect(this.ctx.destination);
+
+    hissNoise.start(t);
+    hissNoise.stop(t + 1.8);
+
+    // 3. Effervescent carbonation bubbling fizz ("tssss-bubble")
+    const fizzNoise = this.ctx.createBufferSource();
+    fizzNoise.buffer = this.noiseBuffer;
+    fizzNoise.loop = true;
+
+    const fizzFilter = this.ctx.createBiquadFilter();
+    fizzFilter.type = 'bandpass';
+    fizzFilter.frequency.setValueAtTime(3600, t);
+    fizzFilter.Q.setValueAtTime(2.5, t);
+
+    const fizzGain = this.ctx.createGain();
+    fizzGain.gain.setValueAtTime(0.001, t + 0.15);
+    fizzGain.gain.linearRampToValueAtTime(0.18, t + 0.35);
+    fizzGain.gain.exponentialRampToValueAtTime(0.0001, t + 3.0);
+
+    fizzNoise.connect(fizzFilter);
+    fizzFilter.connect(fizzGain);
+    fizzGain.connect(this.ctx.destination);
+
+    fizzNoise.start(t + 0.15);
+    fizzNoise.stop(t + 3.0);
+  }
+
+  /**
    * Start warm ambient emotional soundscape (soft drone & soothing chord shifts)
    */
   startAmbientMusic() {

@@ -2,6 +2,7 @@ import { GiftScene } from './three-scene.js';
 import { soundCtrl } from './audio.js';
 import { ScratchLottery } from './lottery.js';
 import { BirthdayCake } from './cake.js';
+import { CokaColaCan } from './cola.js';
 import confetti from 'canvas-confetti';
 
 // Fallback photos list
@@ -19,7 +20,8 @@ const DEFAULT_PHOTOS = [
   { id: 11, file: 'photos/photo-11.jpg', aspect: 0.75 },
   { id: 12, file: 'photos/photo-12.jpg', aspect: 0.75 },
   { id: 13, file: 'photos/photo-13.jpg', aspect: 0.75 },
-  { id: 14, file: 'photos/photo-14.jpg', aspect: 1.33 }
+  { id: 14, file: 'photos/photo-14.jpg', aspect: 1.33 },
+  { id: 15, file: 'photos/avrora.mp4', poster: 'photos/avrora-poster.jpg', type: 'video', aspect: 1.777 }
 ];
 
 class App {
@@ -31,6 +33,7 @@ class App {
     this.hasWebGL = false;
     this.lottery = null;
     this.cake = null;
+    this.cola = null;
 
     // Screens
     this.screens = {
@@ -39,6 +42,7 @@ class App {
       greeting: document.getElementById('screen-greeting'),
       gallery: document.getElementById('screen-gallery'),
       cake: document.getElementById('screen-cake'),
+      cola: document.getElementById('screen-cola'),
       finale: document.getElementById('screen-finale')
     };
 
@@ -52,6 +56,7 @@ class App {
     this.btnFinishGallery = document.getElementById('btn-finish-gallery');
     this.btnBackToGreeting = document.getElementById('btn-back-to-greeting');
     this.btnBackToCake = document.getElementById('btn-back-to-cake');
+    this.btnBackToCola = document.getElementById('btn-back-to-cola');
     this.btnRestart = document.getElementById('btn-restart');
     this.btnBackToPhotos = document.getElementById('btn-back-to-photos');
     this.btnSoundToggle = document.getElementById('btn-sound-toggle');
@@ -64,12 +69,14 @@ class App {
     this.albumNext = document.getElementById('album-next');
     this.photoViewerCard = document.getElementById('photo-viewer-card');
     this.viewerImg = document.getElementById('viewer-img');
+    this.viewerVideo = document.getElementById('viewer-video');
     this.viewerSkeleton = document.getElementById('viewer-skeleton');
     this.thumbsStrip = document.getElementById('thumbs-strip');
 
     // Lightbox Modal
     this.lightbox = document.getElementById('lightbox');
     this.lightboxImg = document.getElementById('lightbox-img');
+    this.lightboxVideo = document.getElementById('lightbox-video');
     this.lightboxCounter = document.getElementById('lightbox-counter');
     this.lightboxClose = document.getElementById('lightbox-close');
     this.lightboxPrev = document.getElementById('lightbox-prev');
@@ -85,6 +92,7 @@ class App {
     this.initSoundEvents();
     this.initLotteryModule();
     this.initCakeModule();
+    this.initColaModule();
     this.initNavigation();
     this.initAlbumSlider();
     this.initLightbox();
@@ -105,10 +113,20 @@ class App {
   initCakeModule() {
     if (this.screens.cake) {
       this.cake = new BirthdayCake(this.screens.cake, () => {
-        this.showScreen('finale');
+        this.showScreen('cola');
         this.scrollToTop();
       });
       this.cake.init();
+    }
+  }
+
+  initColaModule() {
+    if (this.screens.cola) {
+      this.cola = new CokaColaCan(this.screens.cola, () => {
+        this.showScreen('finale');
+        this.scrollToTop();
+      });
+      this.cola.init();
     }
   }
 
@@ -169,6 +187,13 @@ class App {
       this.scrollToTop();
     });
 
+    if (this.btnBackToCola) {
+      this.btnBackToCola.addEventListener('click', () => {
+        this.showScreen('cola');
+        this.scrollToTop();
+      });
+    }
+
     if (this.btnBackToCake) {
       this.btnBackToCake.addEventListener('click', () => {
         this.showScreen('cake');
@@ -200,11 +225,17 @@ class App {
       }
     });
 
-    // Dim 3D scene when inside interactive lottery, photo album, cake, or finale
-    if (name === 'gallery' || name === 'finale' || name === 'lottery' || name === 'cake') {
+    // Dim 3D scene when inside interactive lottery, photo album, cake, cola, or finale
+    if (name === 'gallery' || name === 'finale' || name === 'lottery' || name === 'cake' || name === 'cola') {
       this.canvasContainer.classList.add('dimmed');
     } else {
       this.canvasContainer.classList.remove('dimmed');
+    }
+
+    // Pause video playback if navigating away from gallery
+    if (name !== 'gallery') {
+      if (this.viewerVideo) this.viewerVideo.pause();
+      if (this.lightboxVideo) this.lightboxVideo.pause();
     }
 
     // Manage microphone / audio listening for Cake screen
@@ -293,6 +324,10 @@ class App {
       this.cake.reset();
     }
 
+    if (this.cola) {
+      this.cola.reset();
+    }
+
     this.btnOpenGift.style.display = 'inline-flex';
     this.btnOpenGift.classList.remove('opening-state');
     this.btnOpenGift.innerHTML = '<span>Открыть подарок</span> <span class="btn-sparkle" aria-hidden="true">✨</span>';
@@ -319,17 +354,26 @@ class App {
   setupAlbumView() {
     // Generate mini-thumbnails
     this.thumbsStrip.innerHTML = '';
-    this.photos.forEach((photo, idx) => {
+    this.photos.forEach((item, idx) => {
+      const isVideo = item.type === 'video' || item.file.endsWith('.mp4');
       const thumb = document.createElement('div');
-      thumb.className = `thumb-item ${idx === 0 ? 'active' : ''}`;
+      thumb.className = `thumb-item ${idx === 0 ? 'active' : ''} ${isVideo ? 'is-video-thumb' : ''}`;
       thumb.setAttribute('role', 'tab');
-      thumb.setAttribute('aria-label', `Фотография ${idx + 1}`);
+      thumb.setAttribute('aria-label', `${isVideo ? 'Видео' : 'Фотография'} ${idx + 1}`);
 
       const img = document.createElement('img');
-      img.src = photo.file;
+      img.src = item.poster || item.file;
       img.alt = `Миниатюра ${idx + 1}`;
       img.loading = 'lazy';
       thumb.appendChild(img);
+
+      if (isVideo) {
+        const badge = document.createElement('div');
+        badge.className = 'thumb-video-badge';
+        badge.textContent = '▶';
+        badge.setAttribute('aria-hidden', 'true');
+        thumb.appendChild(badge);
+      }
 
       thumb.addEventListener('click', () => {
         this.displayPhoto(idx);
@@ -344,24 +388,58 @@ class App {
 
   displayPhoto(idx) {
     this.currentPhotoIdx = (idx + this.photos.length) % this.photos.length;
-    const photo = this.photos[this.currentPhotoIdx];
+    const item = this.photos[this.currentPhotoIdx];
+    const isVideo = item.type === 'video' || item.file.endsWith('.mp4');
+
+    // Pause any active playback
+    if (this.viewerVideo) {
+      this.viewerVideo.pause();
+    }
+    if (this.lightboxVideo) {
+      this.lightboxVideo.pause();
+    }
 
     // Show skeleton & fade out current
     this.viewerSkeleton.style.display = 'block';
-    this.viewerImg.style.opacity = '0';
-    this.viewerImg.style.transform = 'scale(0.97)';
 
-    this.viewerImg.src = photo.file;
-    this.viewerImg.onload = () => {
-      this.viewerSkeleton.style.display = 'none';
-      this.viewerImg.style.opacity = '1';
-      this.viewerImg.style.transform = 'scale(1)';
-    };
+    if (isVideo) {
+      this.viewerImg.style.display = 'none';
+      if (this.viewerVideo) {
+        this.viewerVideo.style.display = 'block';
+        this.viewerVideo.style.opacity = '0';
+        this.viewerVideo.src = item.file;
+        if (item.poster) {
+          this.viewerVideo.poster = item.poster;
+        }
+        this.viewerVideo.onloadeddata = () => {
+          this.viewerSkeleton.style.display = 'none';
+          this.viewerVideo.style.opacity = '1';
+        };
+        this.viewerVideo.onerror = () => {
+          this.viewerSkeleton.style.display = 'none';
+          this.viewerVideo.style.opacity = '0.7';
+        };
+      }
+    } else {
+      if (this.viewerVideo) {
+        this.viewerVideo.style.display = 'none';
+      }
+      this.viewerImg.style.display = 'block';
+      this.viewerImg.style.opacity = '0';
+      this.viewerImg.style.transform = 'scale(0.97)';
 
-    this.viewerImg.onerror = () => {
-      this.viewerSkeleton.style.display = 'none';
-      this.viewerImg.style.opacity = '0.5';
-    };
+      this.viewerImg.src = item.file;
+      this.viewerImg.onload = () => {
+        this.viewerSkeleton.style.display = 'none';
+        this.viewerImg.style.opacity = '1';
+        this.viewerImg.style.transform = 'scale(1)';
+      };
+
+      this.viewerImg.onerror = () => {
+        this.viewerSkeleton.style.display = 'none';
+        this.viewerImg.style.opacity = '0.5';
+      };
+    }
 
     // Update counter
     this.albumCounter.textContent = `${this.currentPhotoIdx + 1} из ${this.photos.length}`;
@@ -388,13 +466,23 @@ class App {
       this.displayPhoto(this.currentPhotoIdx + 1);
     });
 
-    // Tap on image card opens full-screen Lightbox
-    this.photoViewerCard.addEventListener('click', () => {
+    // Tap on photo card opens full-screen Lightbox (unless clicking video controls)
+    this.photoViewerCard.addEventListener('click', (e) => {
+      if (e.target === this.viewerVideo) return;
       this.openLightbox(this.currentPhotoIdx);
     });
 
+    const tapHint = document.getElementById('viewer-tap-hint');
+    if (tapHint) {
+      tapHint.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.openLightbox(this.currentPhotoIdx);
+      });
+    }
+
     this.photoViewerCard.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
+        if (e.target === this.viewerVideo) return;
         e.preventDefault();
         this.openLightbox(this.currentPhotoIdx);
       }
@@ -432,6 +520,7 @@ class App {
         if (e.key === 'ArrowLeft') {
           this.displayPhoto(this.currentPhotoIdx - 1);
         } else if (e.key === 'ArrowRight' || e.key === ' ') {
+          if (e.target === this.viewerVideo) return;
           e.preventDefault();
           this.displayPhoto(this.currentPhotoIdx + 1);
         }
@@ -507,17 +596,45 @@ class App {
   }
 
   closeLightbox() {
+    if (this.lightboxVideo) {
+      this.lightboxVideo.pause();
+    }
     this.lightbox.classList.remove('active');
     document.body.style.overflow = '';
   }
 
   updateLightboxContent() {
-    const photo = this.photos[this.currentPhotoIdx];
-    this.lightboxImg.style.opacity = '0';
-    this.lightboxImg.src = photo.file;
-    this.lightboxImg.onload = () => {
-      this.lightboxImg.style.opacity = '1';
-    };
+    const item = this.photos[this.currentPhotoIdx];
+    const isVideo = item.type === 'video' || item.file.endsWith('.mp4');
+
+    if (this.viewerVideo) {
+      this.viewerVideo.pause();
+    }
+    if (this.lightboxVideo) {
+      this.lightboxVideo.pause();
+    }
+
+    if (isVideo) {
+      this.lightboxImg.style.display = 'none';
+      if (this.lightboxVideo) {
+        this.lightboxVideo.style.display = 'block';
+        this.lightboxVideo.src = item.file;
+        if (item.poster) {
+          this.lightboxVideo.poster = item.poster;
+        }
+        this.lightboxVideo.play().catch(() => {});
+      }
+    } else {
+      if (this.lightboxVideo) {
+        this.lightboxVideo.style.display = 'none';
+      }
+      this.lightboxImg.style.display = 'block';
+      this.lightboxImg.style.opacity = '0';
+      this.lightboxImg.src = item.file;
+      this.lightboxImg.onload = () => {
+        this.lightboxImg.style.opacity = '1';
+      };
+    }
     this.lightboxCounter.textContent = `${this.currentPhotoIdx + 1} / ${this.photos.length}`;
   }
 }

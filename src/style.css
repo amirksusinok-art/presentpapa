@@ -550,6 +550,18 @@ html, body {
   -webkit-user-drag: none;
 }
 
+.viewer-video {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #000;
+  outline: none;
+  transition: opacity 0.3s var(--ease-out);
+}
+
 .viewer-tap-hint {
   position: absolute;
   bottom: 14px;
@@ -672,6 +684,30 @@ html, body {
   transform: scale(1.12);
 }
 
+.thumb-item.is-video-thumb {
+  position: relative;
+}
+
+.thumb-video-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background: rgba(14, 19, 29, 0.82);
+  border: 1px solid var(--border-gold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: var(--gold-light);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.85);
+  pointer-events: none;
+  padding-left: 2px;
+}
+
 .album-footer {
   display: flex;
   justify-content: center;
@@ -739,6 +775,17 @@ html, body {
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
   transition: opacity 0.25s var(--ease-out);
   user-select: none;
+}
+
+.lightbox-video {
+  max-width: 90vw;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+  background: #000;
+  outline: none;
+  transition: opacity 0.25s var(--ease-out);
 }
 
 .lightbox-counter {
@@ -817,14 +864,17 @@ html, body {
 }
 
 .finale-card {
+  position: relative;
+  z-index: 10;
   max-width: 620px;
   width: 100%;
-  background: rgba(12, 16, 26, 0.86);
+  background: rgba(12, 16, 26, 0.88);
   border: 1px solid var(--border-gold);
   border-radius: 20px;
   padding: clamp(2rem, 5vw, 3.2rem) clamp(1.4rem, 4vw, 2.5rem);
   backdrop-filter: blur(20px);
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75), 0 0 35px var(--gold-glow);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 35px var(--gold-glow);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -953,11 +1003,13 @@ html, body {
 
 .css-gift-glow {
   position: absolute;
-  top: 35px;
-  left: 15px;
-  width: 150px;
-  height: 120px;
-  background: radial-gradient(circle, rgba(255, 220, 120, 0.8) 0%, transparent 70%);
+  top: 15px;
+  left: 20px;
+  right: 20px;
+  height: 140px;
+  background: linear-gradient(to top, rgba(255, 230, 130, 0.9) 0%, rgba(255, 205, 80, 0.4) 50%, transparent 100%);
+  border-radius: 4px;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
   opacity: 0;
   transition: opacity 2.5s ease;
   pointer-events: none;
@@ -976,7 +1028,7 @@ html, body {
 }
 
 /* ==========================================================================
-   MODULE 1: SCRATCH LOTTERY 777 (#screen-lottery)
+   MODULE 1: RETRO SCRATCH LOTTERY 777 (#screen-lottery)
    ========================================================================== */
 #screen-lottery {
   flex-direction: column;
@@ -994,27 +1046,124 @@ html, body {
   align-items: center;
 }
 
-.lottery-ticket {
+/* Authentic Vintage Soviet/Paper Lottery Ticket */
+.lottery-ticket.vintage-ticket {
   width: 100%;
-  background: linear-gradient(145deg, #121826 0%, #0c101a 100%);
-  border: 2px solid var(--border-gold);
-  border-radius: 18px;
-  padding: 1.5rem 1.2rem;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75), 0 0 35px var(--gold-glow);
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(220, 179, 85, 0.08) 0%, transparent 70%),
+    repeating-linear-gradient(45deg, rgba(184, 134, 11, 0.03) 0px, rgba(184, 134, 11, 0.03) 2px, transparent 2px, transparent 8px),
+    linear-gradient(135deg, #fdfaf2 0%, #f6edd9 50%, #f9f2e3 100%);
+  color: #1f1912;
+  border: 3px double #b8860b;
+  border-radius: 12px;
+  padding: 1.6rem 1.3rem;
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.8), 0 0 35px rgba(220, 179, 85, 0.25);
   position: relative;
-  overflow: hidden;
-  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23f5d78e' stroke='%23b5892d' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23d4a843' stroke-dasharray='2 2' stroke-width='1.5'/%3E%3Ctext x='16' y='21' font-size='13' font-family='sans-serif' font-weight='bold' fill='%2363450d' text-anchor='middle'%3E₽%3C/text%3E%3C/svg%3E") 16 16, crosshair;
+  overflow: visible;
+  outline: 1px dashed rgba(184, 134, 11, 0.45);
+  outline-offset: -7px;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Ccircle cx='18' cy='18' r='16' fill='%23f5d78e' stroke='%23b8860b' stroke-width='2'/%3E%3Ccircle cx='18' cy='18' r='13' fill='%23e6be58' stroke='%23d4a843' stroke-width='1' stroke-dasharray='3 2'/%3E%3Ctext x='18' y='23' font-size='14' font-family='serif' font-weight='bold' fill='%235c3f08' text-anchor='middle'%3E★%3C/text%3E%3C/svg%3E") 18 18, crosshair;
   animation: cardFadeIn 0.8s var(--ease-out) forwards;
+}
+
+/* Perforated tear notches on ticket edges */
+.ticket-tear-edge {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 14px;
+  height: 28px;
+  background: var(--bg-dark);
+  border: 2px solid #b8860b;
+  z-index: 5;
+}
+
+.ticket-tear-edge.left {
+  left: -8px;
+  border-radius: 0 14px 14px 0;
+  border-left: none;
+}
+
+.ticket-tear-edge.right {
+  right: -8px;
+  border-radius: 14px 0 0 14px;
+  border-right: none;
+}
+
+/* Guilloche Corner Rosettes */
+.guilloche-corner {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.guilloche-corner.top-left {
+  top: 9px;
+  left: 9px;
+  border-top: 2px solid #b8860b;
+  border-left: 2px solid #b8860b;
+}
+
+.guilloche-corner.top-right {
+  top: 9px;
+  right: 9px;
+  border-top: 2px solid #b8860b;
+  border-right: 2px solid #b8860b;
+}
+
+.guilloche-corner.bottom-left {
+  bottom: 9px;
+  left: 9px;
+  border-bottom: 2px solid #b8860b;
+  border-left: 2px solid #b8860b;
+}
+
+.guilloche-corner.bottom-right {
+  bottom: 9px;
+  right: 9px;
+  border-bottom: 2px solid #b8860b;
+  border-right: 2px solid #b8860b;
+}
+
+/* Vintage Official Red Stamp Seal */
+.ticket-retro-seal {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 52px;
+  height: 52px;
+  border: 2px dashed #b91c1c;
+  border-radius: 50%;
+  color: #b91c1c;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Courier New', monospace;
+  font-size: 0.65rem;
+  font-weight: 800;
+  transform: rotate(-14deg);
+  opacity: 0.78;
+  pointer-events: none;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+}
+
+.ticket-retro-seal small {
+  font-size: 0.52rem;
 }
 
 .ticket-watermark {
   position: absolute;
-  top: 15%;
-  right: -10px;
+  top: 16%;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: var(--font-serif);
-  font-size: 7rem;
-  font-weight: 700;
-  color: rgba(220, 179, 85, 0.04);
+  font-size: 7.5rem;
+  font-weight: 800;
+  color: rgba(184, 134, 11, 0.07);
   pointer-events: none;
   line-height: 1;
 }
@@ -1025,49 +1174,67 @@ html, body {
   flex-direction: column;
   align-items: center;
   gap: 0.35rem;
-  border-bottom: 1px dashed rgba(220, 179, 85, 0.3);
-  padding-bottom: 0.8rem;
+  border-bottom: 1.5px solid #d4a843;
+  padding-bottom: 0.85rem;
+  position: relative;
+  z-index: 2;
 }
 
 .ticket-badge {
-  font-size: 0.68rem;
+  font-size: 0.66rem;
   letter-spacing: 0.22em;
-  color: var(--gold);
+  color: #8c6314;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 700;
+  background: rgba(220, 179, 85, 0.14);
+  padding: 0.2rem 0.65rem;
+  border-radius: 4px;
 }
 
 .ticket-title {
   font-family: var(--font-serif);
-  font-size: clamp(1.6rem, 4vw, 2.1rem);
+  font-size: clamp(1.8rem, 4.5vw, 2.3rem);
   font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.05em;
-  text-shadow: 0 0 20px var(--gold-glow);
+  color: #2b1f0d;
+  letter-spacing: 0.06em;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 4px rgba(0, 0, 0, 0.15);
+  margin: 0.1rem 0;
 }
 
-.ticket-serial {
-  font-family: monospace;
-  font-size: 0.76rem;
-  color: var(--text-muted);
+/* Red Stamped Serial Number Box */
+.ticket-serial-box {
+  display: inline-flex;
+  gap: 0.4rem;
+  font-family: 'Courier New', monospace;
+  font-size: 0.74rem;
+  color: #b91c1c;
+  font-weight: 700;
   letter-spacing: 0.12em;
+  background: rgba(185, 28, 28, 0.06);
+  border: 1px dashed rgba(185, 28, 28, 0.4);
+  padding: 0.2rem 0.6rem;
+  border-radius: 3px;
 }
 
 .ticket-instruction {
   text-align: center;
   padding: 0.75rem 0.5rem 0.6rem;
   font-size: 0.82rem;
-  color: #f1f5f9;
+  color: #423522;
+  font-weight: 500;
   line-height: 1.4;
+  position: relative;
+  z-index: 2;
 }
 
-/* 3x3 Scratch Grid */
+/* 3x3 Scratch Grid with Vintage Security Frame */
 .scratch-grid-wrap {
   position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
   margin: 0.4rem 0;
+  z-index: 2;
 }
 
 .scratch-grid {
@@ -1081,19 +1248,19 @@ html, body {
 .scratch-cell {
   position: relative;
   aspect-ratio: 1 / 1;
-  background: rgba(18, 25, 38, 0.95);
-  border: 1px solid var(--border-gold);
-  border-radius: 12px;
+  background: #1a1714;
+  border: 2px solid #c49938;
+  border-radius: 10px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8), 0 2px 5px rgba(0, 0, 0, 0.15);
   user-select: none;
 }
 
 .scratch-cell.is-jackpot-symbol {
-  border-color: rgba(245, 218, 140, 0.7);
+  border-color: #ffd700;
 }
 
 .cell-symbol-content {
@@ -1106,16 +1273,16 @@ html, body {
 }
 
 .cell-icon {
-  font-size: 1.9rem;
+  font-size: 1.95rem;
   line-height: 1;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.7));
 }
 
 .cell-label {
   font-size: 0.62rem;
   letter-spacing: 0.08em;
-  color: var(--gold-light);
-  font-weight: 500;
+  color: #fce8a6;
+  font-weight: 600;
   text-transform: uppercase;
 }
 
@@ -1125,7 +1292,7 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  border-radius: 11px;
+  border-radius: 8px;
   cursor: inherit;
   z-index: 2;
   touch-action: none;
@@ -1137,9 +1304,9 @@ html, body {
   top: 50%;
   left: 5%;
   right: 5%;
-  height: 4px;
+  height: 5px;
   background: linear-gradient(90deg, transparent, #fff, #ffd700, #fff, transparent);
-  box-shadow: 0 0 16px #ffd700, 0 0 30px #ffea79;
+  box-shadow: 0 0 18px #ffd700, 0 0 35px #ffea79;
   transform: translateY(-50%) scaleX(0);
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 4;
@@ -1154,42 +1321,54 @@ html, body {
   display: flex;
   justify-content: center;
   margin-top: 0.9rem;
+  position: relative;
+  z-index: 2;
 }
 
 .ticket-scratch-all-btn {
-  padding: 0.55rem 1.4rem;
+  background: #2a2012;
+  color: #fce8a6;
+  border-color: #b8860b;
+  padding: 0.58rem 1.45rem;
   font-size: 0.85rem;
   min-height: 38px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-/* Ticket Footer with Barcode */
+.ticket-scratch-all-btn:hover {
+  background: #3d2e18;
+  border-color: #ffd700;
+  color: #ffffff;
+}
+
+/* Ticket Footer with Retro Barcode */
 .ticket-footer {
   margin-top: 1rem;
-  border-top: 1px dashed rgba(220, 179, 85, 0.3);
+  border-top: 1.5px solid #d4a843;
   padding-top: 0.75rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.4rem;
+  position: relative;
+  z-index: 2;
 }
 
 .ticket-barcode {
   display: flex;
   align-items: center;
   gap: 3px;
-  height: 24px;
+  height: 22px;
 }
 
 .ticket-barcode span {
   width: 2px;
   height: 100%;
-  background: var(--gold);
-  opacity: 0.65;
+  background: #332615;
 }
 
 .ticket-barcode span:nth-child(even) {
   width: 3px;
-  opacity: 0.85;
 }
 
 .ticket-barcode span:nth-child(3n) {
@@ -1197,9 +1376,10 @@ html, body {
 }
 
 .ticket-security-code {
-  font-size: 0.65rem;
+  font-size: 0.64rem;
   letter-spacing: 0.18em;
-  color: var(--text-muted);
+  color: #634f33;
+  font-weight: 700;
 }
 
 /* Jackpot Celebration Modal */
@@ -1280,7 +1460,7 @@ html, body {
 }
 
 /* ==========================================================================
-   MODULE 2: BIRTHDAY CAKE WITH CANDLES (#screen-cake)
+   MODULE 2: GOURMET BIRTHDAY CAKE & LIVING CANDLES (#screen-cake)
    ========================================================================== */
 #screen-cake {
   flex-direction: column;
@@ -1292,58 +1472,58 @@ html, body {
 }
 
 .cake-scene-wrap {
-  width: 100%;
-  max-width: 580px;
   position: relative;
+  width: 100%;
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  text-align: center;
 }
 
 /* Room Dim Vignette Overlay */
 .cake-room-vignette {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 50% 55%, rgba(0, 0, 0, 0.45) 0%, rgba(4, 6, 12, 0.92) 80%);
-  z-index: 2;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(6, 9, 16, 0.4) 0%, rgba(2, 3, 7, 0.94) 85%);
   pointer-events: none;
-  transition: opacity 1.2s var(--ease-out);
+  z-index: 2;
+  opacity: 1;
+  transition: opacity 2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.cake-room-vignette.lit,
 .cake-room-vignette.lights-on {
-  opacity: 0;
+  opacity: 0.12;
 }
 
 .cake-content {
   position: relative;
   z-index: 10;
   width: 100%;
+  max-width: 640px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.2rem;
+  text-align: center;
+  gap: 0.8rem;
 }
 
 .cake-prompt-box {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  max-width: 480px;
+  gap: 0.4rem;
+  max-width: 580px;
 }
 
 .cake-prompt-title {
   font-family: var(--font-serif);
-  font-size: clamp(1.6rem, 3.8vw, 2.3rem);
+  font-size: clamp(1.4rem, 4vw, 2.1rem);
   font-weight: 500;
-  color: #ffffff;
-  line-height: 1.25;
+  color: #fff6e0;
+  text-shadow: 0 0 25px rgba(245, 218, 140, 0.45);
+  min-height: 2.8em;
+  line-height: 1.3;
   transition: opacity 0.5s ease;
-  min-height: 3rem;
 }
 
 .cake-prompt-title.fade-transition {
@@ -1351,12 +1531,12 @@ html, body {
 }
 
 .cake-mic-status {
-  font-size: 0.78rem;
-  color: var(--gold-light);
+  min-height: 24px;
+  font-size: 0.82rem;
+  color: #cbd5e1;
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  opacity: 0.9;
+  gap: 0.5rem;
 }
 
 .mic-live-dot {
@@ -1373,103 +1553,280 @@ html, body {
   to { opacity: 1; transform: scale(1.15); }
 }
 
-/* The Cake Stage */
+/* Masterpiece Gourmet Cake Stage */
 .cake-stage {
   position: relative;
-  width: 280px;
-  height: 220px;
-  margin: 0.5rem auto 1rem;
+  width: 320px;
+  max-width: 90vw;
+  height: 260px;
+  margin: 0.6rem auto 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
   touch-action: pan-x;
+  perspective: 900px;
 }
 
-.cake-platter {
-  width: 290px;
-  height: 20px;
-  background: linear-gradient(180deg, #f5d78e 0%, #c49938 100%);
-  border-radius: 50%;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7), 0 0 25px rgba(220, 179, 85, 0.25);
+/* Metallic Pedestal Cake Stand */
+.cake-pedestal {
   position: absolute;
   bottom: 0;
-  z-index: 1;
-}
-
-.cake-body {
-  width: 240px;
-  height: 130px;
-  position: relative;
-  z-index: 2;
-  margin-bottom: 6px;
-}
-
-.cake-layer-top {
   width: 100%;
-  height: 65px;
-  background: linear-gradient(180deg, #322216 0%, #20150d 100%);
-  border-radius: 50% / 18px;
-  position: relative;
-  box-shadow: inset 0 2px 8px rgba(255, 215, 120, 0.2);
-}
-
-.cake-layer-bottom {
-  width: 100%;
-  height: 80px;
-  background: linear-gradient(180deg, #271a10 0%, #170f09 100%);
-  border-radius: 0 0 50% 50% / 0 0 24px 24px;
-  position: absolute;
-  top: 30px;
-  left: 0;
-  z-index: -1;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
-}
-
-.cake-drips {
-  position: absolute;
-  top: 24px;
-  left: 10px;
-  right: 10px;
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
   pointer-events: none;
 }
 
-.cake-drips span {
-  width: 14px;
-  height: 24px;
-  background: linear-gradient(180deg, #f5d78e, #c49938);
-  border-radius: 0 0 10px 10px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+.platter-top {
+  width: 310px;
+  max-width: 88vw;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fceda8 0%, #d4a843 55%, #916817 100%);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.7), inset 0 2px 4px #fff8d6;
 }
 
-.cake-drips span:nth-child(2) { height: 32px; }
-.cake-drips span:nth-child(4) { height: 28px; }
-.cake-drips span:nth-child(5) { height: 34px; }
+.platter-rim {
+  width: 290px;
+  max-width: 82vw;
+  height: 10px;
+  border-radius: 0 0 50% 50% / 0 0 10px 10px;
+  background: linear-gradient(180deg, #b38520 0%, #684a0a 100%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
+}
 
-.cake-berries {
+.platter-base {
+  width: 110px;
+  height: 20px;
+  border-radius: 0 0 18px 18px;
+  background: linear-gradient(180deg, #d8ac44 0%, #75510b 100%);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.75);
+}
+
+.platter-shadow {
+  width: 260px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  filter: blur(10px);
+  margin-top: -6px;
+}
+
+/* Gourmet Cake Tiers & Rich Ganache Glaze */
+.cake-body {
+  width: 250px;
+  height: 145px;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.75));
+}
+
+.cake-tier-top {
+  width: 230px;
+  height: 70px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 4;
+  border-radius: 50% / 22px;
+  background: linear-gradient(180deg, #3d2314 0%, #201107 100%);
+  box-shadow: inset 0 2px 8px rgba(255, 215, 120, 0.3);
+}
+
+.cake-glaze-surface {
+  position: absolute;
+  inset: 0;
+  border-radius: 50% / 22px;
+  background: radial-gradient(ellipse at 42% 38%, #5a3219 0%, #2e160a 75%, #180903 100%);
+  overflow: hidden;
+}
+
+.glaze-reflection {
+  position: absolute;
+  top: 6px;
+  left: 28px;
+  width: 95px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 240, 200, 0.1) 70%, transparent 100%);
+  transform: rotate(-10deg);
+  filter: blur(2px);
+}
+
+/* Buttercream Rosettes */
+.cake-rosettes {
+  position: absolute;
+  inset: 2px;
+  border-radius: 50% / 20px;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.cake-rosettes span {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #fff5d6 0%, #e2b968 60%, #9e7523 100%);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5), inset 0 1px 2px #ffffff;
+  position: relative;
+}
+
+.cake-rosettes span::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ffd700;
+  box-shadow: 0 0 3px #ffe680;
+}
+
+/* Fresh 3D Fruits */
+.cake-fresh-fruits {
+  position: absolute;
+  top: -6px;
+  left: 18px;
+  right: 18px;
+  height: 35px;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 6;
+}
+
+.fruit-item {
+  position: relative;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.6));
+}
+
+.berry-strawberry {
+  width: 20px;
+  height: 24px;
+  background: radial-gradient(circle at 35% 30%, #ff5266 0%, #b80d22 65%, #66030e 100%);
+  border-radius: 50% 50% 45% 45% / 60% 60% 40% 40%;
+  transform: rotate(-8deg);
+  position: relative;
+}
+
+.berry-strawberry.s2 {
+  transform: rotate(12deg) scale(0.92);
+}
+
+.berry-strawberry.s3 {
+  transform: rotate(-15deg) scale(0.85);
+}
+
+.berry-leaf {
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 12px;
+  height: 6px;
+  background: #38a169;
+  border-radius: 50% 50% 20% 20%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+}
+
+.berry-blueberry {
+  width: 14px;
+  height: 14px;
+  background: radial-gradient(circle at 35% 30%, #5c7cfa 0%, #22387a 65%, #101c40 100%);
+  border-radius: 50%;
+  position: relative;
+}
+
+.blue-shine {
+  position: absolute;
+  top: 2px;
+  left: 3px;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 50%;
+}
+
+/* Organic Chocolate Ganache Drips */
+.cake-glaze-drips {
+  position: absolute;
+  top: 26px;
+  left: 6px;
+  right: 6px;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.cake-glaze-drips .drip {
+  width: 14px;
+  background: linear-gradient(180deg, #3d2314 0%, #281408 80%, #170902 100%);
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6), inset -1px 0 2px rgba(255, 200, 120, 0.15);
+}
+
+.cake-glaze-drips .d1 { height: 26px; }
+.cake-glaze-drips .d2 { height: 36px; border-radius: 0 0 12px 12px; }
+.cake-glaze-drips .d3 { height: 22px; }
+.cake-glaze-drips .d4 { height: 32px; border-radius: 0 0 11px 11px; }
+.cake-glaze-drips .d5 { height: 20px; }
+.cake-glaze-drips .d6 { height: 38px; border-radius: 0 0 12px 12px; }
+.cake-glaze-drips .d7 { height: 24px; }
+
+/* Lower Tier */
+.cake-tier-bottom {
+  width: 250px;
+  height: 90px;
+  position: absolute;
+  top: 32px;
+  left: 0;
+  z-index: 2;
+  border-radius: 0 0 50% 50% / 0 0 28px 28px;
+  background: linear-gradient(180deg, #2c160b 0%, #1a0b04 100%);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+}
+
+.tier-cream-line {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #c49938 0%, #fceda8 50%, #c49938 100%);
+  opacity: 0.65;
+  box-shadow: 0 0 8px rgba(252, 237, 168, 0.35);
+}
+
+.tier-chocolate-base {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 45px;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,0,0,0.4) 100%);
+}
+
+/* 5 Golden Striped Candles with Multi-Layer Flame */
+.cake-candles {
   position: absolute;
   top: -8px;
   left: 20px;
   right: 20px;
   display: flex;
-  justify-content: space-around;
-  font-size: 1.15rem;
-  pointer-events: none;
-}
-
-/* 5 Candles */
-.cake-candles {
-  position: absolute;
-  top: 10px;
-  left: 25px;
-  right: 25px;
-  display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  height: 90px;
-  z-index: 5;
+  height: 105px;
+  z-index: 8;
   pointer-events: none;
 }
 
@@ -1478,51 +1835,63 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 18px;
+  width: 22px;
 }
 
-.candle-stem {
-  width: 8px;
-  height: 44px;
-  background: linear-gradient(90deg, #fceec5 0%, #d4a843 60%, #b38320 100%);
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+.candle:nth-child(1), .candle:nth-child(5) { margin-bottom: 6px; }
+.candle:nth-child(2), .candle:nth-child(4) { margin-bottom: 2px; }
+.candle:nth-child(3) { margin-bottom: 0px; }
+
+.flame-ambient-aura {
+  position: absolute;
+  top: -24px;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 195, 77, 0.38) 0%, rgba(255, 140, 0, 0.15) 45%, transparent 70%);
+  pointer-events: none;
+  animation: glowPulse 2.2s infinite alternate ease-in-out;
+  transition: opacity 0.35s ease;
 }
 
-.wick {
-  width: 2px;
-  height: 6px;
-  background: #332211;
-  margin-bottom: -1px;
-}
-
-/* Living Flame */
 .flame {
-  width: 14px;
-  height: 24px;
+  width: 16px;
+  height: 28px;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   transform-origin: center bottom;
-  animation: flameFlicker 1.8s infinite alternate ease-in-out;
+  animation: flameFlicker 1.6s infinite alternate ease-in-out;
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 @keyframes flameFlicker {
-  0% { transform: scale(1) rotate(-1deg); }
-  25% { transform: scale(1.06, 0.94) rotate(2deg); }
-  50% { transform: scale(0.96, 1.04) rotate(-2deg); }
-  75% { transform: scale(1.04, 0.98) rotate(1.5deg); }
+  0% { transform: scale(1) rotate(-1.5deg); }
+  25% { transform: scale(1.08, 0.94) rotate(2deg); }
+  50% { transform: scale(0.95, 1.05) rotate(-2deg); }
+  75% { transform: scale(1.05, 0.97) rotate(1.8deg); }
   100% { transform: scale(1) rotate(0deg); }
 }
 
-.flame-inner {
-  width: 12px;
-  height: 20px;
-  background: radial-gradient(ellipse at 50% 70%, #ffffff 0%, #fff3b0 30%, #ff8c00 75%, transparent 100%);
+.flame-blue {
+  position: absolute;
+  bottom: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #38bdf8 0%, #0284c7 70%, transparent 100%);
+  opacity: 0.85;
+}
+
+.flame-core {
+  position: absolute;
+  bottom: 2px;
+  width: 14px;
+  height: 24px;
+  background: radial-gradient(ellipse at 50% 75%, #ffffff 0%, #fff7cc 25%, #ffb703 65%, #fb8500 100%);
   border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;
-  filter: drop-shadow(0 0 6px rgba(255, 140, 0, 0.8));
+  filter: drop-shadow(0 0 8px rgba(255, 183, 3, 0.85));
 }
 
 .flame-glow {
@@ -1530,57 +1899,98 @@ html, body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 44px;
-  height: 44px;
-  background: radial-gradient(circle, rgba(255, 200, 80, 0.45) 0%, transparent 70%);
+  width: 48px;
+  height: 48px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, transparent 70%);
   pointer-events: none;
-  animation: glowPulse 2s infinite alternate;
 }
 
 .flame.extinguished {
-  opacity: 0;
+  opacity: 0 !important;
   transform: scale(0.1) !important;
   pointer-events: none;
 }
 
-/* Smoke Wisp on Candle Extinguish */
+.flame.extinguished ~ .flame-ambient-aura,
+.flame-ambient-aura.dimmed {
+  opacity: 0;
+}
+
+/* Smoke Wisp on Extinguish */
 .smoke-wisp {
   position: absolute;
-  top: -20px;
+  top: -24px;
   left: 50%;
-  width: 3px;
-  height: 28px;
-  background: linear-gradient(180deg, transparent, rgba(220, 220, 230, 0.45));
-  border-radius: 999px;
+  width: 4px;
+  height: 32px;
   transform: translateX(-50%) scale(0);
   opacity: 0;
   pointer-events: none;
 }
 
-.smoke-wisp.active {
-  animation: smokeRise 2.2s ease-out forwards;
+.smoke-puff {
+  position: absolute;
+  width: 8px;
+  height: 16px;
+  background: linear-gradient(180deg, transparent, rgba(220, 225, 240, 0.5));
+  border-radius: 50%;
+  filter: blur(2px);
 }
 
-@keyframes smokeRise {
+.smoke-wisp.active {
+  animation: smokeRiseGourmet 2.4s ease-out forwards;
+}
+
+@keyframes smokeRiseGourmet {
   0% {
-    transform: translateX(-50%) translateY(0) scaleY(0.4);
-    opacity: 0.7;
+    transform: translateX(-50%) translateY(0) scale(0.5);
+    opacity: 0.75;
   }
-  50% {
-    transform: translateX(-35%) translateY(-24px) scaleY(1) rotate(6deg);
-    opacity: 0.4;
+  40% {
+    transform: translateX(-30%) translateY(-22px) scale(1) rotate(8deg);
+    opacity: 0.5;
   }
   100% {
-    transform: translateX(-60%) translateY(-50px) scaleY(1.4) rotate(-10deg);
+    transform: translateX(-70%) translateY(-56px) scale(1.6) rotate(-14deg);
     opacity: 0;
   }
 }
 
+.wick {
+  width: 2px;
+  height: 6px;
+  background: #23180f;
+  margin-bottom: -1px;
+}
+
+.candle-wax-socket {
+  width: 10px;
+  height: 4px;
+  background: #ecd490;
+  border-radius: 50%;
+}
+
+.candle-stem {
+  width: 9px;
+  height: 48px;
+  background: repeating-linear-gradient(
+    45deg,
+    #fceec5,
+    #fceec5 4px,
+    #d4a843 4px,
+    #d4a843 8px
+  );
+  border-radius: 4px;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.65), inset 1px 0 2px rgba(255, 255, 255, 0.4);
+}
+
+/* Alternative Action Controls */
 .cake-actions {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.6rem;
+  margin-top: 0.4rem;
 }
 
 .cake-blow-btn {
@@ -1588,14 +1998,14 @@ html, body {
 }
 
 .cake-swipe-hint {
-  font-size: 0.76rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* Wish Accepted Celebration Card */
 .cake-wish-card {
-  max-width: 520px;
+  max-width: 540px;
   width: 100%;
   background: linear-gradient(135deg, rgba(20, 27, 42, 0.95) 0%, rgba(12, 16, 26, 0.98) 100%);
   border: 2px solid var(--border-gold-bright);
@@ -1638,6 +2048,457 @@ html, body {
   padding: 0.9rem 2rem;
 }
 
+/* ==========================================================================
+   MODULE 3: INTERACTIVE COKA-COLA CAN (#screen-cola)
+   ========================================================================== */
+#screen-cola {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4.5rem 1.2rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.cola-scene-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cola-ambient-glow {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 520px;
+  max-width: 85vw;
+  height: 520px;
+  max-height: 85vw;
+  background: radial-gradient(circle, rgba(220, 30, 45, 0.28) 0%, rgba(180, 20, 30, 0.1) 45%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 1;
+  animation: colaPulseGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes colaPulseGlow {
+  0% { transform: translate(-50%, -50%) scale(0.94); opacity: 0.7; }
+  100% { transform: translate(-50%, -50%) scale(1.06); opacity: 1; }
+}
+
+.cola-content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 620px;
+  width: 100%;
+  gap: 1.1rem;
+}
+
+.cola-prompt-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cola-prompt-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4.2vw, 2.2rem);
+  color: #ffffff;
+  font-weight: 600;
+  text-shadow: 0 0 25px rgba(255, 60, 75, 0.45);
+  line-height: 1.25;
+}
+
+.cola-prompt-sub {
+  font-size: 0.94rem;
+  color: #cbd5e1;
+}
+
+/* Cola Stage */
+.cola-stage {
+  position: relative;
+  width: 260px;
+  height: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem auto;
+  user-select: none;
+}
+
+/* Fizzy Soda Spray Fountain */
+.cola-fizz-fountain {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 140px;
+  pointer-events: none;
+  z-index: 20;
+  display: none;
+}
+
+.cola-fizz-fountain.active {
+  display: block;
+}
+
+.fizz-mist {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 0%, rgba(255, 220, 200, 0.3) 60%, transparent 100%);
+  filter: blur(8px);
+  animation: mistBurst 1.2s ease-out forwards;
+}
+
+@keyframes mistBurst {
+  0% { transform: translateX(-50%) scale(0.3); opacity: 1; }
+  100% { transform: translateX(-50%) scale(1.6); opacity: 0; }
+}
+
+.fizz-bubble {
+  position: absolute;
+  top: 25px;
+  left: 50%;
+  width: var(--size, 6px);
+  height: var(--size, 6px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ffeedd 50%, #f97316 100%);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.9);
+  animation: bubbleFly 1.5s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+  animation-delay: var(--delay, 0s);
+  opacity: 0;
+}
+
+@keyframes bubbleFly {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(0.6);
+  }
+  60% {
+    opacity: 0.9;
+    transform: translate(var(--dx), var(--dy)) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--dx) * 1.3), calc(var(--dy) - 30px)) scale(0.4);
+  }
+}
+
+/* 3D Aluminum Can */
+.cola-can {
+  position: relative;
+  width: 154px;
+  height: 290px;
+  border-radius: 22px 22px 26px 26px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.85));
+}
+
+.cola-can:hover {
+  transform: translateY(-3px) scale(1.02);
+}
+
+/* Metallic Lid */
+.can-top-lid {
+  width: 144px;
+  height: 48px;
+  background: radial-gradient(ellipse at 50% 40%, #eef2f6 0%, #cbd5e1 55%, #94a3b8 100%);
+  border-radius: 50%;
+  position: relative;
+  z-index: 5;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6), inset 0 2px 4px #ffffff, inset 0 -2px 4px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: -18px;
+  border: 1.5px solid #94a3b8;
+}
+
+.can-lid-inner {
+  width: 122px;
+  height: 36px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 40%, #dbe3eb 0%, #b8c4d2 70%, #8292a4 100%);
+  position: relative;
+  border: 1px solid #77889a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Opening Hole Seal */
+.can-mouth-hole {
+  position: absolute;
+  top: 6px;
+  left: 24px;
+  width: 32px;
+  height: 20px;
+  border-radius: 50%;
+  background: #9aa8b8;
+  border: 1px dashed #64748b;
+  transition: all 0.25s ease;
+}
+
+.can-mouth-hole.opened {
+  background: radial-gradient(ellipse at 40% 40%, #1a0809 0%, #080203 100%);
+  border: 1px solid #2d0e12;
+  box-shadow: inset 0 2px 6px #000000;
+}
+
+/* Metallic Pull-Tab Key */
+.can-pull-tab {
+  position: absolute;
+  top: 7px;
+  left: 38px;
+  width: 48px;
+  height: 22px;
+  cursor: pointer;
+  z-index: 10;
+  transform-origin: 38px 11px;
+  transition: transform 0.35s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+  outline: none;
+}
+
+.can-pull-tab:focus-visible {
+  outline: 2px solid var(--gold-light);
+  border-radius: 8px;
+}
+
+.can-pull-tab.opened {
+  transform: rotate(-65deg) translateY(-8px);
+}
+
+.tab-metal-ring {
+  width: 46px;
+  height: 20px;
+  background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 50%, #94a3b8 100%);
+  border-radius: 12px;
+  border: 1px solid #64748b;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5), inset 0 1px 2px #ffffff;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+}
+
+.tab-finger-hole {
+  width: 16px;
+  height: 12px;
+  border-radius: 50%;
+  background: #94a3b8;
+  border: 1px solid #475569;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+  margin-right: 14px;
+}
+
+.tab-rivet {
+  position: absolute;
+  right: 5px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff 0%, #94a3b8 80%);
+  border: 1px solid #475569;
+}
+
+.tab-press-lever {
+  position: absolute;
+  top: 4px;
+  left: 2px;
+  width: 14px;
+  height: 12px;
+  background: #64748b;
+  border-radius: 3px;
+}
+
+/* Can Body (Cylinder) */
+.can-body {
+  width: 154px;
+  height: 260px;
+  border-radius: 8px 8px 24px 24px;
+  background: linear-gradient(
+    90deg,
+    #7a0008 0%,
+    #b30b18 16%,
+    #d11222 30%,
+    #ff2e42 46%,
+    #d11222 65%,
+    #8f000b 86%,
+    #5a0006 100%
+  );
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 6px 14px rgba(0, 0, 0, 0.55), inset 0 -6px 14px rgba(0, 0, 0, 0.7);
+}
+
+.can-metallic-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 36%,
+    rgba(255, 255, 255, 0.28) 46%,
+    transparent 54%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.can-highlight-strip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 45%;
+  width: 4px;
+  background: rgba(255, 255, 255, 0.55);
+  filter: blur(1.5px);
+  pointer-events: none;
+}
+
+.can-shadow-rim {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 5px 0 10px rgba(0, 0, 0, 0.6), inset -5px 0 10px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+}
+
+/* Dew Condensation Droplets */
+.can-condensation {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.can-condensation .drop {
+  position: absolute;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, rgba(0, 0, 0, 0.2) 100%);
+  border-radius: 50%;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.can-condensation .d1 { top: 25px; left: 24px; width: 5px; height: 5px; }
+.can-condensation .d2 { top: 40px; left: 38px; width: 4px; height: 6px; border-radius: 40% 40% 50% 50%; }
+.can-condensation .d3 { top: 75px; left: 20px; width: 6px; height: 6px; }
+.can-condensation .d4 { top: 110px; left: 32px; width: 5px; height: 8px; border-radius: 40% 40% 50% 50%; }
+.can-condensation .d5 { top: 160px; left: 22px; width: 4px; height: 4px; }
+.can-condensation .d6 { top: 195px; left: 35px; width: 6px; height: 7px; }
+.can-condensation .d7 { top: 45px; right: 26px; width: 5px; height: 5px; }
+.can-condensation .d8 { top: 85px; right: 38px; width: 4px; height: 4px; }
+.can-condensation .d9 { top: 130px; right: 20px; width: 6px; height: 8px; border-radius: 40% 40% 50% 50%; }
+.can-condensation .d10 { top: 175px; right: 34px; width: 5px; height: 5px; }
+.can-condensation .d11 { top: 215px; right: 22px; width: 4px; height: 5px; }
+.can-condensation .d12 { top: 140px; left: 70px; width: 5px; height: 5px; }
+
+/* Iconic CokaCola Brand Typography */
+.can-brand-wrap {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  width: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.can-logo-text {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 700;
+  font-size: 2.85rem;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6), 0 0 12px rgba(255, 255, 255, 0.4);
+  white-space: nowrap;
+}
+
+.can-bottom-rim {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: linear-gradient(180deg, transparent 0%, #64748b 30%, #cbd5e1 70%, #475569 100%);
+  border-radius: 0 0 24px 24px;
+}
+
+.can-shadow {
+  position: absolute;
+  bottom: -10px;
+  width: 140px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.7);
+  filter: blur(8px);
+  z-index: -1;
+}
+
+/* Cola Success Card */
+.cola-success-card {
+  max-width: 520px;
+  width: 100%;
+  background: linear-gradient(135deg, rgba(22, 28, 42, 0.95) 0%, rgba(12, 16, 26, 0.98) 100%);
+  border: 2px solid var(--border-gold-bright);
+  border-radius: 20px;
+  padding: clamp(1.6rem, 4vw, 2.4rem) clamp(1.2rem, 3.8vw, 2rem);
+  text-align: center;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 45px rgba(220, 30, 45, 0.4);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
+  animation: cardFadeIn 0.8s var(--ease-out) forwards;
+}
+
+.cola-success-card.active {
+  display: flex;
+}
+
+.cola-success-icon {
+  font-size: 2.2rem;
+}
+
+.cola-success-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  color: #ffd700;
+  font-weight: 700;
+  text-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+  line-height: 1.2;
+}
+
+.cola-success-text {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #f1f5f9;
+}
+
+.cola-finish-btn {
+  margin-top: 0.4rem;
+  padding: 0.9rem 2.2rem;
+}
+
 /* --------------------------------------------------------------------------
    RESPONSIVE DESIGN & ONE-SCREEN FIT
    -------------------------------------------------------------------------- */
@@ -1646,6 +2507,24 @@ html, body {
 @media (max-height: 850px) {
   #screen-intro {
     padding: 3.8rem 1.2rem 2rem;
+  }
+
+  #screen-lottery {
+    padding: 3.8rem 1rem 1.5rem;
+  }
+
+  .lottery-ticket {
+    padding: 1.2rem 1.1rem;
+    gap: 0.8rem;
+  }
+
+  .scratch-grid {
+    gap: 0.5rem;
+  }
+
+  .scratch-cell {
+    width: 72px;
+    height: 72px;
   }
 
   #screen-greeting {
@@ -1691,6 +2570,26 @@ html, body {
   .album-footer {
     margin-top: 0.2rem;
     gap: 0.75rem;
+  }
+
+  #screen-cake {
+    padding: 3.5rem 1rem 1.5rem;
+  }
+
+  .cake-stage {
+    height: 220px;
+    transform: scale(0.92);
+    transform-origin: bottom center;
+  }
+
+  #screen-cola {
+    padding: 3.5rem 1rem 1.5rem;
+  }
+
+  .cola-stage {
+    height: 320px;
+    transform: scale(0.92);
+    transform-origin: center center;
   }
 
   .btn {
@@ -1742,6 +2641,24 @@ html, body {
     font-size: 2.1rem;
   }
 
+  .lottery-ticket {
+    padding: 1.1rem 0.8rem;
+    max-width: 95vw;
+  }
+
+  .scratch-grid {
+    gap: 0.45rem;
+  }
+
+  .scratch-cell {
+    width: 68px;
+    height: 68px;
+  }
+
+  .cell-symbol {
+    font-size: 1.65rem;
+  }
+
   .greeting-title {
     font-size: 2rem;
   }
@@ -1763,7 +2680,27 @@ html, body {
   }
 
   .photo-viewer-card {
-    height: 46vh;
-    min-height: 250px;
+    height: 44vh;
+    min-height: 240px;
+  }
+
+  .cake-stage {
+    transform: scale(0.86);
+    transform-origin: bottom center;
+  }
+
+  .cola-stage {
+    transform: scale(0.88);
+    transform-origin: center center;
+  }
+
+  .finale-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .finale-actions .btn {
+    width: 100%;
   }
 }
+

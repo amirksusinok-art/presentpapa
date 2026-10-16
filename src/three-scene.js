@@ -15,6 +15,10 @@ export class GiftScene {
     this.ribbonParts = [];
     this.innerLight = null;
     this.glowMesh = null;
+    this.openingGlow = null;
+    this.lightBeam = null;
+    this.beamSideMat = null;
+    this.innerBed = null;
     this.particles = null;
     this.particleData = [];
 
@@ -175,24 +179,67 @@ export class GiftScene {
       metalness: 0.85
     });
 
-    // 1. Box Base: Dimensions 1.7 x 1.4 x 1.7 (balanced proportion)
+    // 1. Hollow Box Base: Outer dimensions 1.7 x 1.4 x 1.7 with open top
     const baseW = 1.7;
     const baseH = 1.4;
     const baseD = 1.7;
+    const wt = 0.07; // wall thickness
+    const ft = 0.08; // floor thickness
 
-    const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(baseW, baseH, baseD), boxMat);
-    baseMesh.position.y = 0;
-    this.boxGroup.add(baseMesh);
+    // Bottom floor
+    const floorMesh = new THREE.Mesh(new THREE.BoxGeometry(baseW, ft, baseD), boxMat);
+    floorMesh.position.y = -baseH / 2 + ft / 2;
+    this.boxGroup.add(floorMesh);
 
-    // 2. Ribbons on base
+    // Front & Back walls
+    const wallH = baseH - ft;
+    const wallY = -baseH / 2 + ft + wallH / 2;
+
+    const wallFront = new THREE.Mesh(new THREE.BoxGeometry(baseW, wallH, wt), boxMat);
+    wallFront.position.set(0, wallY, baseD / 2 - wt / 2);
+    this.boxGroup.add(wallFront);
+
+    const wallBack = new THREE.Mesh(new THREE.BoxGeometry(baseW, wallH, wt), boxMat);
+    wallBack.position.set(0, wallY, -(baseD / 2 - wt / 2));
+    this.boxGroup.add(wallBack);
+
+    // Left & Right walls
+    const sideDepth = baseD - 2 * wt;
+    const wallLeft = new THREE.Mesh(new THREE.BoxGeometry(wt, wallH, sideDepth), boxMat);
+    wallLeft.position.set(-(baseW / 2 - wt / 2), wallY, 0);
+    this.boxGroup.add(wallLeft);
+
+    const wallRight = new THREE.Mesh(new THREE.BoxGeometry(wt, wallH, sideDepth), boxMat);
+    wallRight.position.set(baseW / 2 - wt / 2, wallY, 0);
+    this.boxGroup.add(wallRight);
+
+    // 2. Outer Ribbons on Box Base
     const ribW = 0.26;
     const ribThick = 0.016;
 
-    const ribBaseX = new THREE.Mesh(new THREE.BoxGeometry(baseW + ribThick, baseH + ribThick, ribW), goldMat);
-    this.boxGroup.add(ribBaseX);
+    const ribFront = new THREE.Mesh(new THREE.BoxGeometry(ribW, baseH, ribThick), goldMat);
+    ribFront.position.set(0, 0, baseD / 2 + ribThick / 2);
+    this.boxGroup.add(ribFront);
 
-    const ribBaseZ = new THREE.Mesh(new THREE.BoxGeometry(ribW, baseH + ribThick, baseD + ribThick), goldMat);
-    this.boxGroup.add(ribBaseZ);
+    const ribBack = new THREE.Mesh(new THREE.BoxGeometry(ribW, baseH, ribThick), goldMat);
+    ribBack.position.set(0, 0, -(baseD / 2 + ribThick / 2));
+    this.boxGroup.add(ribBack);
+
+    const ribLeft = new THREE.Mesh(new THREE.BoxGeometry(ribThick, baseH, ribW), goldMat);
+    ribLeft.position.set(-(baseW / 2 + ribThick / 2), 0, 0);
+    this.boxGroup.add(ribLeft);
+
+    const ribRight = new THREE.Mesh(new THREE.BoxGeometry(ribThick, baseH, ribW), goldMat);
+    ribRight.position.set(baseW / 2 + ribThick / 2, 0, 0);
+    this.boxGroup.add(ribRight);
+
+    const ribFloorX = new THREE.Mesh(new THREE.BoxGeometry(baseW, ribThick, ribW), goldMat);
+    ribFloorX.position.set(0, -(baseH / 2 + ribThick / 2), 0);
+    this.boxGroup.add(ribFloorX);
+
+    const ribFloorZ = new THREE.Mesh(new THREE.BoxGeometry(ribW, ribThick, baseD), goldMat);
+    ribFloorZ.position.set(0, -(baseH / 2 + ribThick / 2), 0);
+    this.boxGroup.add(ribFloorZ);
 
     // 3. Lid Group (Separately animatable)
     this.lidGroup = new THREE.Group();
@@ -259,21 +306,98 @@ export class GiftScene {
     this.ribbonParts.push(tail2);
 
     // 5. Inside Light (warm golden PointLight)
-    this.innerLight = new THREE.PointLight(0xffdf80, 0, 6.5);
-    this.innerLight.position.set(0, 0.3, 0);
+    this.innerLight = new THREE.PointLight(0xffdf80, 0, 7.5);
+    this.innerLight.position.set(0, 0.35, 0);
     this.boxGroup.add(this.innerLight);
 
-    // 6. Inside golden aura mesh
-    const glowGeo = new THREE.SphereGeometry(0.55, 16, 16);
-    const glowMat = new THREE.MeshBasicMaterial({
-      color: 0xffea94,
+    // 6. SQUARE LIGHT SYSTEM: strictly square geometry, never exceeds the 1.7x1.7 box footprint
+    const sqSize = 1.52; // Fits strictly inside the 1.56 cavity and within the 1.7 box walls
+
+    // (A) Glowing square bed in the bottom of the cavity
+    const bedGeo = new THREE.BoxGeometry(sqSize, 0.18, sqSize);
+    const bedMat = new THREE.MeshBasicMaterial({
+      color: 0xffdf80,
       transparent: true,
       opacity: 0,
-      blending: THREE.AdditiveBlending
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
     });
-    this.glowMesh = new THREE.Mesh(glowGeo, glowMat);
-    this.glowMesh.position.set(0, 0.3, 0);
-    this.boxGroup.add(this.glowMesh);
+    this.innerBed = new THREE.Mesh(bedGeo, bedMat);
+    this.innerBed.position.set(0, -0.35, 0);
+    this.boxGroup.add(this.innerBed);
+
+    // (B) Glowing square opening plate at top rim of the box (y = 0.69)
+    const openGeo = new THREE.PlaneGeometry(sqSize, sqSize);
+    const openCanvas = document.createElement('canvas');
+    openCanvas.width = 128;
+    openCanvas.height = 128;
+    const oCtx = openCanvas.getContext('2d');
+    oCtx.fillStyle = '#fff6cc';
+    oCtx.fillRect(0, 0, 128, 128);
+    const oGrad = oCtx.createRadialGradient(64, 64, 15, 64, 64, 64);
+    oGrad.addColorStop(0, 'rgba(255, 255, 240, 1)');
+    oGrad.addColorStop(0.75, 'rgba(255, 225, 120, 0.9)');
+    oGrad.addColorStop(1, 'rgba(240, 185, 50, 0.6)');
+    oCtx.fillStyle = oGrad;
+    oCtx.fillRect(0, 0, 128, 128);
+
+    const openTex = new THREE.CanvasTexture(openCanvas);
+    const openMat = new THREE.MeshBasicMaterial({
+      map: openTex,
+      color: 0xfff0aa,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+    this.openingGlow = new THREE.Mesh(openGeo, openMat);
+    this.openingGlow.rotation.x = -Math.PI / 2;
+    this.openingGlow.position.set(0, 0.69, 0);
+    this.boxGroup.add(this.openingGlow);
+    this.glowMesh = this.openingGlow;
+
+    // (C) Vertical Square Column / Beam of light rising straight out of the box opening
+    const beamH = 2.4;
+    const beamGeo = new THREE.BoxGeometry(sqSize, beamH, sqSize);
+    beamGeo.translate(0, beamH / 2, 0); // Pin base to y = 0 so vertical scale stretches upward
+
+    const beamCanvas = document.createElement('canvas');
+    beamCanvas.width = 64;
+    beamCanvas.height = 256;
+    const bCtx = beamCanvas.getContext('2d');
+    const bGrad = bCtx.createLinearGradient(0, 256, 0, 0); // bottom to top
+    bGrad.addColorStop(0, 'rgba(255, 248, 205, 0.95)');
+    bGrad.addColorStop(0.12, 'rgba(255, 230, 140, 0.70)');
+    bGrad.addColorStop(0.38, 'rgba(255, 210, 85, 0.32)');
+    bGrad.addColorStop(0.72, 'rgba(255, 190, 50, 0.08)');
+    bGrad.addColorStop(1.0, 'rgba(240, 160, 30, 0.0)');
+    bCtx.fillStyle = bGrad;
+    bCtx.fillRect(0, 0, 64, 256);
+    const beamTex = new THREE.CanvasTexture(beamCanvas);
+
+    this.beamSideMat = new THREE.MeshBasicMaterial({
+      map: beamTex,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      side: THREE.DoubleSide,
+      depthWrite: false
+    });
+
+    const invisibleMat = new THREE.MeshBasicMaterial({ visible: false });
+    const beamMaterials = [
+      this.beamSideMat, // +X
+      this.beamSideMat, // -X
+      invisibleMat,     // +Y (top open)
+      invisibleMat,     // -Y (bottom)
+      this.beamSideMat, // +Z
+      this.beamSideMat  // -Z
+    ];
+    this.lightBeam = new THREE.Mesh(beamGeo, beamMaterials);
+    this.lightBeam.position.set(0, 0.69, 0);
+    this.lightBeam.scale.set(1, 0, 1);
+    this.boxGroup.add(this.lightBeam);
 
     // Isometric presentation tilt
     this.boxGroup.rotation.y = -Math.PI / 6;
@@ -287,9 +411,9 @@ export class GiftScene {
     this.particleData = [];
 
     for (let i = 0; i < particleCount; i++) {
-      const x = (Math.random() - 0.5) * 0.9;
-      const y = (Math.random() - 0.5) * 0.6 + 0.1;
-      const z = (Math.random() - 0.5) * 0.9;
+      const x = (Math.random() - 0.5) * 1.1;
+      const y = (Math.random() - 0.5) * 0.4 + 0.6;
+      const z = (Math.random() - 0.5) * 1.1;
 
       positions[i * 3] = x;
       positions[i * 3 + 1] = y;
@@ -301,7 +425,7 @@ export class GiftScene {
         origZ: z,
         speedY: 0.35 + Math.random() * 0.55,
         swaySpeed: 1.2 + Math.random() * 2,
-        swayRadius: 0.08 + Math.random() * 0.2,
+        swayRadius: 0.04 + Math.random() * 0.10,
         phase: Math.random() * Math.PI * 2,
         active: false
       });
@@ -418,11 +542,19 @@ export class GiftScene {
         const lightT = Math.min((t - 0.28) / 0.42, 1);
         const lightEase = Math.sin(lightT * Math.PI * 0.5);
 
-        this.innerLight.intensity = lightEase * 3.8;
-        if (this.glowMesh) {
-          this.glowMesh.material.opacity = lightEase * 0.55;
-          const s = 1 + lightEase * 1.2;
-          this.glowMesh.scale.set(s, s, s);
+        this.innerLight.intensity = lightEase * 4.2;
+
+        if (this.openingGlow) {
+          this.openingGlow.material.opacity = lightEase * 0.90;
+        }
+
+        if (this.innerBed) {
+          this.innerBed.material.opacity = lightEase * 0.60;
+        }
+
+        if (this.lightBeam && this.beamSideMat) {
+          this.beamSideMat.opacity = lightEase * 0.85;
+          this.lightBeam.scale.y = lightEase;
         }
 
         if (this.particles) {
@@ -459,9 +591,15 @@ export class GiftScene {
     });
 
     this.innerLight.intensity = 0;
-    if (this.glowMesh) {
-      this.glowMesh.material.opacity = 0;
-      this.glowMesh.scale.set(1, 1, 1);
+    if (this.openingGlow) {
+      this.openingGlow.material.opacity = 0;
+    }
+    if (this.innerBed) {
+      this.innerBed.material.opacity = 0;
+    }
+    if (this.lightBeam && this.beamSideMat) {
+      this.beamSideMat.opacity = 0;
+      this.lightBeam.scale.y = 0;
     }
     if (this.particles) {
       this.particles.material.opacity = 0;
